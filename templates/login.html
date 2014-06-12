@@ -18,14 +18,14 @@
     <input type="text" placeholder="Server">
   </label>
   <label class="item item-input">
-    <input type="text" placeholder="Uživatelské jméno">
+    <input type="text" placeholder="Uživatelské jméno" ng-model="username">
   </label>
   <label class="item item-input">
     <input type="text" placeholder="Heslo">
   </label>
 </div>
 <div class="padding">
-<button class="button button-block button-positive">Přihlásit</button>
+<button class="button button-block button-positive" ng-click="login()">Přihlásit</button>
 </div>
 
   </ion-content>

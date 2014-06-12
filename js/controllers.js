@@ -12,8 +12,16 @@ angular.module('starter.controllers', [])
     { title: 'Rap', id: 5 },
     { title: 'Cowbell', id: 6 }
   ];
-  $scope.test = function() { alert('test'); };
+  $scope.test = function() {  };
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
+})
+
+.controller('LoginCtrl', function($scope, $location) {
+  $scope.username = "bohdan.maslowski";
+  
+  $scope.login = function() {
+    $location.path('/app/home');
+  }
 })

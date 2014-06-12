@@ -107,11 +107,11 @@ angular.module('starter', ['ionic', 'starter.controllers'])
               fileSystem.root.getFile(
               "dummy.html", {create: true, exclusive: false}, 
               function gotFileEntry(fileEntry) {
-                  var sPath = fileEntry.fullPath.replace("dummy.html","");
-                  alert(sPath);
-                  sPath = fileEntry.toURL().replace("dummy.html","");
-                  alert(sPath);
-                  sPath = "sdcard://";
+                  //var sPath = fileEntry.fullPath.replace("dummy.html","");
+                  //alert(sPath);
+                  sPath = fileEntry.toNativeURL().replace("dummy.html","");
+                  //alert(sPath);
+                  //sPath = "sdcard://";
                                     
                   var fileTransfer = new FileTransfer();
                   fileEntry.remove();

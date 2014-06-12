@@ -111,6 +111,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
                   alert(sPath);
                   sPath = fileEntry.toURL().replace("dummy.html","");
                   alert(sPath);
+                  sPath = "sdcard://";
                                     
                   var fileTransfer = new FileTransfer();
                   fileEntry.remove();

@@ -84,6 +84,22 @@ angular.module('starter', ['ionic', 'starter.controllers'])
   $urlRouterProvider.otherwise('/app/login');
 });
 
+      function openIntent(url, mime)
+      {
+        window.plugins.webintent.startActivity({
+            action: window.plugins.webintent.ACTION_VIEW,
+            url: url,
+            type: mime
+          },
+          function() {},
+          function(x) {
+            alert(x);
+            alert('Failed to open URL via Android Intent.');
+            console.log("Failed to open URL via Android Intent.")
+          }
+      );
+      }
+
       function downloadFile(fileUrl, mimeType, tempName){
 
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 

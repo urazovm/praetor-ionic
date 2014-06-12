@@ -11,6 +11,9 @@ angular.module('starter.controllers', [])
   $scope.openDocument = function() {
     $location.path('/app/document');
   }
+  $scope.openDocumentAndroid = function() {
+    downloadFile('http://www.praetoris.cz/test.docx','application/msword','tmp001.docx');
+  }
 })
 
 .controller('LoginCtrl', function($scope, $location) {

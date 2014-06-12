@@ -84,3 +84,29 @@ angular.module('starter', ['ionic', 'starter.controllers'])
   $urlRouterProvider.otherwise('/app/login');
 });
 
+      function downloadFile(fileUrl, mimeType, tempName){
+
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
+          function onFileSystemSuccess(fileSystem) {
+              fileSystem.root.getFile(
+              "dummy.html", {create: true, exclusive: false}, 
+              function gotFileEntry(fileEntry) {
+                  var sPath = fileEntry.fullPath.replace("dummy.html","");
+                  var fileTransfer = new FileTransfer();
+                  fileEntry.remove();
+      
+                  fileTransfer.download(
+                      fileUrl,
+                      sPath + tempName,
+                      function(theFile) {
+                          openIntent(theFile.toURI(), mimeType);
+                      },
+                      function(error) {
+                          alert("download error source " + error.source);
+                          alert("download error target " + error.target);
+                          alert("upload error code: " + error.code);
+                      }
+                  );
+              }, function(e) { alert(e); } );
+          }, function(e) { alert(e); });
+};

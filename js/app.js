@@ -109,6 +109,9 @@ angular.module('starter', ['ionic', 'starter.controllers'])
               function gotFileEntry(fileEntry) {
                   //var sPath = fileEntry.fullPath.replace("dummy.html","");
                   //alert(sPath);
+                  alert(fileEntry.fullPath);
+                  alert(fileEntry.toUrl());
+                  alert(fileEntry.toNativeURL());
                   sPath = fileEntry.toNativeURL().replace("dummy.html","");
                   //alert(sPath);
                   //sPath = "sdcard://";

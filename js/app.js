@@ -46,16 +46,18 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       url: "/home",
       views: {
         'menuContent' :{
-          templateUrl: "templates/home.html"
+          templateUrl: "templates/home.html",
+          controller: 'HomeCtrl'
         }
       }
     })
 
-    .state('app.browse', {
-      url: "/browse",
+    .state('app.document', {
+      url: "/document",
       views: {
         'menuContent' :{
-          templateUrl: "templates/browse.html"
+          templateUrl: "templates/document.html",
+          controller: 'DocumentCtrl'
         }
       }
     })

@@ -108,6 +108,10 @@ angular.module('starter', ['ionic', 'starter.controllers'])
               "dummy.html", {create: true, exclusive: false}, 
               function gotFileEntry(fileEntry) {
                   var sPath = fileEntry.fullPath.replace("dummy.html","");
+                  alert(sPath);
+                  sPath = fileEntry.toURL().replace("dummy.html","");
+                  alert(sPath);
+                                    
                   var fileTransfer = new FileTransfer();
                   fileEntry.remove();
       

@@ -110,7 +110,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
                   //var sPath = fileEntry.fullPath.replace("dummy.html","");
                   //alert(sPath);
                   alert(fileEntry.fullPath);
-                  alert(fileEntry.toUrl());
+                  alert(fileEntry.toURL());
                   alert(fileEntry.toNativeURL());
                   sPath = fileEntry.toNativeURL().replace("dummy.html","");
                   //alert(sPath);

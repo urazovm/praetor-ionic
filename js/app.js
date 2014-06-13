@@ -123,7 +123,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
                       fileUrl,
                       sPath + tempName,
                       function(theFile) {
-                          openIntent(theFile.toURI(), mimeType);
+                          openIntent(theFile.toNativeURL(), mimeType);
                       },
                       function(error) {
                           alert("download error source " + error.source);

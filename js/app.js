@@ -52,6 +52,15 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     })
 
+    .state('app.spis', {
+      url: "/spis/:playlistId",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/spis.html",
+          controller: 'SpisCtrl'
+        }
+      }
+    })
     .state('app.document', {
       url: "/document",
       views: {

@@ -8,14 +8,8 @@ angular.module('starter.controllers', [])
 })
 
 .controller('HomeCtrl', function($scope, $location) {
-  $scope.openDocument = function() {
-    $location.path('/app/document');
-  }
-$scope.openDocumentAlt = function() {
-    window.open('http://www.praetoris.cz/test.docx');
-  }
-  $scope.openDocumentAndroid = function() {
-    downloadFile('http://www.praetoris.cz/test.docx','application/msword','tmp001.docx');
+  $scope.openSpis = function() {
+    $location.path('/app/spis/12345');
   }
 })
 
@@ -26,3 +20,15 @@ $scope.openDocumentAlt = function() {
     $location.path('/app/home');
   }
 })
+
+.controller('SpisCtrl', function($scope, $location) {
+  $scope.title = '131/2012 - prodej nemovitosti';
+
+  $scope.openDocument = function() {
+    if(ionic.Platform.isAndroid())
+      downloadFile('http://www.praetoris.cz/test.docx','application/msword','tmp001.docx');
+    else
+      $location.path('/app/document');
+  }
+
+});

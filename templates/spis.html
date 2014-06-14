@@ -1,0 +1,27 @@
+<ion-view title="Spis">
+
+  <ion-content class="has-header">
+
+  <div class="list">
+  <div class="item item-divider">{{title}}</div>
+  <div class="item">
+    <div class="">
+      <a class="button button-positive" ng-click="tab=1">Zapsat činnost</a>
+      <a class="button button-positive" ng-click="tab=2">Zadat úkol</a>
+    </div>
+  </div>
+  <div class="item item-divider">Dokumenty</div>
+  <a class="item item-icon-left" ng-click="dir1=!dir1"><i class="icon ion-folder"></i>Plná moc</a>
+    <div ng-show="dir1" >
+  <a class="item" ng-click="openDocument()">&nbsp;&nbsp;Oblíbené</a>
+  <a class="item" ng-click="openDocument()">&nbsp;&nbsp;Oblíbené</a>
+  <a class="item" ng-click="openDocument()">&nbsp;&nbsp;Oblíbené</a>
+  </div>
+  <a class="item item-icon-left" ng-click="openDocument()"><i class="icon ion-document"></i>Zápis z jednání 18.6.2014</a>
+  
+  <a class="item item-icon-left" ng-click="openDocument()"><i class="icon ion-document"></i>Připomínky ke smlouvě</a>
+  </div>
+</div>
+
+  </ion-content>
+</ion-view>

@@ -41,7 +41,8 @@ angular.module('starter.controllers', [])
 
 .controller('SideMenuCtrl', function($scope, $ionicSideMenuDelegate) {
  function onMenuKeyDown() {
-  	$ionicSideMenuDelegate.toggleRight();
+  	alert('down');
+    //$ionicSideMenuDelegate.toggleRight();
   };
  document.addEventListener("menubutton", onMenuKeyDown, false);
 });

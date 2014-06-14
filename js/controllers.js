@@ -1,6 +1,7 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope) {
+  $scope.canGoBack = true;
 })
 
 .controller('DocumentCtrl', function($scope) {
@@ -8,16 +9,20 @@ angular.module('starter.controllers', [])
 })
 
 .controller('HomeCtrl', function($scope, $location) {
+  $scope.canGoBack = false;
   $scope.openSpis = function() {
     $location.path('/app/spis/12345');
   }
 })
 
-.controller('LoginCtrl', function($scope, $location) {
+.controller('LoginCtrl', function($scope, $location, $ionicLoading) {
   $scope.username = "bohdan.maslowski";
   
   $scope.login = function() {
     $location.path('/app/home');
+    //$ionicLoading.show({
+    //  template: 'Loading...'
+    //});
   }
 })
 

@@ -36,4 +36,12 @@ angular.module('starter.controllers', [])
       $location.path('/app/document');
   }
 
+})
+
+.controller('SideMenuCtrl', function SideMenuController($scope, $ionicSideMenuDelegate) {
+ function onMenuKeyDown() {
+  	$ionicSideMenuDelegate.toggleLeft();
+  };
+ document.addEventListener("menubutton", onMenuKeyDown, false);
 });
+

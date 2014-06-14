@@ -30,6 +30,7 @@ angular.module('starter.controllers', [])
   $scope.title = '131/2012 - prodej nemovitosti';
 
   $scope.openDocument = function() {
+    //test();return;
     if(ionic.Platform.isAndroid())
       downloadFile('http://www.praetoris.cz/test.docx','application/msword','tmp001.docx');
     else
@@ -38,9 +39,9 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('SideMenuCtrl', function SideMenuController($scope, $ionicSideMenuDelegate) {
+.controller('SideMenuCtrl', function($scope, $ionicSideMenuDelegate) {
  function onMenuKeyDown() {
-  	$ionicSideMenuDelegate.toggleLeft();
+  	$ionicSideMenuDelegate.toggleRight();
   };
  document.addEventListener("menubutton", onMenuKeyDown, false);
 });

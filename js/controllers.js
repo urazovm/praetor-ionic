@@ -1,7 +1,8 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope) {
+.controller('AppCtrl', function($scope, $state) {
   $scope.canGoBack = true;
+  $scope.$root.sideMenuEnabled = function() { return $state.current.name == 'app.home';} ;
 })
 
 .controller('DocumentCtrl', function($scope, $stateParams, $sce) {
@@ -22,7 +23,7 @@ angular.module('starter.controllers', [])
   
   $scope.login = function() {
     window.localStorage.setItem("server", $scope.formData.server);
-    window.localStorage.setItem("user", $scope.formData.username);
+    window.localStorage.setItem("username", $scope.formData.username);
     window.localStorage.setItem("password", $scope.formData.password);
     $location.path('/app/home');
     //$ionicLoading.show({
@@ -35,19 +36,19 @@ angular.module('starter.controllers', [])
   $scope.title = '131/2012 - prodej nemovitosti';
 
   $scope.openDocument = function(doc, extension) {
-    var mime = extension == 'docx' ? 'application/msword' : 'application/pdf'; 
-    //test();return;
-    if(ionic.Platform.isAndroid())
+     
+
+    if(ionic.Platform.isAndroid()) {
+      var mime = extension == 'docx' ? 'application/msword' : 'application/pdf';
       downloadFile('http://update.praetoris.cz/test/'+doc, mime,'tmp001.' + extension);
+    }
     else
       window.open(
       'http://update.praetoris.cz/test/'+doc,
       '_blank',
       'enableViewportScale=yes,location=no,toolbarposition=top,transitionstyle=fliphorizontal,hidden=no,closebuttoncaption=Zpět'
       );
-      //$location.path('/app/document/'+doc);
   }
-
 })
 
 .controller('SideMenuCtrl', function($scope, $ionicSideMenuDelegate) {
@@ -55,5 +56,7 @@ angular.module('starter.controllers', [])
     $ionicSideMenuDelegate.toggleRight();
   };
  document.addEventListener("menubutton", onMenuKeyDown, false);
+ 
+ document.addEventListener("backbutton", function() { alert('back'); } , false);
 });
 

@@ -35,7 +35,12 @@ angular.module('starter.controllers', [])
     if(ionic.Platform.isAndroid())
       downloadFile('http://update.praetoris.cz/test/'+doc, mime,'tmp001.' + extension);
     else
-      $location.path('/app/document/'+doc);
+      window.open(
+      'http://update.praetoris.cz/test/'+doc,
+      '_blank',
+      'enableViewportScale=yes,location=no,toolbarposition=top,transitionstyle=fliphorizontal,hidden=no,closebuttoncaption=Zpět'
+      );
+      //$location.path('/app/document/'+doc);
   }
 
 })

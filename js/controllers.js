@@ -4,8 +4,8 @@ angular.module('starter.controllers', [])
   $scope.canGoBack = true;
 })
 
-.controller('DocumentCtrl', function($scope, $stateParams) {
-  $scope.document = 'http://update.praetoris.cz/test/' + $stateParams.documentId;
+.controller('DocumentCtrl', function($scope, $stateParams, $sce) {
+  $scope.document = $sce.trustAsResourceUrl('http://update.praetoris.cz/test/' + $stateParams.documentId);
 })
 
 .controller('HomeCtrl', function($scope, $location) {

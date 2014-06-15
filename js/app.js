@@ -58,7 +58,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     })
     .state('app.document', {
-      url: "/document",
+      url: "/document/:documentId",
       views: {
         'menuContent' :{
           templateUrl: "templates/document.html",

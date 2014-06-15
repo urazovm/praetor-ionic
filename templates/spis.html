@@ -13,13 +13,13 @@
   <div class="item item-divider">Dokumenty</div>
   <a class="item item-icon-left" ng-click="dir1=!dir1"><i class="icon ion-folder"></i>Plná moc</a>
     <div ng-show="dir1" >
-  <a class="item" ng-click="openDocument()">&nbsp;&nbsp;Oblíbené</a>
-  <a class="item" ng-click="openDocument()">&nbsp;&nbsp;Oblíbené</a>
+  <a class="item" ng-click="openDocument('http://www.praetoris.cz/test.docx')">&nbsp;&nbsp;Oblíbené</a>
+  <a class="item" ng-click="openDocument('http://update.praetoris.cz/test/test.pdf')">&nbsp;&nbsp;Oblíbené</a>
   <a class="item" ng-click="openDocument()">&nbsp;&nbsp;Oblíbené</a>
   </div>
-  <a class="item item-icon-left" ng-click="openDocument()"><i class="icon ion-document"></i>Zápis z jednání 18.6.2014</a>
+  <a class="item item-icon-left" ng-click="openDocument('test.docx', 'docx')"><i class="icon ion-document"></i>Zápis z jednání 18.6.2014.docx</a>
   
-  <a class="item item-icon-left" ng-click="openDocument()"><i class="icon ion-document"></i>Připomínky ke smlouvě</a>
+  <a class="item item-icon-left" ng-click="openDocument('test.pdf', 'pdf')"><i class="icon ion-document"></i>Připomínky ke smlouvě.pdf</a>
   </div>
 </div>
 

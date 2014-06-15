@@ -19,27 +19,41 @@ angular.module('starter.controllers', [])
 })
 
 .controller('LoginCtrl', function($scope, $location, $ionicLoading, PraetorService) {
+  
+  function doLogin()
+  {
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
+    PraetorService.call().then(function(d) {
+      $ionicLoading.hide();
+      $location.path('/app/home');
+    });
+  }
+  
   $scope.$root.canGoBack = false;
   $scope.$root.sideMenuEnabled = false;
+  var server = window.localStorage.getItem('server');
+  var username = window.localStorage.getItem('username');
+  var password = window.localStorage.getItem('password'); 
+ 
+  if(server && username && password)
+  {
+    doLogin();
+  }
+  
   $scope.formData = {
-    server: window.localStorage.getItem('server') || '',
-    username: window.localStorage.getItem('username') || '',
+    server: server || '',
+    username: username || '',
     password: ''
   };
   
+
   $scope.login = function() {
     window.localStorage.setItem('server', $scope.formData.server);
     window.localStorage.setItem('username', $scope.formData.username);
     window.localStorage.setItem('password', $scope.formData.password);
-    $ionicLoading.show({
-      template: 'Loading...'
-    });
-  PraetorService.call().then(function(d) {
-    $ionicLoading.hide();
-    $location.path('/app/home');
-  });
-    
-    
+    doLogin();
   }
 })
 
@@ -64,18 +78,26 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('SideMenuCtrl', function($scope, $state, $ionicSideMenuDelegate) {
- function onMenuKeyDown() {
-    $ionicSideMenuDelegate.toggleRight();
-  };
- document.addEventListener('menubutton', onMenuKeyDown, false);
+.controller('SideMenuCtrl', function($scope, $location, $state, $ionicSideMenuDelegate) {
+
+  $scope.logout = function()
+  {
+    window.localStorage.removeItem('password');
+    $location.path('/login'); 
+  }
+ // toggle side menu with Menu button
+ document.addEventListener('menubutton', function () { $ionicSideMenuDelegate.toggleRight(); }, false);
  
+ // prevent returning to login page, close the app instead
  document.addEventListener('backbutton', function() { 
   if($state.current.name == 'app.home')
   {
     ionic.Platform.exitApp();
     return false;
   } 
- } , false);
+  } , false);
+
+
+
 });
 

@@ -54,6 +54,7 @@
     <gap:plugin name="net.tunts.webintent" />
     <gap:plugin name="org.apache.cordova.file" />
     <gap:plugin name="org.apache.cordova.file-transfer" />
+    <gap:plugin name="org.li8.inappbrowser" version="0.1" />
     
     <!-- Plugins can also be added here. -->
     <!--

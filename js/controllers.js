@@ -1,8 +1,8 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $state) {
-  $scope.canGoBack = true;
-  $scope.$root.sideMenuEnabled = function() { return $state.current.name == 'app.home';} ;
+  $scope.$root.canGoBack = true;
+  $scope.$root.sideMenuEnabled = false;//function() { return $state.current.name == 'app.home';} ;
 })
 
 .controller('DocumentCtrl', function($scope, $stateParams, $sce) {
@@ -10,29 +10,42 @@ angular.module('starter.controllers', [])
 })
 
 .controller('HomeCtrl', function($scope, $location) {
-  $scope.canGoBack = false;
+  console.log('here');
+  $scope.$root.canGoBack = false;
+  $scope.$root.sideMenuEnabled = true;
   $scope.openSpis = function() {
     $location.path('/app/spis/12345');
   }
 })
 
-.controller('LoginCtrl', function($scope, $location, $ionicLoading) {
-  $scope.formData = {};
-  $scope.formData.server = window.localStorage.getItem("server");
-  $scope.formData.username = window.localStorage.getItem("username");
+.controller('LoginCtrl', function($scope, $location, $ionicLoading, PraetorService) {
+  $scope.$root.canGoBack = false;
+  $scope.$root.sideMenuEnabled = false;
+  $scope.formData = {
+    server: window.localStorage.getItem('server') || '',
+    username: window.localStorage.getItem('username') || '',
+    password: ''
+  };
   
   $scope.login = function() {
-    window.localStorage.setItem("server", $scope.formData.server);
-    window.localStorage.setItem("username", $scope.formData.username);
-    window.localStorage.setItem("password", $scope.formData.password);
+    window.localStorage.setItem('server', $scope.formData.server);
+    window.localStorage.setItem('username', $scope.formData.username);
+    window.localStorage.setItem('password', $scope.formData.password);
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
+  PraetorService.call().then(function(d) {
+    $ionicLoading.hide();
     $location.path('/app/home');
-    //$ionicLoading.show({
-    //  template: 'Loading...'
-    //});
+  });
+    
+    
   }
 })
 
 .controller('SpisCtrl', function($scope, $location) {
+  $scope.$root.sideMenuEnabled = false;
+
   $scope.title = '131/2012 - prodej nemovitosti';
 
   $scope.openDocument = function(doc, extension) {
@@ -55,8 +68,8 @@ angular.module('starter.controllers', [])
  function onMenuKeyDown() {
     $ionicSideMenuDelegate.toggleRight();
   };
- document.addEventListener("menubutton", onMenuKeyDown, false);
+ document.addEventListener('menubutton', onMenuKeyDown, false);
  
- document.addEventListener("backbutton", function() { alert('back'); } , false);
+ document.addEventListener('backbutton', function() { alert('back'); } , false);
 });
 

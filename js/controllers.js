@@ -16,9 +16,14 @@ angular.module('starter.controllers', [])
 })
 
 .controller('LoginCtrl', function($scope, $location, $ionicLoading) {
-  $scope.username = "bohdan.maslowski";
+  $scope.formData = {};
+  $scope.formData.server = window.localStorage.getItem("server");
+  $scope.formData.username = window.localStorage.getItem("username");
   
   $scope.login = function() {
+    window.localStorage.setItem("server", $scope.formData.server);
+    window.localStorage.setItem("user", $scope.formData.username);
+    window.localStorage.setItem("password", $scope.formData.password);
     $location.path('/app/home');
     //$ionicLoading.show({
     //  template: 'Loading...'
@@ -47,8 +52,7 @@ angular.module('starter.controllers', [])
 
 .controller('SideMenuCtrl', function($scope, $ionicSideMenuDelegate) {
  function onMenuKeyDown() {
-  	alert('down');
-    //$ionicSideMenuDelegate.toggleRight();
+    $ionicSideMenuDelegate.toggleRight();
   };
  document.addEventListener("menubutton", onMenuKeyDown, false);
 });

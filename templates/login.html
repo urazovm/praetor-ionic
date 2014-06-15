@@ -12,18 +12,20 @@
 <div class="padding">
   <h1>Vítejte</h1>
 </div>-->
+{{formData.username}}
 <img src="img/praetor.png" width="80%" style="display:block;margin: 2em auto"/>
-<div class="list list-inset">
+
+<form class="list list-inset">
   <label class="item item-input">
-    <input type="text" placeholder="Server">
+    <input type="text" placeholder="Server" ng-model="formData.server">
   </label>
   <label class="item item-input">
-    <input type="text" placeholder="Uživatelské jméno" ng-model="username">
+    <input type="text" placeholder="Uživatelské jméno" ng-model="formData.username">
   </label>
   <label class="item item-input">
-    <input type="password" placeholder="Heslo">
+    <input type="password" placeholder="Heslo" ng-model="formData.password">
   </label>
-</div>
+</form>
 <div class="padding">
 <button class="button button-block button-positive" ng-click="login()">Přihlásit</button>
 </div>

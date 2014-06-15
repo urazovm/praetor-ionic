@@ -64,12 +64,18 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('SideMenuCtrl', function($scope, $ionicSideMenuDelegate) {
+.controller('SideMenuCtrl', function($scope, $state, $ionicSideMenuDelegate) {
  function onMenuKeyDown() {
     $ionicSideMenuDelegate.toggleRight();
   };
  document.addEventListener('menubutton', onMenuKeyDown, false);
  
- document.addEventListener('backbutton', function() { alert('back'); } , false);
+ document.addEventListener('backbutton', function() { 
+  if($state.current.name == 'app.home')
+  {
+    ionic.Platform.exitApp();
+    return false;
+  } 
+ } , false);
 });
 

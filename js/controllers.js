@@ -9,25 +9,40 @@ angular.module('starter.controllers', [])
   $scope.document = $sce.trustAsResourceUrl('http://update.praetoris.cz/test/' + $stateParams.documentId);
 })
 
-.controller('HomeCtrl', function($scope, $location) {
-  console.log('here');
+.controller('HomeCtrl', function($scope, $location, $ionicLoading, praetorService) {
   $scope.$root.canGoBack = false;
   $scope.$root.sideMenuEnabled = true;
-  $scope.openSpis = function() {
-    $location.path('/app/spis/12345');
+
+  $scope.recentItems = praetorService.recent;
+
+  $scope.openSpis = function(id) {
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
+    praetorService.getSpis(id).then(function(d) {
+      $ionicLoading.hide();
+      $location.path('/app/spis');
+    });
   }
 })
 
-.controller('LoginCtrl', function($scope, $location, $ionicLoading, PraetorService) {
+.controller('LoginCtrl', function($scope, $location, $ionicLoading, praetorService) {
   
   function doLogin()
   {
     $ionicLoading.show({
       template: 'Loading...'
     });
-    PraetorService.call().then(function(d) {
+    praetorService.login().then(function(d) {
       $ionicLoading.hide();
-      $location.path('/app/home');
+      if(d.success)
+      {
+        $location.path('/app/home');
+      }
+      else
+      {
+        $scope.message = d.message;
+      }
     });
   }
   
@@ -57,21 +72,20 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('SpisCtrl', function($scope, $location) {
+.controller('SpisCtrl', function($scope, $location, praetorService) {
   $scope.$root.sideMenuEnabled = false;
 
-  $scope.title = '131/2012 - prodej nemovitosti';
-
-  $scope.openDocument = function(doc, extension) {
+  $scope.spis = praetorService.currentSpis;
+  
+  $scope.openDocument = function(file) {
      
 
     if(ionic.Platform.isAndroid()) {
-      var mime = extension == 'docx' ? 'application/msword' : 'application/pdf';
-      downloadFile('http://update.praetoris.cz/test/'+doc, mime,'tmp001.' + extension);
+      downloadFile('http://update.praetoris.cz/test/'+file.name+'.'+file.extension, file.mime,'tmp001.' + file.extension);
     }
     else
       window.open(
-      'http://update.praetoris.cz/test/'+doc,
+      'http://update.praetoris.cz/test/'+file.name+'.'+file.extension,
       '_blank',
       'enableViewportScale=yes,location=no,toolbarposition=bottom,transitionstyle=fliphorizontal,hidden=no,closebuttoncaption=Zpět'
       );
@@ -92,8 +106,8 @@ angular.module('starter.controllers', [])
  document.addEventListener('backbutton', function() { 
   if($state.current.name == 'app.home')
   {
-    //ionic.Platform.exitApp();
-    return false;
+    // TODO: better stay at the home page
+    ionic.Platform.exitApp();
   } 
   } , false);
 

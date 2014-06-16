@@ -1,66 +1,41 @@
-// Ionic Starter App
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.praetorService'])
-
-.run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    if(window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    }
-    if(window.StatusBar) {
-      // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
-    }
-  });
-})
-
-.config(function($stateProvider, $urlRouterProvider) {
-  $stateProvider
-
-
-    .state('app', {
-      url: "/app",
-      abstract: true,
-      templateUrl: "/menu.html",
-      controller: 'AppCtrl'
-    })
-
-    .state('login', {
-      url: "/login",
-      templateUrl: "templates/login.html",
-      controller: "LoginCtrl"
-    })
-
-
-    .state('app.home', {
-      url: "/home",
-      views: {
-        'menuContent' :{
-          templateUrl: "templates/home.html",
-          controller: 'HomeCtrl'
-        }
-      }
-    })
-
-    .state('app.spis', {
-      url: "/spis",
-      views: {
-        'menuContent' :{
-          templateUrl: "templates/spis.html",
-          controller: 'SpisCtrl'
-        }
-      }
-    })
+angular.module('starter.praetorService', [])
+  .factory('praetorService', function($http) {
+  var instance = {
     
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/login');
-  });
+    // static data
+    recent : {},
+    currentSpis : {},
+
+    // calls 
+    login: function() {
+      var promise = $http.get('http://praetoris.cz/service.php?call=login').then(function (response) {
+
+        if(response.data.success)
+        {
+          instance.recent = response.data.recent
+        }
+
+        return response.data;
+      });
+      return promise;
+    },
+    
+    getSpis: function(id) {
+      console.log("getSpis "+id);
+      var promise = $http.get('http://praetoris.cz/service.php?call=getSpis').then(function (response) {
+        //console.log(response.data);
+        instance.currentSpis = response.data;
+        return response.data;
+      });
+      return promise;
+    },
+    
+    
+    
+  };
+  return instance;
+});
 
 
       function openIntent(url, mime)

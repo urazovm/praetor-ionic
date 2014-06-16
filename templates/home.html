@@ -18,9 +18,12 @@
 <div class="list">
 
   <div class="item item-divider">Nedávno otevřené spisy</div>
-  <a class="item" ng-click="openSpis()">131/2012 - prodej nemovitosti</a>
-  <a class="item" ng-click="openSpis()">134/2012 - test</a>
-  <a class="item" ng-click="openSpis()">134/2012 - spis 3</a>
+  <div ng-repeat="recentItem in recentItems">
+  <a class="item" ng-click="openSpis(recentItem.id)">
+    <h2>{{recentItem.title}}</h2>
+    <p>{{recentItem.subtitle}}</p>
+  </a>
+  </div>
 
   <div class="item item-divider">Oblíbené spisy</div>
   <a class="item" ng-click="openSpis()">

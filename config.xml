@@ -4,12 +4,12 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "cz.praetor-systems.praetor2"
-        version   = "1.0.4">
+        version   = "1.0.6">
 
-    <name>Praetor 2</name>
+    <name>Praetor</name>
 
     <description>
-        Praetor app
+        Praetor App
     </description>
 
     <author href="http://praetor-systems.cz" email="info@praetor-systems.cz">

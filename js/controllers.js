@@ -73,7 +73,7 @@ angular.module('starter.controllers', [])
       window.open(
       'http://update.praetoris.cz/test/'+doc,
       '_blank',
-      'enableViewportScale=yes,location=no,toolbarposition=top,transitionstyle=fliphorizontal,hidden=no,closebuttoncaption=Zpět'
+      'enableViewportScale=yes,location=no,toolbarposition=bottom,transitionstyle=fliphorizontal,hidden=no,closebuttoncaption=Zpět'
       );
   }
 })
@@ -92,7 +92,7 @@ angular.module('starter.controllers', [])
  document.addEventListener('backbutton', function() { 
   if($state.current.name == 'app.home')
   {
-    ionic.Platform.exitApp();
+    //ionic.Platform.exitApp();
     return false;
   } 
   } , false);

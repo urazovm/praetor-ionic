@@ -33,8 +33,8 @@
   <div ng-switch="file.files">
     <a ng-switch-when="undefined" class="item item-icon-left" ng-click="openDocument(file)"><i class="icon ion-document"></i>{{file.name}}.{{file.extension}}</a>
     <div ng-switch-default >
-      <a class="item item-icon-left" ng-click="dir1=!dir1"><i class="icon ion-folder"></i>{{file.name}}</a>
-      <ul ng-show="dir1" class="dir">
+      <a class="item item-icon-left" onclick="this.nextElementSibling.style.display = (this.nextElementSibling.style.display == 'block') ? 'none' : 'block';"><i class="icon ion-folder"></i>{{file.name}}</a>
+      <ul style='display:none' class="dir">
         <li ng-repeat="file in file.files" ng-include="'file_template.html'"></li>
       </ul>
     </div>

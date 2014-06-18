@@ -9,14 +9,16 @@ angular.module('starter.praetorService', [])
 
     // calls 
     login: function() {
-      var promise = $http.get('http://praetoris.cz/service.php?call=login').then(function (response) {
-
-        if(response.data.success)
+      var promise = $http.get('http://praetoris.cz/service.php?call=login')
+      .then(function (response) {
+       if(response.data.success)
         {
           instance.recent = response.data.recent
         }
-
         return response.data;
+      })
+      .catch(function(e) {
+        return { success: false, message: "Error " + e.status };
       });
       return promise;
     },

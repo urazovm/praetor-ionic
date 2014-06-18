@@ -19,19 +19,22 @@
 
   <div class="item item-divider">Nedávno otevřené spisy</div>
   <div ng-repeat="recentItem in recentItems">
-  <a class="item" ng-click="openSpis(recentItem.id)">
+  <a class="item" ng-click="openSpis(recentItem)">
     <h2>{{recentItem.title}}</h2>
-    <p>{{recentItem.subtitle}}</p>
+    <div ng-switch="recentItem.loading">
+      <p ng-switch-when="true">Loading...</p>
+      <p ng-switch-default>{{recentItem.subtitle}}</p>
+    </div>
   </a>
   </div>
 
-  <div class="item item-divider">Oblíbené spisy</div>
+  <!--div class="item item-divider">Oblíbené spisy</div>
   <a class="item" ng-click="openSpis()">
     <h2>121/2013 - Prodej nemovitosti</h2>
     <p>M.M Reality, Bohdan Maslowski </p>
   </a>
   <a class="item" ng-click="openSpis()">134/2012 - test</a>
-  <a class="item" ng-click="openSpis()">134/2012 - spis 3</a>
+  <a class="item" ng-click="openSpis()">134/2012 - spis 3</a-->
 
   
 </div>

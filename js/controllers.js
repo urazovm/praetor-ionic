@@ -15,12 +15,14 @@ angular.module('starter.controllers', [])
 
   $scope.recentItems = praetorService.recent;
 
-  $scope.openSpis = function(id) {
-    $ionicLoading.show({
-      template: 'Loading...'
-    });
-    praetorService.getSpis(id).then(function(d) {
-      $ionicLoading.hide();
+  $scope.openSpis = function(spis) {
+    spis.loading = true;
+    //$ionicLoading.show({
+    // template: 'Loading...'
+    //});
+    praetorService.getSpis(spis.id).then(function(d) {
+      spis.loading = false;
+      //$ionicLoading.hide();
       $location.path('/app/spis');
     });
   }

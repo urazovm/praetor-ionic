@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ui.utils'])
 
 .controller('AppCtrl', function($scope, $state) {
   $scope.$root.canGoBack = true;
@@ -74,7 +74,7 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('SpisCtrl', function($scope, $location, praetorService) {
+.controller('SpisCtrl', function($scope, $location, praetorService, androidFileOpenerService) {
   $scope.$root.sideMenuEnabled = false;
 
   $scope.spis = praetorService.currentSpis;
@@ -83,11 +83,11 @@ angular.module('starter.controllers', [])
      
 
     if(ionic.Platform.isAndroid()) {
-      downloadFile('http://update.praetoris.cz/test/'+file.name+'.'+file.extension, file.mime,'tmp001.' + file.extension);
+      androidFileOpenerService.downloadFile('http://update.praetoris.cz/test/'+file.name+'.'+file.extension, file.mime,'tmp001.' + file.extension);
     }
     else
       window.open(
-      'http://update.praetoris.cz/test/'+file.name+'.'+file.extension,
+      'http://localhost:888/getFile/'+file.id,
       '_blank',
       'enableViewportScale=yes,location=no,toolbarposition=bottom,transitionstyle=fliphorizontal,hidden=no,closebuttoncaption=Zpět'
       );

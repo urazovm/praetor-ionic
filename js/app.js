@@ -17,12 +17,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.praetorServi
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    // Hide android splash screen    
+    navigator.splashscreen.hide();
+    
   });
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
-  $stateProvider
 
+  $stateProvider
 
     .state('app', {
       url: "/app",
@@ -39,10 +43,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.praetorServi
           controller: 'LoginCtrl'
         }
       }
-      //templateUrl: "templates/login.html",
-      //controller: "LoginCtrl"
     })
-
 
     .state('app.home', {
       url: "/home",
@@ -67,51 +68,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.praetorServi
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/login');
   });
-
-
-      function openIntent(url, mime)
-      {
-        window.plugins.webintent.startActivity({
-            action: window.plugins.webintent.ACTION_VIEW,
-            url: url,
-            type: mime
-          },
-          function() {},
-          function(x) {
-            alert(x);
-            alert('Failed to open URL via Android Intent.');
-            console.log("Failed to open URL via Android Intent.")
-          }
-      );
-      }
-
-      function downloadFile(fileUrl, mimeType, tempName){
-
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
-          function onFileSystemSuccess(fileSystem) {
-              fileSystem.root.getFile(
-              "dummy.html", {create: true, exclusive: false}, 
-              function gotFileEntry(fileEntry) {
-                  sPath = fileEntry.toNativeURL().replace("dummy.html","");
-                                    
-                  var fileTransfer = new FileTransfer();
-                  fileEntry.remove();
-      
-                  fileTransfer.download(
-                      fileUrl,
-                      sPath + tempName,
-                      function(theFile) {
-                          openIntent(theFile.toNativeURL(), mimeType);
-                      },
-                      function(error) {
-                          alert("download error source " + error.source);
-                          alert("download error target " + error.target);
-                          alert("upload error code: " + error.code);
-                      }
-                  );
-              }, function(e) { alert(e); } );
-          }, function(e) { alert(e); });
-};
 
 
 //http://forum.ionicframework.com/t/android-look-ionicactionsheet-android-hardware-menu-button/3630/3

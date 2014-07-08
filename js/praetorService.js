@@ -9,7 +9,7 @@ angular.module('starter.praetorService', [])
 
     // calls 
     login: function() {
-      var promise = $http.get('http://praetoris.cz/service.php?call=login')
+      var promise = $http.get('http://localhost:888/login')
       .then(function (response) {
        if(response.data.success)
         {
@@ -25,7 +25,7 @@ angular.module('starter.praetorService', [])
     
     getSpis: function(id) {
       console.log("getSpis "+id);
-      var promise = $http.get('http://praetoris.cz/service.php?call=getSpis').then(function (response) {
+      var promise = $http.post('http://localhost:888/getSpis?callback=JSON_CALLBACK', { id: id }).then(function (response) {
         //console.log(response.data);
         instance.currentSpis = response.data;
         return response.data;
@@ -37,10 +37,12 @@ angular.module('starter.praetorService', [])
     
   };
   return instance;
-});
+})
 
-
-      function openIntent(url, mime)
+  .factory('androidFileOpenerService', function($http) {
+     
+     var instance = {
+      openIntent: function(url, mime)
       {
         window.plugins.webintent.startActivity({
             action: window.plugins.webintent.ACTION_VIEW,
@@ -53,10 +55,10 @@ angular.module('starter.praetorService', [])
             alert('Failed to open URL via Android Intent.');
             console.log("Failed to open URL via Android Intent.")
           }
-      );
-      }
+        );
+      },
 
-      function downloadFile(fileUrl, mimeType, tempName){
+      downloadFile: function instance(fileUrl, mimeType, tempName){
 
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
           function onFileSystemSuccess(fileSystem) {
@@ -72,7 +74,7 @@ angular.module('starter.praetorService', [])
                       fileUrl,
                       sPath + tempName,
                       function(theFile) {
-                          openIntent(theFile.toNativeURL(), mimeType);
+                          service.openIntent(theFile.toNativeURL(), mimeType);
                       },
                       function(error) {
                           alert("download error source " + error.source);
@@ -82,7 +84,10 @@ angular.module('starter.praetorService', [])
                   );
               }, function(e) { alert(e); } );
           }, function(e) { alert(e); });
-};
+      }
+    };
+    return instance;
+  });
 
 
 //http://forum.ionicframework.com/t/android-look-ionicactionsheet-android-hardware-menu-button/3630/3

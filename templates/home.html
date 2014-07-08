@@ -18,7 +18,7 @@
 <div class="list">
 
   <div class="item item-divider">Nedávno otevřené spisy</div>
-  <div ng-repeat="recentItem in recentItems">
+  <div ng-repeat="recentItem in recentItems | limitTo:20">
   <a class="item" ng-click="openSpis(recentItem)">
     <h2>{{recentItem.title}}</h2>
     <div ng-switch="recentItem.loading">
@@ -43,24 +43,14 @@
 <div ng-show="searchText!=''">
 <div class="list">
   <div class="item item-divider">Hledání: {{searchText}}</div>
-    <a class="item">Výsledek 1</a>
-    <a class="item">Výsledek 2</a>
-    <a class="item">Výsledek 3</a>
-    <a class="item">Výsledek 1</a>
-    <a class="item">Výsledek 2</a>
-    <a class="item">Výsledek 3</a>
-    <a class="item">Výsledek 1</a>
-    <a class="item">Výsledek 2</a>
-    <a class="item">Výsledek 3</a>
-    <a class="item">Výsledek 1</a>
-    <a class="item">Výsledek 2</a>
-    <a class="item">Výsledek 3</a>
-    <a class="item">Výsledek 1</a>
-    <a class="item">Výsledek 2</a>
-    <a class="item">Výsledek 3</a>
-    <a class="item">Výsledek 1</a>
-    <a class="item">Výsledek 2</a>
-    <a class="item">Výsledek 3</a>
+<div ng-repeat="recentItem in recentItems | filter:searchText | limitTo:20">
+  <a class="item" ng-click="openSpis(recentItem)">
+    <h2 ng-bind-html="recentItem.title | highlight:searchText"></h2>
+    <div ng-switch="recentItem.loading">
+      <p ng-switch-when="true">Loading...</p>
+      <p ng-switch-default ng-bind-html="recentItem.subtitle | highlight:searchText"></p>
+    </div>
+  </a>
   </div>
 </div>
 

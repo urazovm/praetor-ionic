@@ -24,6 +24,8 @@
     <Content Include="js\app.js" />
     <Content Include="js\controllers.js" />
     <Content Include="js\praetorService.js" />
+    <Content Include="lib\angular-ui\ui-utils.js" />
+    <Content Include="lib\angular-ui\ui-utils.min.js" />
     <Content Include="lib\ionic\css\ionic.css" />
     <Content Include="lib\ionic\css\ionic.min.css" />
     <Content Include="lib\ionic\fonts\ionicons.svg" />
@@ -43,6 +45,7 @@
     <Content Include="lib\ionic\js\ionic.bundle.min.js" />
     <Content Include="lib\ionic\js\ionic.js" />
     <Content Include="lib\ionic\js\ionic.min.js" />
+    <Content Include="lib\md5.js" />
     <Content Include="starter_menu\css\style.css" />
     <Content Include="starter_menu\img\ionic.png" />
     <Content Include="starter_menu\index.html" />

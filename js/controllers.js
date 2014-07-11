@@ -13,7 +13,7 @@ angular.module('starter.controllers', ['ui.utils'])
     $scope.$root.canGoBack = false;
     $scope.$root.sideMenuEnabled = true;
 
-    $scope.spisy = praetorService.recent.spisy;
+    $scope.spisy = praetorService.recent.login.spisy;
 
     $scope.openSpis = function (spis) {
         spis.loading = true;
@@ -30,11 +30,11 @@ angular.module('starter.controllers', ['ui.utils'])
 
 .controller('LoginCtrl', function ($scope, $location, $ionicLoading, praetorService) {
 
-    function doLogin(server, username, password) {
+    function doLogin() {
         $ionicLoading.show({
             template: 'Loading...'
         });
-        praetorService.login(server, username, password).then(function (d) {
+        praetorService.login().then(function (d) {
             $ionicLoading.hide();
             if (d.success) {
                 $location.path('/app/home');
@@ -52,7 +52,7 @@ angular.module('starter.controllers', ['ui.utils'])
     var password = window.localStorage.getItem('password');
 
     if (server && username && password) {
-        doLogin(server, username, password);
+        //doLogin();
     }
 
     $scope.formData = {
@@ -64,10 +64,11 @@ angular.module('starter.controllers', ['ui.utils'])
 
     $scope.login = function () {
         window.localStorage.setItem('server', $scope.formData.server);
-        window.localStorage.setItem('username', $scope.formData.username);
-        window.localStorage.setItem('password', $scope.formData.password);
+        window.localStorage.setItem('username', $scope.formData.username);        
+        var passwordHash = hex_md5("Praetor_salt" + $scope.formData.password);        
+        window.localStorage.setItem('password', passwordHash.toString());
 
-        doLogin($scope.formData.server, $scope.formData.username, $scope.formData.password);
+        doLogin();
     }
 
 })
@@ -75,17 +76,17 @@ angular.module('starter.controllers', ['ui.utils'])
 .controller('SpisCtrl', function ($scope, $location, praetorService, androidFileOpenerService) {
     $scope.$root.sideMenuEnabled = false;
 
-    $scope.spis = praetorService.currentSpis;
+    $scope.spis = praetorService.recent.getspis.spis;
 
     $scope.openDocument = function (file) {
 
 
         if (ionic.Platform.isAndroid()) {
-            androidFileOpenerService.downloadFile('http://update.praetoris.cz/test/' + file.name + '.' + file.extension, file.mime, 'tmp001.' + file.extension);
+            androidFileOpenerService.downloadFile('http://localhost:8080/praetorapi/getFile/' + file.id, file.mime, 'tmp001.' + file.extension);
         }
         else
             window.open(
-            'http://localhost:888/getFile/' + file.id,
+            'http://localhost:8080/praetorapi/getFile/' + file.id,
             '_blank',
             'enableViewportScale=yes,location=no,toolbarposition=bottom,transitionstyle=fliphorizontal,hidden=no,closebuttoncaption=Zpět'
             );

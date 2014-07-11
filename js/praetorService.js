@@ -4,23 +4,30 @@ angular.module('starter.praetorService', [])
       var instance = {
 
           // static data
-          recent: {},
-          currentSpis: {},
+          recent: {},          
 
           // calls 
-          login: function (server, username, password) {
-              //var promise = $http.get('http://' + server + ':8080/api/praetorionic/getlogin?username=' + username + '&password=' + password + '')
+          login: function () {
+              return instance.getdata("login", {});
+          },
+          getSpis: function (id) {
+              return instance.getdata("getspis", { "id_spis": id });
+          },
+          getdata: function (action, data) {
+              var server = window.localStorage.getItem('server');
+              var username = window.localStorage.getItem('username');
+              var password = window.localStorage.getItem('password');
 
-              var requestData = {"username":username, "password":password}
+              data.username = username;
+              data.password = password;
 
               var promise = $http.post(
-                  'http://' + server + ':8080/praetorapi/login',
-                  requestData,
+                  'http://' + server + ':8080/praetorapi/' + action,
+                  data,
                   { headers: { 'Content-Type': 'application/json' } })
             .then(function (response) {
-                debugger;
                 if (response.data.success) {
-                    instance.recent = response.data
+                    instance.recent[action] = response.data
                 }
                 return response.data;
             })
@@ -28,20 +35,7 @@ angular.module('starter.praetorService', [])
                 return { success: false, message: "Error " + e.status };
             });
               return promise;
-          },
-
-          getSpis: function (id) {
-              console.log("getSpis " + id);
-              var promise = $http.post('http://localhost:888/getSpis?callback=JSON_CALLBACK', { id: id }).then(function (response) {
-                  //console.log(response.data);
-                  instance.currentSpis = response.data;
-                  return response.data;
-              });
-              return promise;
-          },
-
-
-
+          }
       };
       return instance;
   })

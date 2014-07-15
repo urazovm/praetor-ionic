@@ -71,7 +71,7 @@ angular.module('starter.praetorService', [])
                             fileUrl,
                             sPath + tempName,
                             function (theFile) {
-                                service.openIntent(theFile.toNativeURL(), mimeType);
+                                instance.openIntent(theFile.toNativeURL(), mimeType);
                             },
                             function (error) {
                                 alert("download error source " + error.source);

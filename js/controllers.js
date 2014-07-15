@@ -13,21 +13,52 @@ angular.module('starter.controllers', ['ui.utils'])
     $scope.$root.canGoBack = false;
     $scope.$root.sideMenuEnabled = true;
 
-    $scope.spisy = praetorService.recent.login.spisy;
+    // Zobrazí loading panel
+    $ionicLoading.show({
+        template: 'Loading...'
+    });
 
+    // Načte všechny spisy
+    praetorService.getSpisy().then(function (d) {        
+        $scope.spisy = d.spisy;
+        $ionicLoading.hide();
+    });
+
+
+    // Otevře detail spisu
     $scope.openSpis = function (spis) {
-        spis.loading = true;
-        //$ionicLoading.show({
-        // template: 'Loading...'
-        //});
-        praetorService.getSpis(spis.id).then(function (d) {
-            spis.loading = false;
-            //$ionicLoading.hide();
-            $location.path('/app/spis');
-        });
+        $location.path('/app/spis').search({ id_spis: spis.id });
     }
 })
+.controller('SpisCtrl', function ($scope, $location, $ionicLoading, praetorService, androidFileOpenerService) {
+    var searchObject = $location.search();
 
+    // Zobrazí loading panel
+    $ionicLoading.show({
+        template: 'Loading...'
+    });
+
+    // Načte seznam všech spisů
+    praetorService.getSpis(searchObject.id_spis).then(function (d) {
+        $scope.spis = d.spis;
+        $ionicLoading.hide();
+    });
+
+    $scope.$root.sideMenuEnabled = false;
+
+    // Otevře dokumenty
+    $scope.openDocument = function (file) {
+        if (ionic.Platform.isAndroid()) {
+            androidFileOpenerService.downloadFile('http://localhost:8080/praetorapi/getFile/' + file.id, file.mime, 'tmp001.' + file.extension);
+        }
+        else
+            window.open(
+            'http://localhost:8080/praetorapi/getFile/' + file.id,
+            '_blank',
+            'enableViewportScale=yes,location=no,toolbarposition=bottom,transitionstyle=fliphorizontal,hidden=no,closebuttoncaption=Zpět'
+            );
+    }
+})
 .controller('LoginCtrl', function ($scope, $location, $ionicLoading, praetorService) {
 
     function doLogin() {
@@ -47,6 +78,7 @@ angular.module('starter.controllers', ['ui.utils'])
 
     $scope.$root.canGoBack = false;
     $scope.$root.sideMenuEnabled = false;
+
     var server = window.localStorage.getItem('server');
     var username = window.localStorage.getItem('username');
     var password = window.localStorage.getItem('password');
@@ -55,42 +87,23 @@ angular.module('starter.controllers', ['ui.utils'])
         //doLogin();
     }
 
+    // datamodel pro view
     $scope.formData = {
         server: server || '',
         username: username || '',
         password: ''
     };
 
-
+    // Přihlášení pos tisknutí tlačítka přihlásit
     $scope.login = function () {
         window.localStorage.setItem('server', $scope.formData.server);
-        window.localStorage.setItem('username', $scope.formData.username);        
-        var passwordHash = hex_md5("Praetor_salt" + $scope.formData.password);        
+        window.localStorage.setItem('username', $scope.formData.username);
+        var passwordHash = hex_md5("Praetor_salt" + $scope.formData.password);
         window.localStorage.setItem('password', passwordHash.toString());
 
         doLogin();
     }
 
-})
-
-.controller('SpisCtrl', function ($scope, $location, praetorService, androidFileOpenerService) {
-    $scope.$root.sideMenuEnabled = false;
-
-    $scope.spis = praetorService.recent.getspis.spis;
-
-    $scope.openDocument = function (file) {
-
-
-        if (ionic.Platform.isAndroid()) {
-            androidFileOpenerService.downloadFile('http://localhost:8080/praetorapi/getFile/' + file.id, file.mime, 'tmp001.' + file.extension);
-        }
-        else
-            window.open(
-            'http://localhost:8080/praetorapi/getFile/' + file.id,
-            '_blank',
-            'enableViewportScale=yes,location=no,toolbarposition=bottom,transitionstyle=fliphorizontal,hidden=no,closebuttoncaption=Zpět'
-            );
-    }
 })
 
 .controller('SideMenuCtrl', function ($scope, $location, $state, $ionicSideMenuDelegate) {

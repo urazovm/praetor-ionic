@@ -3,15 +3,15 @@ angular.module('starter.praetorService', [])
   .factory('praetorService', function ($http) {
       var instance = {
 
-          // static data
-          recent: {},          
-
           // calls 
           login: function () {
               return instance.getdata("login", {});
           },
           getSpis: function (id) {
               return instance.getdata("getspis", { "id_spis": id });
+          },
+          getSpisy: function () {
+              return instance.getdata("getspisy", { });
           },
           getdata: function (action, data) {
               var server = window.localStorage.getItem('server');
@@ -26,9 +26,6 @@ angular.module('starter.praetorService', [])
                   data,
                   { headers: { 'Content-Type': 'application/json' } })
             .then(function (response) {
-                if (response.data.success) {
-                    instance.recent[action] = response.data
-                }
                 return response.data;
             })
             .catch(function (e) {

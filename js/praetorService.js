@@ -55,7 +55,7 @@ angular.module('starter.praetorService', [])
               );
           },
 
-          downloadFile: function instance(fileUrl, mimeType, tempName) {
+          downloadFile: function (fileUrl, mimeType, tempName) {
 
               window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,
                 function onFileSystemSuccess(fileSystem) {

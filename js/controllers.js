@@ -19,7 +19,7 @@ angular.module('starter.controllers', ['ui.utils'])
     });
 
     // Načte všechny spisy
-    praetorService.getSpisy().then(function (d) {        
+    praetorService.getSpisy().then(function (d) {
         $scope.spisy = d.spisy;
         $ionicLoading.hide();
     });
@@ -48,12 +48,13 @@ angular.module('starter.controllers', ['ui.utils'])
 
     // Otevře dokumenty
     $scope.openDocument = function (file) {
+        var server = window.localStorage.getItem('server');
         if (ionic.Platform.isAndroid()) {
-            androidFileOpenerService.downloadFile('http://localhost:8080/praetorapi/getFile/' + file.id, file.mime, 'tmp001.' + file.extension);
+            androidFileOpenerService.downloadFile('http://' + server + ':8080/praetorapi/getFile/' + file.id, file.mime, 'tmp001.' + file.extension);
         }
         else
             window.open(
-            'http://localhost:8080/praetorapi/getFile/' + file.id,
+            'http://' + server + ':8080/praetorapi/getFile/' + file.id,
             '_blank',
             'enableViewportScale=yes,location=no,toolbarposition=bottom,transitionstyle=fliphorizontal,hidden=no,closebuttoncaption=Zpět'
             );

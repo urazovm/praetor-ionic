@@ -45,6 +45,8 @@ angular.module('starter.praetorService', [])
       var instance = {
           downloadFile: function (fileUrl, mimeType, tempName) {
 
+              console.log("init download: " + fileUrl + ", " + mimeType);
+
               window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,
                 function onFileSystemSuccess(fileSystem) {
                     fileSystem.root.getFile(
@@ -54,17 +56,18 @@ angular.module('starter.praetorService', [])
 
                         var fileTransfer = new FileTransfer();
                         fileEntry.remove();
+                        console.log("download: " + fileUrl + ", " + mimeType);
 
                         fileTransfer.download(
                             fileUrl,
                             sPath + tempName,
                             function (theFile) {
+                                console.log("download complet: " + theFile.toNativeURL() + ", " + mimeType);                                
                                 window.plugins.webintent.startActivity({
                                     action: window.plugins.webintent.ACTION_VIEW,
                                     url: theFile.toNativeURL(),
                                     type: mimeType
                                 },
-                                function () { },
                                 function (x) {
                                     alert(x);
                                     alert('Failed to open URL via Android Intent.');

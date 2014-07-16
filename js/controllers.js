@@ -51,7 +51,9 @@ angular.module('starter.controllers', ['ui.utils'])
         var server = window.localStorage.getItem('server');
         praetorService.getFileToken(file.id).then(function (d) {
             var token = d.token;
+            console.log("open file toke: " + token);
             if (ionic.Platform.isAndroid()) {
+                console.log("open android file");
                 androidFileOpenerService.downloadFile('http://' + server + '/praetorapi/getFile/' + token, file.mime, 'tmp001.' + file.extension);
             }
             else

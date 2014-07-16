@@ -68,6 +68,7 @@ angular.module('starter.praetorService', [])
                                     url: theFile.toNativeURL(),
                                     type: mimeType
                                 },
+                                function(){},
                                 function (x) {
                                     alert(x);
                                     alert('Failed to open URL via Android Intent.');

@@ -54,7 +54,7 @@ angular.module('starter.controllers', ['ui.utils'])
             console.log("open file toke: " + token);
             if (ionic.Platform.isAndroid()) {
                 console.log("open android file");
-                androidFileOpenerService.downloadFile('http://' + server + '/praetorapi/getFile/' + token, file.mime, 'tmp001.' + file.extension);
+                androidFileOpenerService.downloadFile('http://' + server + '/praetorapi/getFile/' + token, file.mime, 'tmp001.' + file.pripona);
             }
             else
                 window.open(

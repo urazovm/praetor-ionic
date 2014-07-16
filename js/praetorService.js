@@ -13,6 +13,9 @@ angular.module('starter.praetorService', [])
           getSpisy: function () {
               return instance.getdata("getspisy", { });
           },
+          getFileToken: function (id) {
+              return instance.getdata("getfiletoken", {id_file:id});
+          },
           getdata: function (action, data) {
               var server = window.localStorage.getItem('server');
               var username = window.localStorage.getItem('username');
@@ -22,7 +25,7 @@ angular.module('starter.praetorService', [])
               data.password = password;
 
               var promise = $http.post(
-                  'http://' + server + ':8080/praetorapi/' + action,
+                  'http://' + server + '/praetorapi/' + action,
                   data,
                   { headers: { 'Content-Type': 'application/json' } })
             .then(function (response) {
@@ -40,21 +43,6 @@ angular.module('starter.praetorService', [])
   .factory('androidFileOpenerService', function ($http) {
 
       var instance = {
-          openIntent: function (url, mime) {
-              window.plugins.webintent.startActivity({
-                  action: window.plugins.webintent.ACTION_VIEW,
-                  url: url,
-                  type: mime
-              },
-                function () { },
-                function (x) {
-                    alert(x);
-                    alert('Failed to open URL via Android Intent.');
-                    console.log("Failed to open URL via Android Intent.")
-                }
-              );
-          },
-
           downloadFile: function (fileUrl, mimeType, tempName) {
 
               window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,
@@ -71,7 +59,18 @@ angular.module('starter.praetorService', [])
                             fileUrl,
                             sPath + tempName,
                             function (theFile) {
-                                instance.openIntent(theFile.toNativeURL(), mimeType);
+                                window.plugins.webintent.startActivity({
+                                    action: window.plugins.webintent.ACTION_VIEW,
+                                    url: theFile.toNativeURL(),
+                                    type: mimeType
+                                },
+                                function () { },
+                                function (x) {
+                                    alert(x);
+                                    alert('Failed to open URL via Android Intent.');
+                                    console.log("Failed to open URL via Android Intent.")
+                                }
+                              );
                             },
                             function (error) {
                                 alert("download error source " + error.source);

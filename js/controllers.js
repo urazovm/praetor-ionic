@@ -49,15 +49,18 @@ angular.module('starter.controllers', ['ui.utils'])
     // Otevře dokumenty
     $scope.openDocument = function (file) {
         var server = window.localStorage.getItem('server');
-        if (ionic.Platform.isAndroid()) {
-            androidFileOpenerService.downloadFile('http://' + server + ':8080/praetorapi/getFile/' + file.id, file.mime, 'tmp001.' + file.extension);
-        }
-        else
-            window.open(
-            'http://' + server + ':8080/praetorapi/getFile/' + file.id,
-            '_blank',
-            'enableViewportScale=yes,location=no,toolbarposition=bottom,transitionstyle=fliphorizontal,hidden=no,closebuttoncaption=Zpět'
-            );
+        praetorService.getFileToken(file.id).then(function (d) {
+            var token = d.token;
+            if (ionic.Platform.isAndroid()) {
+                androidFileOpenerService.downloadFile('http://' + server + '/praetorapi/getFile/' + token, file.mime, 'tmp001.' + file.extension);
+            }
+            else
+                window.open(
+                'http://' + server + '/praetorapi/getFile/' + token,
+                '_blank',
+                'enableViewportScale=yes,location=no,toolbarposition=bottom,transitionstyle=fliphorizontal,hidden=no,closebuttoncaption=Zpět'
+                );
+        });
     }
 })
 .controller('LoginCtrl', function ($scope, $location, $ionicLoading, praetorService) {

@@ -19,7 +19,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.praetorServi
     }
 
     // Hide android splash screen    
-    navigator.splashscreen.hide();
+    //navigator.splashscreen.hide();
     
   });
 })

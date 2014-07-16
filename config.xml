@@ -51,11 +51,11 @@
     <preference name="SplashScreenDelay"          value="2000"/>
 
 <!--gap:plugin name="com.phonegap.plugins.childbrowser" /-->
-    <gap:plugin name="net.tunts.webintent" />
+    <!--gap:plugin name="net.tunts.webintent" />
     <gap:plugin name="org.apache.cordova.file" />
     <gap:plugin name="org.apache.cordova.file-transfer" />
     <gap:plugin name="org.nom.inappbrowser" />
-    <gap:plugin name="org.apache.cordova.splashscreen"/>
+    <gap:plugin name="org.apache.cordova.splashscreen"/-->
     <!--gap:plugin name="org.apache.cordova.inappbrowser" version="0.2.4" /-->
     
     <!-- Plugins can also be added here. -->

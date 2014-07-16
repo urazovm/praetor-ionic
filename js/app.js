@@ -66,9 +66,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.praetorServi
     })
     
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/login');
-
-  alert("config - route");
+  $urlRouterProvider.otherwise('/app/login');  
 
   });
 

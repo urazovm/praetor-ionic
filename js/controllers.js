@@ -65,9 +65,7 @@ angular.module('starter.controllers', ['ui.utils'])
         });
     }
 })
-.controller('LoginCtrl', function ($scope, $location, $ionicLoading, praetorService) {
-
-    alert("loginCtrl");
+.controller('LoginCtrl', function ($scope, $location, $ionicLoading, praetorService) {    
 
     function doLogin() {
 
@@ -87,9 +85,7 @@ angular.module('starter.controllers', ['ui.utils'])
     }
 
     $scope.$root.canGoBack = false;
-    $scope.$root.sideMenuEnabled = false;
-
-    alert("loginCtrl - settings");
+    $scope.$root.sideMenuEnabled = false;    
 
     var server = window.localStorage.getItem('server');
     var username = window.localStorage.getItem('username');
@@ -97,18 +93,14 @@ angular.module('starter.controllers', ['ui.utils'])
 
     if (server && username && password) {
         //doLogin();
-    }
-
-    alert("loginCtrl - localStorage");
+    }    
 
     // datamodel pro view
     $scope.formData = {
         server: server || '',
         username: username || '',
         password: ''
-    };
-
-    alert("loginCtrl - dataModel");
+    };    
 
     // Přihlášení pos tisknutí tlačítka přihlásit
     $scope.login = function () {

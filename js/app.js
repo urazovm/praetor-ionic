@@ -90,7 +90,7 @@ angular.module('praetor',
     })
 
             .state('app.spis', {
-                url: "/spis/{id}",
+                url: "/spis",
                 views: {
                     'menuContent': { templateUrl: "/app/spisPage.html" },
                 }
@@ -135,7 +135,7 @@ angular.module('praetor',
         }
     })
         .state('app.spis.dokumenty', {
-            url: "/dokumenty",
+            url: "/dokumenty/{id}",
             views: {
                 'menuContent2': { templateUrl: "/app/spis/dokumenty.html" }
             }

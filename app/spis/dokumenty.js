@@ -1,13 +1,6 @@
 angular.module('praetor.spis.dokumenty', [])
 
-.controller('SpisDocumentyCtrl', function ($scope, $stateParams, $sce) {
-    var searchObject = $location.search();
-
-    // Zobrazí loading panel
-    $ionicLoading.show({
-        template: 'Loading...'
-    });
-
+.controller('SpisDocumentyCtrl', function ($scope, praetorService) {
     // Otevře dokumenty
     $scope.openDokument = function (dokument) {
         var server = window.localStorage.getItem('server');

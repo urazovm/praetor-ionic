@@ -32,7 +32,7 @@ angular.module('praetor.loginpage', [])
     $scope.formData = {
         server: server || '',
         username: username || '',
-        password: 'bohmas'
+        password: 'admin'
     };
 
     // Přihlášení pos tisknutí tlačítka přihlásit

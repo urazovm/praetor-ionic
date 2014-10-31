@@ -1,7 +1,6 @@
 angular.module('praetor.spis.dokumenty', [])
 
 .controller('SpisDocumentyCtrl', function ($scope, $stateParams, $sce) {
-
     var searchObject = $location.search();
 
     // Zobrazí loading panel
@@ -9,28 +8,15 @@ angular.module('praetor.spis.dokumenty', [])
         template: 'Loading...'
     });
 
-    // Možná takto načítat data 
-    //$scope.$parent.GetData().then(function (d) {
-    //    $scope.Data.files = d.Data.files;
-    //});
-
-    // Načte seznam všech spisů
-    praetorService.getSpis(searchObject.id_spis).then(function (d) {
-        $scope.spis = d.spis;
-        $ionicLoading.hide();
-    });
-
-    $scope.$root.sideMenuEnabled = false;
-
     // Otevře dokumenty
-    $scope.openDocument = function (file) {
+    $scope.openDokument = function (dokument) {
         var server = window.localStorage.getItem('server');
-        praetorService.getFileToken(file.id).then(function (d) {
+        praetorService.getFileToken(dokument.id).then(function (d) {
             var token = d.token;
-            console.log("open file toke: " + token);
+            console.log("open file token: " + token);
             if (ionic.Platform.isAndroid()) {
                 console.log("open android file");
-                androidFileOpenerService.downloadFile('http://' + server + '/praetorapi/getFile/' + token, file.mime, 'tmp001.' + file.pripona);
+                androidFileOpenerService.downloadFile('http://' + server + '/praetorapi/getFile/' + token, dokument.mime, 'tmp001.' + dokument.pripona);
             }
             else
                 window.open(

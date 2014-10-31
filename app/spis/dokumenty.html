@@ -1,7 +1,6 @@
 <ion-view title="Spis">
-    <ion-content class="has-header">
+    <ion-content>
         <div class="list">
-            <div class="item item-divider">{{spis.title}}</div>
             <!--div class="item">
               <div class="">
                 <a class="button button-positive" ng-click="tab=1">Zapsat činnost</a>
@@ -10,7 +9,7 @@
             </div-->
             <!--div class="item item-divider">Dokumenty</div-->
 
-            <div ng-repeat="file in Data.files" ng-include="'file_template.html'">
+            <div ng-repeat="node in dokumenty" ng-include="'file_template.html'">
                 <!--
                   <a class="item item-icon-left" ng-click="dir1=!dir1"><i class="icon ion-folder"></i>Plná moc</a>
                     <div ng-show="dir1" >
@@ -26,14 +25,13 @@
     </ion-content>
 </ion-view>
 <script type="text/ng-template" id="file_template.html">
-    <div ng-switch="file.mime || 'dir'">
-
+    <div ng-switch="node.mime || 'dir'">
         <div ng-switch-when="'dir'">
-            <a class="item item-icon-left" onclick="this.nextElementSibling.style.display = (this.nextElementSibling.style.display == 'block') ? 'none' : 'block';"><i class="icon ion-folder"></i>{{file.nazev}}</a>
+            <a class="item item-icon-left" onclick="this.nextElementSibling.style.display = (this.nextElementSibling.style.display == 'block') ? 'none' : 'block';"><i class="icon ion-folder"></i>{{node.nazev}}</a>
             <ul style='display:none' class="dir">
-                <li ng-repeat="file in file.files" ng-include="'file_template.html'"></li>
+                <li ng-repeat="node in node.nodes" ng-include="'file_template.html'"></li>
             </ul>
         </div>
-        <a ng-switch-default class="item item-icon-left" ng-click="openDocument(file)"><i class="icon ion-document"></i>{{file.nazev}}.{{file.pripona}}</a>
+        <a ng-switch-default class="item item-icon-left" ng-click="openDokument(node)"><i class="icon ion-document"></i>{{node.nazev}}.{{node.pripona}}</a>
     </div>
 </script>

@@ -93,7 +93,9 @@ angular.module('praetor',
             url: "/spisy",
             views: {
                 'menuContent': { templateUrl: "/app/homePage.html" },
-                'tab-spisy': { templateUrl: "/app/spis/prehled.html" }
+                'tab-spisy': { templateUrl: "/app/spis/prehled.html" },
+                // Test:
+                'tab-dokumenty': { templateUrl: "/app/spis/dokumenty.html" }
             }
         })
 

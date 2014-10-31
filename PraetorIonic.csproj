@@ -31,6 +31,8 @@
     <Content Include="app\spis\dokumenty.js" />
     <Content Include="app\vykazovani\cinnost.html" />
     <Content Include="app\vykazovani\cinnost.js" />
+    <Content Include="app\vykazovani\prehled.html" />
+    <Content Include="app\vykazovani\prehled.js" />
     <Content Include="css\style.css" />
     <Content Include="img\ionic.png" />
     <Content Include="img\praetor.png" />

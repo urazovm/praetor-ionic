@@ -7,6 +7,22 @@ angular.module('praetor.praetorService', [])
           login: function () {
               return instance.getdata("login", {});
           },
+
+          loadHome: function (request) {
+              return instance.getdata("loadhome", request);
+          },
+
+          loadSpis: function (request) {
+              return instance.getdata("loadspis", request);
+          },
+
+
+
+
+
+
+
+          // Staré volání
           getSpis: function (id) {
               return instance.getdata("getspis", { "id_spis": id });
           },

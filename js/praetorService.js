@@ -1,5 +1,5 @@
  //test
-angular.module('starter.praetorService', [])
+angular.module('praetor.praetorService', [])
   .factory('praetorService', function ($http) {
       var instance = {
 

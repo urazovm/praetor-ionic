@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('praetor.controllers', [])
 
 .controller('AppCtrl', function($scope) {
 })

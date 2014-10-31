@@ -17,12 +17,25 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="app\blabla.js" />
+    <Content Include="app\generalPage.html" />
+    <Content Include="app\generalPage.js" />
+    <Content Include="app\homePage.js" />
+    <Content Include="app\spisPage.html" />
+    <Content Include="app\homePage.html" />
+    <Content Include="app\spis\detail.html" />
+    <Content Include="app\spis\detail.js" />
+    <Content Include="app\spis\prehled.js" />
+    <Content Include="app\loginPage.js" />
+    <Content Include="app\spisPage.js" />
+    <Content Include="app\spis\dokumenty.js" />
+    <Content Include="app\vykazovani\cinnost.html" />
+    <Content Include="app\vykazovani\cinnost.js" />
     <Content Include="css\style.css" />
     <Content Include="img\ionic.png" />
     <Content Include="img\praetor.png" />
     <Content Include="index.html" />
     <Content Include="js\app.js" />
-    <Content Include="js\controllers.js" />
     <Content Include="js\praetorService.js" />
     <Content Include="lib\angular-ui\ui-utils.js" />
     <Content Include="lib\angular-ui\ui-utils.min.js" />
@@ -66,9 +79,9 @@
     <Content Include="starter_tabs\templates\tab-dash.html" />
     <Content Include="starter_tabs\templates\tab-friends.html" />
     <Content Include="starter_tabs\templates\tabs.html" />
-    <Content Include="templates\home.html" />
-    <Content Include="templates\login.html" />
-    <Content Include="templates\spis.html" />
+    <Content Include="app\spis\prehled.html" />
+    <Content Include="app\loginPage.html" />
+    <Content Include="app\spis\dokumenty.html" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +96,7 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

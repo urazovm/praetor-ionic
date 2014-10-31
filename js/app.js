@@ -121,6 +121,13 @@ angular.module('praetor',
         }
     })
 
+    .state('app.home.cinnosti', {
+                url: "/cinnosti",
+                views: {
+                    'tab-cinnosti': { templateUrl: "/app/vykazovani/prehled.html" }
+                }
+            })
+
     .state('app.spis.detail', {
         url: "/detail",
         views: {

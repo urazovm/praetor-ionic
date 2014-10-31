@@ -6,13 +6,18 @@
         template: 'Loading...'
     });
 
+    today = new Date();
+    since = new Date(today);
+    since.setDate(since.getDate() - 6);
+    until = new Date(today);
+    until.setDate(until.getDate() + 1);
     praetorService.loadSpis({
         id_Spis: $stateParams.id,
         loadSpis: true,
         loadDokumenty: true,
         loadCinnosti: true,
-        cinnostiSince: Date() - 7,
-        cinnostiUntil: Date()
+        cinnostiSince: since,
+        cinnostiUntil: until
     })
     .then(function (response) {
         $scope.loadingSuccess = response.success;

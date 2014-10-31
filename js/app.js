@@ -115,7 +115,7 @@ angular.module('praetor',
             })
 
     .state('app.home.spisy', {
-        url: "/spisy",
+        url: "/spisy/:search",
         views: {
             'tab-spisy': { templateUrl: "/app/spis/prehled.html" }
         }

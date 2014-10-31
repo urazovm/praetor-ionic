@@ -6,9 +6,9 @@
         </header>
         <ion-content class="has-header">
             <ion-list>
-                <ion-item nav-clear menu-close href="#/app/home/spisy">Dokumenty</ion-item>
-                <ion-item nav-clear menu-close href="#cinnosti">Činnosti</ion-item>
-                <ion-item nav-clear menu-close ng-click="logout()">Odhlásit</ion-item>
+                <ion-item nav-clear menu-close ng-click="gotoPage('dokumenty')">Dokumenty</ion-item>
+                <ion-item nav-clear menu-close ng-click="gotoPage('cinnosti')">Činnosti</ion-item>
+                <!--<ion-item nav-clear menu-close ng-click="logout()">Odhlásit</ion-item>-->
             </ion-list>
         </ion-content>
     </ion-side-menu>

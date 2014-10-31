@@ -87,7 +87,25 @@ angular.module('praetor',
                 templateUrl: "/app/homePage.html"                
             }
         }
-    });
+    })
+
+        .state('app.home.spisy', {
+            url: "/spisy",
+            views: {
+                'menuContent': { templateUrl: "/app/homePage.html" },
+                'tab-spisy': { templateUrl: "/app/spis/prehled.html" }
+            }
+        })
+
+            .state('app.spis', {
+                url : "/spis/{id}",
+                views: {
+                    'menuContent': { templateUrl: "/app/spisPage.html" },
+                    'menuContent2': { templateUrl: "/app/spis/dokumenty.html" }
+                }
+            })
+
+    ;
 
     //.state('app.spis', {
     //  url: "/spis",

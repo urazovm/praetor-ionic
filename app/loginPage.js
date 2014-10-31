@@ -9,7 +9,7 @@ angular.module('praetor.loginpage', [])
         praetorService.login().then(function (d) {
             $ionicLoading.hide();
             if (d.success) {
-                $state.go('app.home.spisy', { data: 'aa' }, { location: false, inherit: false });
+                $state.go('app.home.spisy');
             }
             else {
                 $scope.message = d.message;
@@ -32,7 +32,7 @@ angular.module('praetor.loginpage', [])
     $scope.formData = {
         server: server || '',
         username: username || '',
-        password: 'admin'
+        password: 'bohmas'
     };
 
     // Přihlášení pos tisknutí tlačítka přihlásit

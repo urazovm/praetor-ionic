@@ -1,42 +1,38 @@
-<ion-view title="Praetor" hide-back-button="true">
-  <ion-content ng-init="searchText=''">
-   
-    <div class="padding">   
-    <label class="item item-input">
-      <i class="icon ion-search placeholder-icon"></i>
-      <input type="search" placeholder="Search" ng-model="searchText">
-    </label>
-    </div>
+<ion-view title="Praetor" hide-back-button="true" ng-controller="SpisPrehledCtrl">
+    <ion-content ng-init="searchText=''">
 
-    <div ng-show="searchText==''">
-    <div class="list">
-
-      <div class="item item-divider">Nedávno otevřené spisy</div>
-        <div ng-repeat="spis in posledniSpisy">
-            <a class="item" ng-click="openSpis(spis)">
-                <h2>{{spis.spisovaZnacka}} {{spis.predmet}}</h2>
-                <div ng-switch="spis.loading">
-                    <p ng-switch-when="true">Loading...</p>
-                    <p ng-switch-default>{{spis.hlavniKlient}}</p>
+        <div class="padding">
+            <label class="item item-input">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="search" placeholder="Search" ng-model="searchText">
+            </label>
+        </div>
+        <div ng-show="searchText==''">
+            <div class="list">
+                <div class="item item-divider">Nedávno otevřené spisy</div>
+                <div ng-repeat="spis in posledniSpisy">
+                    <a class="item" ng-click="openSpis(spis)">
+                        <h2>{{spis.spisovaZnacka}} {{spis.predmet}}</h2>
+                        <div ng-switch="spis.loading">
+                            <p ng-switch-when="true">Loading...</p>
+                            <p ng-switch-default>{{spis.hlavniKlient}}</p>
+                        </div>
+                    </a>
                 </div>
-            </a>
-        </div>  
-    </div>
-    </div>
-
-    <div ng-show="searchText!=''">
-    <div class="list">
-      <div class="item item-divider">Hledání: {{searchText}}</div>
-    <div ng-repeat="spis in vsechnySpisy | filter:searchText | limitTo:20">
-        <a class="item" ng-click="openSpis(spis)">
-            <h2 ng-bind-html="spis.spisovaZnacka + ' ' + spis.predmet | highlight:searchText"></h2>
-            <div ng-switch="spis.loading">
-                <p ng-switch-when="true">Loading...</p>
-                <p ng-switch-default ng-bind-html="spis.hlavniKlient | highlight:searchText"></p>
             </div>
-        </a>
-      </div>
-    </div>
-
-  </ion-content>
+        </div>
+        <div ng-show="searchText!=''">
+            <div class="list">
+                <div class="item item-divider">Hledání: {{searchText}}</div>
+                <div ng-repeat="spis in vsechnySpisy | filter:searchText | limitTo:20">
+                    <a class="item" ng-click="openSpis(spis)">
+                        <h2 ng-bind-html="spis.spisovaZnacka + ' ' + spis.predmet | highlight:searchText"></h2>
+                        <div ng-switch="spis.loading">
+                            <p ng-switch-when="true">Loading...</p>
+                            <p ng-switch-default ng-bind-html="spis.hlavniKlient | highlight:searchText"></p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+    </ion-content>
 </ion-view>

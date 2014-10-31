@@ -1,4 +1,4 @@
-<ion-view title="Spis">
+<ion-view title="Spis" ng-controller="SpisDocumentyCtrl">
     <ion-content>
         <div class="list">
             <!--div class="item">
@@ -8,7 +8,6 @@
               </div>
             </div-->
             <!--div class="item item-divider">Dokumenty</div-->
-
             <div ng-repeat="node in dokumenty" ng-include="'file_template.html'">
                 <!--
                   <a class="item item-icon-left" ng-click="dir1=!dir1"><i class="icon ion-folder"></i>Plná moc</a>

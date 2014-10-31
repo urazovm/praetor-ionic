@@ -1,6 +1,6 @@
 ﻿angular.module('praetor.spispage', [])
 
-.controller('SpisPageCtrl', function ($scope, $ionicLoading, $stateParams, praetorService) {
+.controller('SpisPageCtrl', function ($scope, $state, $ionicLoading, $stateParams, praetorService) {
     // Zobrazí loading panel
     $ionicLoading.show({
         template: 'Loading...'
@@ -23,4 +23,9 @@
         // Skryje loading panel
         $ionicLoading.hide();
     });
+
+    $scope.gotoPage = function(page)
+    {
+        $state.go('app.spis.' + page);
+    }
 });

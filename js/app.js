@@ -75,7 +75,7 @@ angular.module('praetor',
         url: "/login",
         views: {
             'menuContent': {
-                templateUrl: "/app/loginPage.html"                
+                templateUrl: "/app/loginPage.html"
             }
         }
     })
@@ -84,38 +84,55 @@ angular.module('praetor',
         url: "/home",
         views: {
             'menuContent': {
-                templateUrl: "/app/homePage.html"                
+                templateUrl: "/app/homePage.html"
             }
         }
     })
 
-        .state('app.home.spisy', {
-            url: "/spisy",
-            views: {
-                'menuContent': { templateUrl: "/app/homePage.html" },
-                'tab-spisy': { templateUrl: "/app/spis/prehled.html" }
-            }
-        })
-
             .state('app.spis', {
-                url : "/spis/{id}",
+                url: "/spis/{id}",
                 views: {
                     'menuContent': { templateUrl: "/app/spisPage.html" },
-                    'menuContent2': { templateUrl: "/app/spis/dokumenty.html" }
                 }
             })
 
-    ;
+    .state('app.general', {
+        url: "/general",
+        views: {
+            'menuContent': {
+                templateUrl: "/app/generalPage.html"
+            }
+        }
+    })
 
-    //.state('app.spis', {
-    //  url: "/spis",
-    //  views: {
-    //    'menuContent' :{
-    //      templateUrl: "/app/spisPage.html",
-    //      controller: 'SpisCtrl'
-    //    }
-    //  }
-    //})
+            .state('app.general.cinnost', {
+                url: "/cinnost/{id}",
+                views: {
+                    'generalContent': {
+                        templateUrl: "/app/vykazovani/cinnost.html"
+                    }
+                }
+            })
+
+    .state('app.home.spisy', {
+        url: "/spisy",
+        views: {
+            'tab-spisy': { templateUrl: "/app/spis/prehled.html" }
+        }
+    })
+
+    .state('app.spis.detail', {
+        url: "/detail",
+        views: {
+            'menuContent2': { templateUrl: "/app/spis/detail.html" }
+        }
+    })
+        .state('app.spis.dokumenty', {
+            url: "/dokumenty",
+            views: {
+                'menuContent2': { templateUrl: "/app/spis/dokumenty.html" }
+            }
+        });
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/login');

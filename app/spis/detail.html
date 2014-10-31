@@ -1,48 +1,5 @@
-<ion-view title="Praetor" hide-back-button="true">
-  
-  <ion-content ng-init="searchText=''">
-   
-<div class="padding">   
-<!--div class="button-bar bar-positive">
-  <a class="button" ng-click="tab=1">Oblíbené</a>
-  <a class="button" ng-click="tab=2">Vyhledat</a>
-  <a class="button" ng-click="tab=3">Poslední otevřené</a>
-</div-->
-<label class="item item-input">
-  <i class="icon ion-search placeholder-icon"></i>
-  <input type="search" placeholder="Search" ng-model="searchText">
-</label>
-</div>
-
-<div ng-show="searchText==''">
-<div class="list">
-
-  <div class="item item-divider">Nedávno otevřené spisy</div>
-    <div ng-repeat="spis in spisy | limitTo:20">
-        <a class="item" ng-click="openSpis(spis)">
-            <h2>{{spis.title}}</h2>
-            <div ng-switch="spis.loading">
-                <p ng-switch-when="true">Loading...</p>
-                <p ng-switch-default>{{spis.subtitle}}</p>
-            </div>
-        </a>
-    </div>  
-</div>
-</div>
-
-<div ng-show="searchText!=''">
-<div class="list">
-  <div class="item item-divider">Hledání: {{searchText}}</div>
-<div ng-repeat="spis in spisy | filter:searchText | limitTo:20">
-    <a class="item" ng-click="openSpis(spis)">
-        <h2 ng-bind-html="spis.title | highlight:searchText"></h2>
-        <div ng-switch="spis.loading">
-            <p ng-switch-when="true">Loading...</p>
-            <p ng-switch-default ng-bind-html="spis.subtitle | highlight:searchText"></p>
-        </div>
-    </a>
-  </div>
-</div>
-
-  </ion-content>
+<ion-view>
+    <ion-content>
+        sddssdfsddsf
+    </ion-content>
 </ion-view>

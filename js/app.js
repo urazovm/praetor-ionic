@@ -90,7 +90,7 @@ angular.module('praetor',
     })
 
             .state('app.spis', {
-                url: "/spis",
+                url: "/spis/{id}",
                 views: {
                     'menuContent': { templateUrl: "/app/spisPage.html" },
                 }
@@ -135,11 +135,18 @@ angular.module('praetor',
         }
     })
         .state('app.spis.dokumenty', {
-            url: "/dokumenty/{id}",
+            url: "/dokumenty",
             views: {
                 'menuContent2': { templateUrl: "/app/spis/dokumenty.html" }
             }
-        });
+        })
+
+            .state('app.spis.cinnosti', {
+                url: "/cinnosti",
+                views: {
+                    'menuContent2': { templateUrl: "/app/vykazovani/prehled.html" }
+                }
+            });
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/login');

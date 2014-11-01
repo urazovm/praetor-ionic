@@ -1,4 +1,3 @@
-//test
 angular.module('praetor.praetorService', [])
     .factory('praetorService', function ($http, $q) {
         var instance = {

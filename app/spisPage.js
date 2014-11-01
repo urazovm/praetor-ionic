@@ -3,7 +3,7 @@
 .controller('SpisPageCtrl', function ($scope, $state, $ionicLoading, $stateParams, praetorService) {
     // Zobrazí loading panel
     $ionicLoading.show({
-        template: 'Loading...'
+        template: '<i class="icon ion-loading-c"></i> Loading...'
     });
 
     today = new Date();

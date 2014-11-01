@@ -4,7 +4,7 @@ angular.module('praetor.loginpage', [])
     
     function doLogin() {
         $ionicLoading.show({
-            template: 'Loading...'
+            template: '<i class="icon ion-loading-c"></i> Loading...'
         });
         praetorService.login().then(function (d) {
             $ionicLoading.hide();

@@ -80,6 +80,7 @@ angular.module('praetor.praetorService', [])
                         console.log("download: " + fileUrl + ", " + mimeType);
                         var increment = 0;
                         var incrementText = "";
+
                         fileTransfer.onprogress = function (progressEvent) {
                             if (progressEvent.lengthComputable) {
                                 var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);

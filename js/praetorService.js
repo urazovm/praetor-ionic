@@ -73,10 +73,23 @@ angular.module('praetor.praetorService', [])
                         var fileTransfer = new FileTransfer();
                         fileEntry.remove();
                         console.log("download: " + fileUrl + ", " + mimeType);
-
+                        var increment = 0;
+                        var incrementText = "";
                         fileTransfer.onprogress = function (progressEvent) {
                             if (progressEvent.lengthComputable) {
-                                onprogress(progressEvent.loaded / progressEvent.total);
+                                var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+                                onprogress(perc + "%");
+                            } else {
+
+                                if (increment == 0) {
+                                    incrementText = "Loading.";
+                                } else {
+                                    incrementText += ".";
+                                }
+                                onprogress(incrementText);
+                                increment++;
+                                if (increment > 3)
+                                    increment = 0;
                             }
                         };
 

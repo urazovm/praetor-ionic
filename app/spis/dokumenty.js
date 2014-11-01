@@ -11,6 +11,7 @@ angular.module('praetor.spis.dokumenty', [])
                 console.log("open android file");
                 androidFileOpenerService.downloadFile('http://' + server + '/praetorapi/getFile/' + token, dokument.mime, 'tmp001.' + dokument.pripona, function (percent)
                 {
+                    alert(percent);
                     dokument.downloadProgress = percent;
                 });
             }

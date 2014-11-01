@@ -80,7 +80,7 @@ angular.module('praetor.praetorService', [])
                                 var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
                                 onprogress(perc + "%");
                             } else {
-
+                                
                                 if (increment == 0) {
                                     incrementText = "Loading.";
                                 } else {

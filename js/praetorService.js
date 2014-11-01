@@ -13,8 +13,11 @@ angular.module('praetor.praetorService', [])
                 if (instance.loadHomeCache == null)
                     return instance.getdata("loadhome", request)
                     .then(function (response) { instance.loadHomeCache = response; return response; });
-                else
-                    return $q(function (resolve) { resolve(instance.loadHomeCache); });
+                else {                    
+                    var q = $q.defer();
+                    q.resolve(instance.loadHomeCache);
+                    return q.promise;
+                }
             },
 
             loadSpis: function (request) {

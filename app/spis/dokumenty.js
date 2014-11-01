@@ -9,7 +9,8 @@ angular.module('praetor.spis.dokumenty', [])
             console.log("open file token: " + token);
             if (ionic.Platform.isAndroid()) {
                 console.log("open android file");
-                
+
+                dokument.downloadProgress = "0%";
                 androidFileOpenerService.downloadFile('http://' + server + '/praetorapi/getFile/' + token, dokument.mime, 'tmp001.' + dokument.pripona, function (percent)
                 {                                        
                     $scope.$apply(function () { dokument.downloadProgress = percent; });

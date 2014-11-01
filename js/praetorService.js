@@ -1,20 +1,25 @@
  //test
 angular.module('praetor.praetorService', [])
-  .factory('praetorService', function ($http) {
-      var instance = {
+    .factory('praetorService', function ($http, $q) {
+        var instance = {
+            loadHomeCache: null,
 
-          // calls 
-          login: function () {
-              return instance.getdata("login", {});
-          },
+            // calls 
+            login: function () {
+                return instance.getdata("login", {});
+            },
 
-          loadHome: function (request) {
-              return instance.getdata("loadhome", request);
-          },
+            loadHome: function (request) {
+                if (instance.loadHomeCache == null)
+                    return instance.getdata("loadhome", request)
+                    .then(function (response) { instance.loadHomeCache = response; return response; });
+                else
+                    return $q(function (resolve) { resolve(instance.loadHomeCache); });
+            },
 
-          loadSpis: function (request) {
-              return instance.getdata("loadspis", request);
-          },
+            loadSpis: function (request) {
+                return instance.getdata("loadspis", request)
+            },
 
 
 

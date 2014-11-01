@@ -14,6 +14,6 @@
                 <li ng-repeat="node in node.nodes" ng-include="'file_template.html'"></li>
             </ul>
         </div>
-        <a ng-switch-default class="item item-icon-left" ng-click="openDokument(node)"><i class="icon ion-document"></i>{{node.nazev}}.{{node.pripona}}</a>
+        <a ng-switch-default class="item item-icon-left" ng-click="openDokument(node)"><i class="icon ion-document"></i>{{node.nazev}}.{{node.pripona}}<span class="item-note">{{node.downloadProgress}}</span></a>
     </div>
 </script>

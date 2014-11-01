@@ -9,7 +9,13 @@ angular.module('praetor.spis.dokumenty', [])
             console.log("open file token: " + token);
             if (ionic.Platform.isAndroid()) {
                 console.log("open android file");
-                androidFileOpenerService.downloadFile('http://' + server + '/praetorapi/getFile/' + token, dokument.mime, 'tmp001.' + dokument.pripona, function (percent) { dokument.downloadProgress = percent + "%"; });
+                androidFileOpenerService.downloadFile('http://' + server + '/praetorapi/getFile/' + token, dokument.mime, 'tmp001.' + dokument.pripona, function (percent)
+                {
+                    if (percent == "")
+                        dokument.downloadProgress = percent + "%";
+                    else
+                        dokument.downloadProgress = "";
+                });
             }
             else                
                 window.open(

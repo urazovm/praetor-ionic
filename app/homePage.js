@@ -2,7 +2,7 @@
 
 .controller('HomePageCtrl', function ($scope, $state, $stateParams, $ionicLoading, praetorService) {
     $ionicLoading.show({
-        template: '<i class="icon ion-loading-c"></i> Loading...'
+        template: '<i class="icon ion-loading-c"></i> Načítám data...'
     });
     today = new Date();
     since = new Date(today);

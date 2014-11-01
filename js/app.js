@@ -32,7 +32,7 @@ angular.module('praetor',
         }
 
         // Hide android splash screen    
-        //navigator.splashscreen.hide();
+        navigator.splashscreen.hide();
 
     });
 })

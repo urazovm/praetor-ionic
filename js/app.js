@@ -32,7 +32,8 @@ angular.module('praetor',
         }
 
         // Hide android splash screen    
-        navigator.splashscreen.hide();
+        if (navigator && navigator.splashscreen)
+            navigator.splashscreen.hide();
 
     });
 })
@@ -75,7 +76,7 @@ angular.module('praetor',
         url: "/login",
         views: {
             'menuContent': {
-                templateUrl: "app/loginPage.html"
+                templateUrl: "/app/loginPage.html"
             }
         }
     })
@@ -84,7 +85,7 @@ angular.module('praetor',
         url: "/home",
         views: {
             'menuContent': {
-                templateUrl: "app/homePage.html"
+                templateUrl: "/app/homePage.html"
             }
         }
     })
@@ -92,7 +93,7 @@ angular.module('praetor',
             .state('app.spis', {
                 url: "/spis/{id}",
                 views: {
-                    'menuContent': { templateUrl: "app/spisPage.html" },
+                    'menuContent': { templateUrl: "/app/spisPage.html" },
                 }
             })
 
@@ -100,7 +101,7 @@ angular.module('praetor',
         url: "/general",
         views: {
             'menuContent': {
-                templateUrl: "app/generalPage.html"
+                templateUrl: "/app/generalPage.html"
             }
         }
     })
@@ -109,42 +110,42 @@ angular.module('praetor',
                 url: "/cinnost/{id}",
                 views: {
                     'generalContent': {
-                        templateUrl: "app/vykazovani/cinnost.html"
+                        templateUrl: "/app/vykazovani/cinnost.html"
                     }
                 }
             })
 
     .state('app.home.spisy', {
-        url: "/spisy/:search",
+        url: "/spisy",
         views: {
-            'tab-spisy': { templateUrl: "app/spis/prehled.html" }
+            'tab-spisy': { templateUrl: "/app/spis/prehled.html" }
         }
     })
 
     .state('app.home.cinnosti', {
                 url: "/cinnosti",
                 views: {
-                    'tab-cinnosti': { templateUrl: "app/vykazovani/prehled.html" }
+                    'tab-cinnosti': { templateUrl: "/app/vykazovani/prehled.html" }
                 }
             })
 
     .state('app.spis.detail', {
         url: "/detail",
         views: {
-            'menuContent2': { templateUrl: "app/spis/detail.html" }
+            'menuContent2': { templateUrl: "/app/spis/detail.html" }
         }
     })
         .state('app.spis.dokumenty', {
             url: "/dokumenty",
             views: {
-                'menuContent2': { templateUrl: "app/spis/dokumenty.html" }
+                'menuContent2': { templateUrl: "/app/spis/dokumenty.html" }
             }
         })
 
             .state('app.spis.cinnosti', {
                 url: "/cinnosti",
                 views: {
-                    'menuContent2': { templateUrl: "app/vykazovani/prehled.html" }
+                    'menuContent2': { templateUrl: "/app/vykazovani/prehled.html" }
                 }
             });
 

@@ -4,13 +4,15 @@ angular.module('praetor.spis.dokumenty', [])
     // Otevře dokumenty
     $scope.openDokument = function (dokument) {
         var server = window.localStorage.getItem('server');
+
+        $scope.$apply(function () { dokument.downloadProgress = "0%"; });
+
         praetorService.getFileToken(dokument.id).then(function (d) {
             var token = d.token;
             console.log("open file token: " + token);
             if (ionic.Platform.isAndroid()) {
                 console.log("open android file");
 
-                dokument.downloadProgress = "0%";
                 androidFileOpenerService.downloadFile('http://' + server + '/praetorapi/getFile/' + token, dokument.mime, 'tmp001.' + dokument.pripona, function (percent)
                 {                                        
                     $scope.$apply(function () { dokument.downloadProgress = percent; });

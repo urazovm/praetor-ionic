@@ -1,6 +1,6 @@
 angular.module('praetor.spis.dokumenty', [])
 
-.controller('SpisDocumentyCtrl', function ($scope, praetorService) {
+.controller('SpisDocumentyCtrl', function ($scope, praetorService, androidFileOpenerService) {
     // Otevře dokumenty
     $scope.openDokument = function (dokument) {
         var server = window.localStorage.getItem('server');

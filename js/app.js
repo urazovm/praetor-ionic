@@ -15,8 +15,8 @@ angular.module('praetor',
         'praetor.vykazovani.cinnost',
         'praetor.spis.prehled',
         'praetor.spis.dokumenty',
-        'praetor.spis.detail'
-    //    'praetor.praetorService'
+        'praetor.spis.detail',
+        'praetor.praetorService'
     ]
         )
 
@@ -47,7 +47,7 @@ angular.module('praetor',
         $scope.logout = function () {
             window.localStorage.removeItem('password');
             $location.path('/login');
-        }
+        };
         // toggle side menu with Menu button
         document.addEventListener('menubutton', function () { $ionicSideMenuDelegate.toggleRight(); }, false);
 
@@ -94,7 +94,7 @@ angular.module('praetor',
             .state('app.spis', {
                 url: "/spis/{id}",
                 views: {
-                    'menuContent': { templateUrl: "/app/spisPage.html" },
+                    'menuContent': { templateUrl: "/app/spisPage.html" }
                 }
             })
 
@@ -124,11 +124,11 @@ angular.module('praetor',
     })
 
     .state('app.home.cinnosti', {
-                url: "/cinnosti",
-                views: {
-                    'tab-cinnosti': { templateUrl: "/app/vykazovani/prehled.html" }
-                }
-            })
+        url: "/cinnosti",
+        views: {
+            'tab-cinnosti': { templateUrl: "/app/vykazovani/prehled.html" }
+        }
+    })
 
     .state('app.spis.detail', {
         url: "/detail",
@@ -154,7 +154,7 @@ angular.module('praetor',
     $urlRouterProvider.otherwise('/app/login');
 
 })
-//angular.module('praetor.praetorService', [])
+
     .factory('praetorService', function ($http, $q) {
         var instance = {
             loadHomeCache: null,
@@ -165,10 +165,10 @@ angular.module('praetor',
             },
 
             loadHome: function (request) {
-                if (instance.loadHomeCache == null)
+                if (instance.loadHomeCache == null) {
                     return instance.getdata("loadhome", request)
                     .then(function (response) { instance.loadHomeCache = response; return response; });
-                else {
+                } else {
                     var q = $q.defer();
                     q.resolve(instance.loadHomeCache);
                     return q.promise;
@@ -176,7 +176,7 @@ angular.module('praetor',
             },
 
             loadSpis: function (request) {
-                return instance.getdata("loadspis", request)
+                return instance.getdata("loadspis", request);
             },
 
 
@@ -217,7 +217,7 @@ angular.module('praetor',
             }
         };
         return instance;
-    })
+    });
 
 
 

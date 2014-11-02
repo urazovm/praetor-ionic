@@ -1,4 +1,72 @@
 angular.module('praetor.praetorService', [])
+
+    
+    .factory('praetorService', function ($http, $q) {
+        var instance = {
+            loadHomeCache: null,
+
+            // calls 
+            login: function () {
+                return instance.getdata("login", {});
+            },
+
+            loadHome: function (request) {
+                if (instance.loadHomeCache == null) {
+                    return instance.getdata("loadhome", request)
+                    .then(function (response) { instance.loadHomeCache = response; return response; });
+                } else {
+                    var q = $q.defer();
+                    q.resolve(instance.loadHomeCache);
+                    return q.promise;
+                }
+            },
+
+            loadSpis: function (request) {
+                return instance.getdata("loadspis", request);
+            },
+
+
+
+
+
+
+
+            // Staré volání
+            getSpis: function (id) {
+                return instance.getdata("getspis", { "id_spis": id });
+            },
+            getSpisy: function () {
+                return instance.getdata("getspisy", {});
+            },
+            getFileToken: function (id) {
+                return instance.getdata("getfiletoken", { id_file: id });
+            },
+            getdata: function (action, data) {
+                var server = window.localStorage.getItem('server');
+                var username = window.localStorage.getItem('username');
+                var password = window.localStorage.getItem('password');
+
+                data.username = username;
+                data.password = password;
+
+                var promise = $http.post(
+                    'http://' + server + '/praetorapi/' + action,
+                    data,
+                    { headers: { 'Content-Type': 'application/json' } })
+              .then(function (response) {
+                  return response.data;
+              })
+              ['catch'](function (e) {
+                  return { success: false, message: "Error " + e.status };
+              });
+                return promise;
+            }
+        };
+        return instance;
+    })
+
+
+
 .factory('androidFileOpenerService', function ($http) {
 
     var instance = {

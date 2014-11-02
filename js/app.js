@@ -155,7 +155,9 @@ angular.module('praetor',
 
 })
 
-    //.factory('praetorService', function ($http, $q) {
+    .factory('praetorService', function ($http, $q) {
+        return {};
+    });
     //    var instance = {
     //        loadHomeCache: null,
 

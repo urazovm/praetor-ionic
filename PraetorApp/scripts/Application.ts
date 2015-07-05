@@ -445,7 +445,7 @@ module PraetorApp.Application {
 
         try {
             UiHelper = angular.element(document.body).injector().get(Services.UiHelper.ID);
-            UiHelper.toast.showLongBottom("An error has occurred; please try again.");
+            UiHelper.toast.showLongBottom("Exception(" + exception.name + "): " + exception.message);
             UiHelper.progressIndicator.hide();
         }
         catch (ex) {

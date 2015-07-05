@@ -413,13 +413,12 @@ module PraetorApp.Application {
      * Fired when an unhandled JavaScript exception occurs outside of Angular.
      */
     function window_onerror(message: any, uri: string, lineNumber: number, columnNumber?: number): void {
-        var UiHelper: Services.UiHelper;
-
+        var UiHelper: Services.UiHelper;        
         console.error("Unhandled JS Exception", message, uri, lineNumber, columnNumber);
         
         try {
             UiHelper = angular.element(document.body).injector().get(Services.UiHelper.ID);
-            UiHelper.toast.showLongBottom("Error0: " + message);
+            UiHelper.toast.showLongBottom("Error0: " + uri + ", " + lineNumber);
             UiHelper.progressIndicator.hide();
         }
         catch (ex) {

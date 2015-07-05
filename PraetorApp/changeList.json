@@ -203,9 +203,9 @@
     "res\\screens\\android\\screen-mdpi-portrait.png",
     "config.xml",
     "index.html",
+    "www\\index.html",
     "www\\scripts\\appBundle.js",
-    "www\\scripts\\appBundle.js.map",
-    "www\\index.html"
+    "www\\scripts\\appBundle.js.map"
   ],
   "deletedFilesIos": [
     "www\\config.xml"
@@ -214,9 +214,7 @@
   "deletedPluginsIos": [],
   "changedFiles": [
     "plugins\\android.json",
-    "www\\scripts\\BuildVars.js",
-    "www\\scripts\\appBundle.js",
-    "www\\scripts\\appBundle.js.map"
+    "www\\scripts\\BuildVars.js"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

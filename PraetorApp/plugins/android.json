@@ -4,8 +4,23 @@
         "uninstalled": []
     },
     "config_munge": {
-        "files": {}
+        "files": {
+            "res/xml/config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"DocumentHandler\"><param name=\"android-package\" value=\"ch.ti8m.phonegap.plugins.DocumentHandler\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
     },
-    "installed_plugins": {},
+    "installed_plugins": {
+        "ch.ti8m.documenthandler": {
+            "PACKAGE_NAME": "Praetoris.PraetorApp"
+        }
+    },
     "dependent_plugins": {}
 }

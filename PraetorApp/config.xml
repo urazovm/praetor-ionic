@@ -10,8 +10,7 @@
   <preference name="SplashScreen" value="screen" />
   <preference name="windows-target-version" value="8.1" />
   <preference name="windows-phone-target-version" value="8.1" />
-  <preference name="phonegap-version" value="3.7.0" />
-  
+  <preference name="phonegap-version" value="cli-5.1.1" />
   <platform name="android">
     <icon src="res/icons/android/icon-36-ldpi.png" density="ldpi" />
     <icon src="res/icons/android/icon-48-mdpi.png" density="mdpi" />
@@ -98,6 +97,5 @@
   <preference name="InAppBrowserStorageEnabled" value="True" />
   <preference name="SuppressesIncrementalRendering" value="True" />
   <preference name="Fullscreen" value="False" />
-  
   <!--<vs:plugin name="ch.ti8m.documenthandler" version="0.2.1"/>-->
 </widget>

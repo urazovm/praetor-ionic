@@ -424,7 +424,7 @@ module PraetorApp.Application {
         }
         catch (ex) {
             console.warn("There was a problem alerting the user to an Angular error; falling back to a standard alert().", ex);
-            UiHelper.toast.showLongBottom("Exception: " + ex + ", " + message);
+            //UiHelper.toast.showLongBottom("Exception: " + ex + ", " + message);
         }
     }
 
@@ -450,7 +450,7 @@ module PraetorApp.Application {
         }
         catch (ex) {
             console.warn("There was a problem alerting the user to an Angular error; falling back to a standard alert().", ex);
-            UiHelper.toast.showLongBottom("Exception: " + ex + ", " + exception);
+            //UiHelper.toast.showLongBottom("Exception: " + ex + ", " + exception);
         }
     }
 

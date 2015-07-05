@@ -424,7 +424,7 @@ module PraetorApp.Application {
         }
         catch (ex) {
             console.warn("There was a problem alerting the user to an Angular error; falling back to a standard alert().", ex);
-            UiHelper.toast.showLongBottom("Exception(" + ex.name + "): " + ex.message + "| " + message);
+            UiHelper.toast.showLongBottom("Exception: " + ex + ", " + message);
         }
     }
 
@@ -445,12 +445,12 @@ module PraetorApp.Application {
 
         try {
             UiHelper = angular.element(document.body).injector().get(Services.UiHelper.ID);
-            UiHelper.toast.showLongBottom("Exception(" + exception.name + "): " + exception.message);
+            UiHelper.toast.showLongBottom("Exception:" + exception);
             UiHelper.progressIndicator.hide();
         }
         catch (ex) {
             console.warn("There was a problem alerting the user to an Angular error; falling back to a standard alert().", ex);
-            UiHelper.toast.showLongBottom("Exception(" + ex.name + ", " + exception.name + "): " + ex.message + "| " + exception.message);
+            UiHelper.toast.showLongBottom("Exception: " + ex + ", " + exception);
         }
     }
 

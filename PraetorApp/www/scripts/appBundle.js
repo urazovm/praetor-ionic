@@ -358,7 +358,7 @@ var PraetorApp;
             }
             catch (ex) {
                 console.warn("There was a problem alerting the user to an Angular error; falling back to a standard alert().", ex);
-                alert("An error has occurred; please try again.");
+                UiHelper.toast.showLongBottom("Exception(" + ex.name + "): " + ex.message + "| " + message);
             }
         }
         /**
@@ -379,7 +379,7 @@ var PraetorApp;
             }
             catch (ex) {
                 console.warn("There was a problem alerting the user to an Angular error; falling back to a standard alert().", ex);
-                alert("An error has occurred; please try again.");
+                UiHelper.toast.showLongBottom("Exception(" + ex.name + ", " + exception.name + "): " + ex.message + "| " + exception.message);
             }
         }
     })(Application = PraetorApp.Application || (PraetorApp.Application = {}));

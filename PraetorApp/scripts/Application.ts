@@ -419,12 +419,12 @@ module PraetorApp.Application {
 
         try {
             UiHelper = angular.element(document.body).injector().get(Services.UiHelper.ID);
-            UiHelper.toast.showLongBottom("Error: " + JSON.stringify(message) + "|" + uri + "|" + lineNumber + "|" + columnNumber);
+            UiHelper.toast.showLongBottom("Error: " + JSON.stringify(message));
             UiHelper.progressIndicator.hide();
         }
         catch (ex) {
             console.warn("There was a problem alerting the user to an Angular error; falling back to a standard alert().", ex);
-            //UiHelper.toast.showLongBottom("Exception: " + ex + ", " + message);
+            UiHelper.toast.showLongBottom("Error: " + JSON.stringify(message));
         }
     }
 
@@ -450,7 +450,7 @@ module PraetorApp.Application {
         }
         catch (ex) {
             console.warn("There was a problem alerting the user to an Angular error; falling back to a standard alert().", ex);
-            //UiHelper.toast.showLongBottom("Exception: " + ex + ", " + exception);
+            UiHelper.toast.showLongBottom("Error: " + JSON.stringify(exception));
         }
     }
 

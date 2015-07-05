@@ -215,8 +215,8 @@
   "changedFiles": [
     "plugins\\android.json",
     "www\\scripts\\BuildVars.js",
-    "config.xml",
-    "www\\config.xml"
+    "www\\config.xml",
+    "config.xml"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

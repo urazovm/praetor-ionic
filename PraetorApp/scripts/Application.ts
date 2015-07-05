@@ -416,15 +416,15 @@ module PraetorApp.Application {
         var UiHelper: Services.UiHelper;
 
         console.error("Unhandled JS Exception", message, uri, lineNumber, columnNumber);
-
+        
         try {
             UiHelper = angular.element(document.body).injector().get(Services.UiHelper.ID);
-            UiHelper.toast.showLongBottom("Error: " + JSON.stringify(message));
+            UiHelper.toast.showLongBottom("Error0: " + message);
             UiHelper.progressIndicator.hide();
         }
         catch (ex) {
             console.warn("There was a problem alerting the user to an Angular error; falling back to a standard alert().", ex);
-            UiHelper.toast.showLongBottom("Error: " + JSON.stringify(message));
+            UiHelper.toast.showLongBottom("Error1: " + message);
         }
     }
 
@@ -445,12 +445,12 @@ module PraetorApp.Application {
 
         try {
             UiHelper = angular.element(document.body).injector().get(Services.UiHelper.ID);
-            UiHelper.toast.showLongBottom("Exception:" + exception);
+            UiHelper.toast.showLongBottom("Exception:" + exception + "," + cause);
             UiHelper.progressIndicator.hide();
         }
         catch (ex) {
             console.warn("There was a problem alerting the user to an Angular error; falling back to a standard alert().", ex);
-            UiHelper.toast.showLongBottom("Error: " + JSON.stringify(exception));
+            UiHelper.toast.showLongBottom("Error2: " + exception + ", " + cause);
         }
     }
 

@@ -2,6 +2,7 @@
 <widget 
   xmlns:cdv="http://cordova.apache.org/ns/1.0" 
   xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" 
+  xmlns:gap="http://phonegap.com/ns/1.0"
   id="cz.praetor-systems.praetor2" 
   version="1.0.36" 
   xmlns="http://www.w3.org/ns/widgets" 

@@ -150,7 +150,6 @@
     "www\\templates\\Settings\\About.html",
     "www\\lib\\ionic\\fonts\\ionicons.eot",
     "res\\icons\\wp8\\Background.png",
-    "www\\index.html",
     "www\\lib\\uri.js\\uri.min.js",
     "res\\icons\\ios\\icon-40.png",
     "www\\lib\\nprogress\\nprogress.js",
@@ -203,16 +202,21 @@
     "res\\icons\\windows\\Square44x44Logo.scale-240.png",
     "res\\screens\\android\\screen-mdpi-portrait.png",
     "config.xml",
+    "index.html",
     "www\\scripts\\appBundle.js",
-    "www\\scripts\\appBundle.js.map"
+    "www\\scripts\\appBundle.js.map",
+    "www\\index.html"
   ],
-  "deletedFilesIos": [],
+  "deletedFilesIos": [
+    "www\\config.xml"
+  ],
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
     "plugins\\android.json",
     "www\\scripts\\BuildVars.js",
-    "config.xml"
+    "www\\scripts\\appBundle.js",
+    "www\\scripts\\appBundle.js.map"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

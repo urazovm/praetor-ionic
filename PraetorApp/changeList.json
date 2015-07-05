@@ -202,6 +202,7 @@
     "res\\icons\\windows\\Square44x44Logo.scale-240.png",
     "res\\screens\\android\\screen-mdpi-portrait.png",
     "config.xml",
+    "plugins\\windows.json",
     "www\\scripts\\appBundle.js",
     "www\\scripts\\appBundle.js.map"
   ],
@@ -211,7 +212,8 @@
   "changedFiles": [
     "plugins\\android.json",
     "www\\scripts\\BuildVars.js",
-    "config.xml"
+    "www\\scripts\\appBundle.js",
+    "www\\scripts\\appBundle.js.map"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

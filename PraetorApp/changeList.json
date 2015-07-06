@@ -91,7 +91,6 @@
     "www\\templates\\Onboarding\\Onboarding-Share.html",
     "res\\screens\\android\\screen-mdpi-landscape.png",
     "merges\\android\\scripts\\android2.3-jscompat.js",
-    "www\\scripts\\appBundle.js.map",
     "www\\images\\touch-cursor-hover.png",
     "merges\\windows\\scripts\\winstore-jscompat.js",
     "res\\icons\\ios\\icon-60.png",
@@ -132,9 +131,7 @@
     "www\\scripts\\Main.js",
     "packages.config",
     "res\\icons\\ios\\icon-60-3x.png",
-    "config.xml",
     "res\\screens\\wp8\\SplashScreenImage.jpg",
-    "www\\scripts\\appBundle.js",
     "res\\screens\\ios\\screen-ipad-landscape-2x.png",
     "res\\screens\\ios\\screen-iphone-568h-2x.png",
     "res\\icons\\windows\\Square150x150Logo.scale-100.png",
@@ -205,20 +202,25 @@
     "res\\screens\\android\\screen-xhdpi-landscape.png",
     "www\\lib\\moment\\moment.js",
     "res\\icons\\windows\\Square44x44Logo.scale-240.png",
-    "res\\screens\\android\\screen-mdpi-portrait.png"
+    "res\\screens\\android\\screen-mdpi-portrait.png",
+    "config.xml"
   ],
-  "deletedFilesIos": [],
+  "deletedFilesIos": [
+    "www\\scripts\\appBundle.js",
+    "www\\scripts\\appBundle.js.map"
+  ],
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
-    "www\\scripts\\appBundle.js.map",
-    "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
     "plugins\\android.json",
     "www\\scripts\\Main.js",
-    "www\\lib\\ionic\\js\\ionic.bundle.js"
+    "www\\scripts\\platformOverrides.js"
   ],
-  "deletedFiles": [],
+  "deletedFiles": [
+    "www\\scripts\\appBundle.js",
+    "www\\scripts\\appBundle.js.map"
+  ],
   "addedPlugins": [],
   "deletedPlugins": []
 }

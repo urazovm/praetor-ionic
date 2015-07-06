@@ -292,7 +292,11 @@ module PraetorApp.Application {
     /**
      * Function that is used to configure AngularJs.
      */
-    function angular_configure($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider, $provide: ng.auto.IProvideService, $httpProvider: ng.IHttpProvider, $compileProvider: ng.ICompileProvider): void {
+    function angular_configure($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider, $provide: ng.auto.IProvideService, $httpProvider: ng.IHttpProvider, $compileProvider: ng.ICompileProvider, $ionicConfigProvider: any): void {
+
+        $ionicConfigProvider.tabs.position("bottom");
+        $ionicConfigProvider.tabs.style("standard");
+
 
         // Intercept the default Angular exception handler.
         $provide.decorator("$exceptionHandler", function ($delegate: ng.IExceptionHandlerService) {

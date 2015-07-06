@@ -13,7 +13,7 @@ module PraetorApp {
             $stateProvider.state("app", {
                 url: "/app",
                 abstract: true,
-                templateUrl: "templates/Menu.html",
+                templateUrl: "templates/menu.html",
                 controller: Controllers.MenuController.ID
             });
 
@@ -22,7 +22,7 @@ module PraetorApp {
                 url: "/login",
                 views: {
                     "menuContent": {
-                        templateUrl: "templates/Login.html",
+                        templateUrl: "templates/login.html",
                         controller: Controllers.LoginController.ID
                     }
                 }
@@ -33,7 +33,7 @@ module PraetorApp {
                 url: "/home",
                 views: {
                     "menuContent": {
-                        templateUrl: "templates/Home.html",
+                        templateUrl: "templates/home.html",
                         controller: Controllers.HomeController.ID
                     }
                 }
@@ -63,7 +63,7 @@ module PraetorApp {
                 url: "/settings/about",
                 views: {
                     "menuContent": {
-                        templateUrl: "templates/Settings/About.html",
+                        templateUrl: "templates/settings/about.html",
                         controller: Controllers.AboutController.ID
                     }
                 }

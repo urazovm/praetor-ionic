@@ -25,10 +25,9 @@ module PraetorApp.Application {
      * It is invoked via the Main.js script included from the index.html page.
      */
     export function main(): void {
-        var versionInfo: Interfaces.VersionInfo;
-
+        var versionInfo: Interfaces.VersionInfo;        
         // Set the default error handler for all uncaught exceptions.
-        window.onerror = window_onerror;
+        window.onerror = window_onerror;        
 
         versionInfo = {
             applicationName: "Praetor App",
@@ -42,7 +41,7 @@ module PraetorApp.Application {
             versionString: window.buildVars.majorVersion + "." + window.buildVars.minorVersion + "." + window.buildVars.buildVersion,
             buildTimestamp: window.buildVars.buildTimestamp
         };
-
+        
         // Define the top level Angular module for the application.
         // Here we also specify the Angular modules this module depends upon.
         ngModule = angular.module("PraetorApp.Application", ["ui.router", "ionic", "ngMockE2E"]);
@@ -60,7 +59,7 @@ module PraetorApp.Application {
         registerDirectives(ngModule);
         registerFilters(ngModule);
         registerControllers(ngModule);
-
+        
         // Specify the initialize/run and configuration functions.
         ngModule.run(angular_initialize);
         ngModule.config(angular_configure);
@@ -260,6 +259,7 @@ module PraetorApp.Application {
         // Once AngularJs has loaded we'll wait for the Ionic platform's ready event.
         // This event will be fired once the device ready event fires via Cordova.
         $ionicPlatform.ready(function () {
+            
             ionicPlatform_ready($rootScope, $location, $ionicViewService, $ionicPlatform, UiHelper, Utilities, Preferences);
         });   
         
@@ -274,7 +274,7 @@ module PraetorApp.Application {
      * on the Codrova device ready event.
      */
     function ionicPlatform_ready($rootScope: ng.IScope, $location: ng.ILocationService, $ionicViewService: any, $ionicPlatform: Ionic.IPlatform, UiHelper: Services.UiHelper, Utilities: Services.Utilities, Preferences: Services.Preferences): void {
-        
+                
         // Subscribe to device events.
         document.addEventListener("pause", _.bind(device_pause, null, Preferences));
         document.addEventListener("resume", _.bind(device_resume, null, $location, $ionicViewService, Utilities, UiHelper, Preferences));
@@ -292,7 +292,10 @@ module PraetorApp.Application {
     /**
      * Function that is used to configure AngularJs.
      */
-    function angular_configure($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider, $provide: ng.auto.IProvideService, $httpProvider: ng.IHttpProvider, $compileProvider: ng.ICompileProvider): void {
+    function angular_configure($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider, $provide: ng.auto.IProvideService, $httpProvider: ng.IHttpProvider, $compileProvider: ng.ICompileProvider, $ionicConfigProvider: any): void {
+
+        $ionicConfigProvider.tabs.position("bottom");
+        $ionicConfigProvider.tabs.style("standard");
 
         // Intercept the default Angular exception handler.
         $provide.decorator("$exceptionHandler", function ($delegate: ng.IExceptionHandlerService) {

@@ -250,8 +250,8 @@ var PraetorApp;
          * Function that is used to configure AngularJs.
          */
         function angular_configure($stateProvider, $urlRouterProvider, $provide, $httpProvider, $compileProvider, $ionicConfigProvider) {
-            //$ionicConfigProvider.tabs.position("bottom");
-            //$ionicConfigProvider.tabs.style("standard");
+            $ionicConfigProvider.tabs.position("bottom");
+            $ionicConfigProvider.tabs.style("standard");
             // Intercept the default Angular exception handler.
             $provide.decorator("$exceptionHandler", function ($delegate) {
                 return function (exception, cause) {
@@ -841,10 +841,11 @@ var PraetorApp;
                     else {
                         self.UiHelper.alert("Chyba přihlášení");
                     }
-                })['finally'](function () {
-                    // Zavřeme progress indigator                
-                    self.UiHelper.progressIndicator.hide();
                 });
+                //['finally'](function () {
+                //    // Zavřeme progress indigator                
+                //    self.UiHelper.progressIndicator.hide();
+                //});
             };
             LoginController.ID = "LoginController";
             return LoginController;

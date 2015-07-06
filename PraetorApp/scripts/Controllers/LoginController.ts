@@ -27,7 +27,7 @@
 
             // vyplníme poslední uložený server a login
             this.viewModel.server = Preferences.serverUrl;
-            this.viewModel.username = Preferences.userId;
+            this.viewModel.username = Preferences.username;
 
             $scope.$on("http.unauthorized", _.bind(this.http_unauthorized, this));
             $scope.$on("http.forbidden", _.bind(this.http_forbidden, this));
@@ -39,7 +39,7 @@
         private http_unauthorized() {
 
             // Unauthorized should mean that a token wasn't sent, but we'll null these out anyways.
-            this.Preferences.userId = null;
+            this.Preferences.username = null;
             this.Preferences.token = null;
 
             this.UiHelper.toast.showLongBottom("You do not have a token (401); please login.");
@@ -48,7 +48,7 @@
         private http_forbidden() {
 
             // A token was sent, but was no longer valid. Null out the invalid token.
-            this.Preferences.userId = null;
+            this.Preferences.username = null;
             this.Preferences.token = null;
 
             this.UiHelper.toast.showLongBottom("Your token has expired (403); please login again.");
@@ -64,6 +64,7 @@
         //#region Controller Methods
 
         protected login() {
+            var self = this;
 
             if (!this.viewModel.server) {
                 this.UiHelper.alert("Zadejte adresu serveru");
@@ -80,16 +81,24 @@
                 return;
             }
 
-            this.UiHelper.progressIndicator.showSimpleWithLabel(true, "Přihlašuji...");
-            var self = this;
+            this.UiHelper.progressIndicator.showSimple(true);            
 
             this.Praetor.login(this.viewModel.server, this.viewModel.username, this.viewModel.password).then(function (data) {
-
+                // Odstraníme 
                 self.UiHelper.progressIndicator.hide();
-                self.UiHelper.alert("Chyba přihlášení");
+                if (data.success) {
+                    self.Preferences.serverUrl = self.viewModel.server;
+                    self.Preferences.username = self.viewModel.username;
+                    self.Preferences.password = self.viewModel.password;
+
+                    self.$location.path("/app/home");
+                    self.$location.replace();
+                }
+                else {                    
+                    self.UiHelper.alert("Chyba přihlášení");
+                }
 
             }).finally(function () {
-
                 // Zavřeme progress indigator                
                 self.UiHelper.progressIndicator.hide();
             });

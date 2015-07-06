@@ -347,13 +347,14 @@ module PraetorApp.Application {
      */
     function device_resume($location: ng.ILocationService, $ionicViewService: any, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences): void {
 
+        return;
+
         isShowingPinPrompt = true;
-        
+                
         // Potentially display the PIN screen.
         UiHelper.showPinEntryAfterResume().then(() => {
             isShowingPinPrompt = false;
-
-            debugger;
+            
             // If the user hasn't completed onboarding (eg new, first-time use of the app)
             // then we'll push them straight into the onboarding flow. Note that we do this
             // purposefully after the PIN screen for the case where the user may be upgrading

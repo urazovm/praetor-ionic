@@ -206,7 +206,16 @@
     "scripts\\ViewModels\\MenuViewModel.ts",
     "scripts\\Services\\MockHttpApis.ts",
     "www\\scripts\\appBundle.js",
-    "www\\scripts\\appBundle.js.map"
+    "www\\scripts\\appBundle.js.map",
+    "www\\templates\\Home.html",
+    "scripts\\Controllers\\HomeController.ts",
+    "scripts\\ViewModels\\HomeViewModel.ts",
+    "scripts\\Controllers\\Home\\SpisyController.ts",
+    "scripts\\Controllers\\Home\\VykazovaniController.ts",
+    "scripts\\ViewModels\\Home\\SpisyViewModel.ts",
+    "scripts\\ViewModels\\Home\\VykazovaniViewModel.ts",
+    "www\\templates\\Home\\spisy.html",
+    "www\\templates\\Home\\vykazovani.html"
   ],
   "deletedFilesIos": [
     "www\\lib\\ionic\\js\\ionic.bundle.min.js.crdownload",
@@ -266,8 +275,6 @@
     "res\\icon\\blackberry\\icon-80.png",
     "res\\icon\\bada-wac\\icon-80-type4.png",
     "res\\icon\\windows-phone\\icon-62-tile.png",
-    "scripts\\Controllers\\MenuController - Copy.ts",
-    "scripts\\ViewModels\\MenuViewModel - Copy.ts",
     "www\\templates\\Category.html",
     "scripts\\Controllers\\Dialogs\\ReorderCategoriesController.ts",
     "www\\templates\\Dialogs\\Reorder-Categories.html",
@@ -295,13 +302,26 @@
     "scripts\\ViewModels\\Settings\\ConfigurePinViewModel.ts",
     "scripts\\Controllers\\Settings\\ConfigurePinController.ts",
     "scripts\\Controllers\\Dialogs\\PinEntryController.ts",
-    "scripts\\ViewModels\\LoginViewModel.d.ts"
+    "scripts\\ViewModels\\LoginViewModel.d.ts",
+    "scripts\\Controllers\\MenuController - Copy.ts",
+    "scripts\\ViewModels\\MenuViewModel - Copy.ts",
+    "scripts\\Controllers\\Spisy\\MenuController.ts",
+    "scripts\\Controllers\\Vykazovani\\MenuController.ts",
+    "scripts\\Controllers\\Spisy\\PrehledSpisuController.ts",
+    "scripts\\Controllers\\Home\\MenuController.ts",
+    "scripts\\Controllers\\Home\\SpisyController - Copy.ts",
+    "scripts\\ViewModels\\Home\\MenuViewModel.ts",
+    "scripts\\ViewModels\\Home\\SpisyViewModel - Copy.ts",
+    "www\\templates\\Home\\spisy - Copy.html"
   ],
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
+    "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json"
+    "www\\scripts\\appBundle.js.map",
+    "plugins\\android.json",
+    "www\\templates\\Home.html"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

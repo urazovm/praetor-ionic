@@ -14,7 +14,8 @@
             return [];
         }
 
-        private static USER_ID = "USER_ID";
+        private static USERNAME = "USER_ID";
+        private static PASSWORD = "PASSWORD";
         private static SERVER_URL = "SERVER_URL";
         private static SESSION_ID = "SESSION_ID";
         private static REQUIRE_PIN_THRESHOLD = "REQUIRE_PIN_THRESHOLD";
@@ -70,16 +71,29 @@
             }
         }
 
-        get userId(): string {
-            return localStorage.getItem(Preferences.USER_ID);
+        get password(): string {
+            return localStorage.getItem(Preferences.PASSWORD);
         }
 
-        set userId(value: string) {
+        set password(value: string) {
             if (value == null) {
-                localStorage.removeItem(Preferences.USER_ID);
+                localStorage.removeItem(Preferences.PASSWORD);
             }
             else {
-                localStorage.setItem(Preferences.USER_ID, value);
+                localStorage.setItem(Preferences.USERNAME, value);
+            }
+        }
+
+        get username(): string {
+            return localStorage.getItem(Preferences.USERNAME);
+        }
+
+        set username(value: string) {
+            if (value == null) {
+                localStorage.removeItem(Preferences.USERNAME);
+            }
+            else {
+                localStorage.setItem(Preferences.USERNAME, value);
             }
         }
 

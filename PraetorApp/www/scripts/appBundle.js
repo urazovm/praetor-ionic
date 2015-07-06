@@ -293,11 +293,11 @@ var PraetorApp;
          * to switch back to the application.
          */
         function device_resume($location, $ionicViewService, Utilities, UiHelper, Preferences) {
+            return;
             isShowingPinPrompt = true;
             // Potentially display the PIN screen.
             UiHelper.showPinEntryAfterResume().then(function () {
                 isShowingPinPrompt = false;
-                debugger;
                 // If the user hasn't completed onboarding (eg new, first-time use of the app)
                 // then we'll push them straight into the onboarding flow. Note that we do this
                 // purposefully after the PIN screen for the case where the user may be upgrading
@@ -413,6 +413,34 @@ var PraetorApp;
                     }
                 }
             });
+            // An blank view useful as a place holder etc.
+            $stateProvider.state("app.home", {
+                url: "/home",
+                views: {
+                    "menuContent": {
+                        templateUrl: "templates/Home.html",
+                        controller: PraetorApp.Controllers.HomeController.ID
+                    }
+                }
+            });
+            $stateProvider.state('app.home.spisy', {
+                url: "/spisy",
+                views: {
+                    'tab-spisy': {
+                        templateUrl: "templates/home/spisy.html",
+                        controller: PraetorApp.Controllers.HomeSpisyController.ID
+                    }
+                }
+            });
+            $stateProvider.state('app.home.cinnosti', {
+                url: "/cinnosti",
+                views: {
+                    'tab-cinnosti': {
+                        templateUrl: "templates/home/vykazovani.html",
+                        controller: PraetorApp.Controllers.HomeVykazovaniController.ID
+                    }
+                }
+            });
             $stateProvider.state("app.about", {
                 url: "/settings/about",
                 views: {
@@ -423,7 +451,7 @@ var PraetorApp;
                 }
             });
             // If none of the above states are matched, use the blank route.
-            $urlRouterProvider.otherwise('/app/login');
+            $urlRouterProvider.otherwise('/app/home');
         };
         return RouteConfig;
     })();
@@ -713,6 +741,33 @@ var PraetorApp;
 (function (PraetorApp) {
     var Controllers;
     (function (Controllers) {
+        var HomeController = (function (_super) {
+            __extends(HomeController, _super);
+            function HomeController($scope, $location, $http, Utilities, UiHelper, Preferences) {
+                _super.call(this, $scope, PraetorApp.ViewModels.MenuViewModel);
+                this.$location = $location;
+                this.$http = $http;
+                this.Utilities = Utilities;
+                this.UiHelper = UiHelper;
+                this.Preferences = Preferences;
+            }
+            Object.defineProperty(HomeController, "$inject", {
+                get: function () {
+                    return ["$scope", "$location", "$http", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            HomeController.ID = "HomeController";
+            return HomeController;
+        })(Controllers.BaseController);
+        Controllers.HomeController = HomeController;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
         var LoginController = (function (_super) {
             __extends(LoginController, _super);
             function LoginController($scope, $location, $http, Utilities, UiHelper, Preferences, Praetor) {
@@ -725,7 +780,7 @@ var PraetorApp;
                 this.Praetor = Praetor;
                 // vyplníme poslední uložený server a login
                 this.viewModel.server = Preferences.serverUrl;
-                this.viewModel.username = Preferences.userId;
+                this.viewModel.username = Preferences.username;
                 $scope.$on("http.unauthorized", _.bind(this.http_unauthorized, this));
                 $scope.$on("http.forbidden", _.bind(this.http_forbidden, this));
                 $scope.$on("http.notFound", _.bind(this.http_notFound, this));
@@ -740,13 +795,13 @@ var PraetorApp;
             //#region Event Handlers
             LoginController.prototype.http_unauthorized = function () {
                 // Unauthorized should mean that a token wasn't sent, but we'll null these out anyways.
-                this.Preferences.userId = null;
+                this.Preferences.username = null;
                 this.Preferences.token = null;
                 this.UiHelper.toast.showLongBottom("You do not have a token (401); please login.");
             };
             LoginController.prototype.http_forbidden = function () {
                 // A token was sent, but was no longer valid. Null out the invalid token.
-                this.Preferences.userId = null;
+                this.Preferences.username = null;
                 this.Preferences.token = null;
                 this.UiHelper.toast.showLongBottom("Your token has expired (403); please login again.");
             };
@@ -757,6 +812,7 @@ var PraetorApp;
             //#endregion
             //#region Controller Methods
             LoginController.prototype.login = function () {
+                var self = this;
                 if (!this.viewModel.server) {
                     this.UiHelper.alert("Zadejte adresu serveru");
                     return;
@@ -769,12 +825,22 @@ var PraetorApp;
                     this.UiHelper.alert("Zadejte heslo");
                     return;
                 }
-                this.UiHelper.progressIndicator.showSimpleWithLabel(true, "Přihlašuji...");
-                var self = this;
+                this.UiHelper.progressIndicator.showSimple(true);
                 this.Praetor.login(this.viewModel.server, this.viewModel.username, this.viewModel.password).then(function (data) {
-                    self.UiHelper.alert("Chyba přihlášení");
+                    // Odstraníme 
+                    self.UiHelper.progressIndicator.hide();
+                    if (data.success) {
+                        self.Preferences.serverUrl = self.viewModel.server;
+                        self.Preferences.username = self.viewModel.username;
+                        self.Preferences.password = self.viewModel.password;
+                        self.$location.path("/app/home");
+                        self.$location.replace();
+                    }
+                    else {
+                        self.UiHelper.alert("Chyba přihlášení");
+                    }
                 }).finally(function () {
-                    // Zavřeme progress indigator
+                    // Zavřeme progress indigator                
                     self.UiHelper.progressIndicator.hide();
                 });
             };
@@ -809,6 +875,60 @@ var PraetorApp;
             return MenuController;
         })(Controllers.BaseController);
         Controllers.MenuController = MenuController;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
+        var HomeSpisyController = (function (_super) {
+            __extends(HomeSpisyController, _super);
+            function HomeSpisyController($scope, $location, $http, Utilities, UiHelper, Preferences) {
+                _super.call(this, $scope, PraetorApp.ViewModels.Home.SpisyViewModel);
+                this.$location = $location;
+                this.$http = $http;
+                this.Utilities = Utilities;
+                this.UiHelper = UiHelper;
+                this.Preferences = Preferences;
+            }
+            Object.defineProperty(HomeSpisyController, "$inject", {
+                get: function () {
+                    return ["$scope", "$location", "$http", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            HomeSpisyController.ID = "HomeSpisyController";
+            return HomeSpisyController;
+        })(Controllers.BaseController);
+        Controllers.HomeSpisyController = HomeSpisyController;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
+        var HomeVykazovaniController = (function (_super) {
+            __extends(HomeVykazovaniController, _super);
+            function HomeVykazovaniController($scope, $location, $http, Utilities, UiHelper, Preferences) {
+                _super.call(this, $scope, PraetorApp.ViewModels.Home.VykazovaniViewModel);
+                this.$location = $location;
+                this.$http = $http;
+                this.Utilities = Utilities;
+                this.UiHelper = UiHelper;
+                this.Preferences = Preferences;
+            }
+            Object.defineProperty(HomeVykazovaniController, "$inject", {
+                get: function () {
+                    return ["$scope", "$location", "$http", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            HomeVykazovaniController.ID = "HomeVykazovaniController";
+            return HomeVykazovaniController;
+        })(Controllers.BaseController);
+        Controllers.HomeVykazovaniController = HomeVykazovaniController;
     })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
@@ -1320,8 +1440,8 @@ var PraetorApp;
                     config.headers["Content-Type"] = "application/json";
                     config.headers["Accept"] = "application/json";
                     // If we currently have a user ID and token, then include it in the authorization header.
-                    if (this.Preferences.userId && this.Preferences.token) {
-                        config.headers["Authorization"] = this.getAuthorizationHeader(this.Preferences.userId, this.Preferences.token);
+                    if (this.Preferences.username && this.Preferences.token) {
+                        config.headers["Authorization"] = this.getAuthorizationHeader(this.Preferences.username, this.Preferences.token);
                     }
                     /* tslint:enable:no-string-literal */
                     if (this.Preferences.apiUrl && this.Preferences.apiUrl) {
@@ -2083,16 +2203,31 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
-            Object.defineProperty(Preferences.prototype, "userId", {
+            Object.defineProperty(Preferences.prototype, "password", {
                 get: function () {
-                    return localStorage.getItem(Preferences.USER_ID);
+                    return localStorage.getItem(Preferences.PASSWORD);
                 },
                 set: function (value) {
                     if (value == null) {
-                        localStorage.removeItem(Preferences.USER_ID);
+                        localStorage.removeItem(Preferences.PASSWORD);
                     }
                     else {
-                        localStorage.setItem(Preferences.USER_ID, value);
+                        localStorage.setItem(Preferences.USERNAME, value);
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Preferences.prototype, "username", {
+                get: function () {
+                    return localStorage.getItem(Preferences.USERNAME);
+                },
+                set: function (value) {
+                    if (value == null) {
+                        localStorage.removeItem(Preferences.USERNAME);
+                    }
+                    else {
+                        localStorage.setItem(Preferences.USERNAME, value);
                     }
                 },
                 enumerable: true,
@@ -2162,7 +2297,8 @@ var PraetorApp;
                 configurable: true
             });
             Preferences.ID = "Preferences";
-            Preferences.USER_ID = "USER_ID";
+            Preferences.USERNAME = "USER_ID";
+            Preferences.PASSWORD = "PASSWORD";
             Preferences.SERVER_URL = "SERVER_URL";
             Preferences.SESSION_ID = "SESSION_ID";
             Preferences.REQUIRE_PIN_THRESHOLD = "REQUIRE_PIN_THRESHOLD";
@@ -2911,6 +3047,18 @@ var PraetorApp;
 (function (PraetorApp) {
     var ViewModels;
     (function (ViewModels) {
+        var HomeViewModel = (function () {
+            function HomeViewModel() {
+            }
+            return HomeViewModel;
+        })();
+        ViewModels.HomeViewModel = HomeViewModel;
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
         var LoginViewModel = (function () {
             function LoginViewModel() {
             }
@@ -2929,6 +3077,36 @@ var PraetorApp;
             return MenuViewModel;
         })();
         ViewModels.MenuViewModel = MenuViewModel;
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
+        var Home;
+        (function (Home) {
+            var SpisyViewModel = (function () {
+                function SpisyViewModel() {
+                }
+                return SpisyViewModel;
+            })();
+            Home.SpisyViewModel = SpisyViewModel;
+        })(Home = ViewModels.Home || (ViewModels.Home = {}));
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
+        var Home;
+        (function (Home) {
+            var VykazovaniViewModel = (function () {
+                function VykazovaniViewModel() {
+                }
+                return VykazovaniViewModel;
+            })();
+            Home.VykazovaniViewModel = VykazovaniViewModel;
+        })(Home = ViewModels.Home || (ViewModels.Home = {}));
     })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;

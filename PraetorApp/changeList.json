@@ -275,7 +275,8 @@
     "www\\scripts\\appBundle.js.map",
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "www\\css\\style.css"
+    "config.xml",
+    "www\\config.xml"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

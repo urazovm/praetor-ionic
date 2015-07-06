@@ -13,5 +13,8 @@ if (typeof (chrome) !== "undefined" && typeof (chrome.runtime) !== "undefined" &
     document.head.appendChild(style);
 }
 
+if (console == undefined)
+    console = { log: function (data) { } };
+
 // Start the application by invoking the main entry point method defined in Application.ts.
 PraetorApp.Application.main();

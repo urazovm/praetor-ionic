@@ -415,10 +415,10 @@ module PraetorApp.Application {
     function window_onerror(message: any, uri: string, lineNumber: number, columnNumber?: number): void {
         var UiHelper: Services.UiHelper;        
         console.error("Unhandled JS Exception", message, uri, lineNumber, columnNumber);
-        
-        try {
+        debugger;
+        try {            
             UiHelper = angular.element(document.body).injector().get(Services.UiHelper.ID);
-            UiHelper.toast.showLongBottom("Error0: " + uri + ", " + lineNumber);
+            UiHelper.toast.showLongBottom("Error0: " + Event.caller);
             UiHelper.progressIndicator.hide();
         }
         catch (ex) {

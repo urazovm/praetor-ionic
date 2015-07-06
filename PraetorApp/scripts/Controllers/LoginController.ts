@@ -98,7 +98,7 @@
                     self.UiHelper.alert("Chyba přihlášení");
                 }
 
-            }).finally(function () {
+            })['finally'](function () {
                 // Zavřeme progress indigator                
                 self.UiHelper.progressIndicator.hide();
             });

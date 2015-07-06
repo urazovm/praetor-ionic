@@ -1,0 +1,15 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "ch.ti8m.documenthandler": {
+            "PACKAGE_NAME": "{a6a5b1c0-2418-11e5-845a-3366f878fcea}"
+        }
+    },
+    "dependent_plugins": {}
+}

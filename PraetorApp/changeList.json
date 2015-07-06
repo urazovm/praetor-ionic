@@ -276,7 +276,9 @@
     "plugins\\android.json",
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "www\\scripts\\appBundle.js.map"
+    "www\\scripts\\appBundle.js.map",
+    "config.xml",
+    "www\\config.xml"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

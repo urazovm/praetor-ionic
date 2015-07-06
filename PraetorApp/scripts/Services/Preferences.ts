@@ -15,22 +15,59 @@
         }
 
         private static USER_ID = "USER_ID";
-        private static TOKEN = "TOKEN";
-        private static ENABLE_DEVELOPER_TOOLS = "ENABLE_DEVELOPER_TOOLS";
-        private static ENABLE_FULL_HTTP_LOGGING = "ENABLE_FULL_HTTP_LOGGING";
-        private static ENABLE_MOCK_HTTP_CALLS = "ENABLE_MOCK_HTTP_CALLS";
+        private static SERVER_URL = "SERVER_URL";
+        private static SESSION_ID = "SESSION_ID";
         private static REQUIRE_PIN_THRESHOLD = "REQUIRE_PIN_THRESHOLD";
         private static LAST_PAUSED_AT = "LAST_PAUSED_AT";
-        private static PIN = "PIN";
-        private static CATEGORY_ORDER = "CATEGORY_ORDER";
         private static HAS_COMPLETED_ONBOARDING = "HAS_COMPLETED_ONBOARDING";
+        private static PIN = "PIN";
+        private static ENABLE_MOCK_HTTP_CALLS = "ENABLE_MOCK_HTTP_CALLS";
 
         // Default setting is 10 minutes.
         private static REQUIRE_PIN_THRESHOLD_DEFAULT = 10;
 
+        get enableMockHttpCalls(): boolean {
+            return localStorage.getItem(Preferences.ENABLE_MOCK_HTTP_CALLS) === "true";
+        }
+
+        set enableMockHttpCalls(value: boolean) {
+            if (value == null) {
+                localStorage.removeItem(Preferences.ENABLE_MOCK_HTTP_CALLS);
+            }
+            else {
+                localStorage.setItem(Preferences.ENABLE_MOCK_HTTP_CALLS, value.toString());
+            }
+        }
+
+        get hasCompletedOnboarding(): boolean {
+            return localStorage.getItem(Preferences.HAS_COMPLETED_ONBOARDING) === "true";
+        }
+
+        set hasCompletedOnboarding(value: boolean) {
+            if (value == null) {
+                localStorage.removeItem(Preferences.HAS_COMPLETED_ONBOARDING);
+            }
+            else {
+                localStorage.setItem(Preferences.HAS_COMPLETED_ONBOARDING, value.toString());
+            }
+        }
+
         get apiUrl(): string {
             //return localStorage.getItem(Preferences.API_URL);
             return "sample-app.justin-credible.net/api";
+        }
+
+        get serverUrl(): string {
+            return localStorage.getItem(Preferences.SERVER_URL);
+        }
+
+        set serverUrl(value: string) {
+            if (value == null) {
+                localStorage.removeItem(Preferences.SERVER_URL);
+            }
+            else {
+                localStorage.setItem(Preferences.SERVER_URL, value);
+            }
         }
 
         get userId(): string {
@@ -47,54 +84,15 @@
         }
 
         get token(): string {
-            return localStorage.getItem(Preferences.TOKEN);
+            return localStorage.getItem(Preferences.SESSION_ID);
         }
 
         set token(value: string) {
             if (value == null) {
-                localStorage.removeItem(Preferences.TOKEN);
+                localStorage.removeItem(Preferences.SESSION_ID);
             }
             else {
-                localStorage.setItem(Preferences.TOKEN, value);
-            }
-        }
-
-        get enableDeveloperTools(): boolean {
-            return sessionStorage.getItem(Preferences.ENABLE_DEVELOPER_TOOLS) === "true";
-        }
-
-        set enableDeveloperTools(value: boolean) {
-            if (value == null) {
-                sessionStorage.removeItem(Preferences.ENABLE_DEVELOPER_TOOLS);
-            }
-            else {
-                sessionStorage.setItem(Preferences.ENABLE_DEVELOPER_TOOLS, value.toString());
-            }
-        }
-
-        get enableFullHttpLogging(): boolean {
-            return localStorage.getItem(Preferences.ENABLE_FULL_HTTP_LOGGING) === "true";
-        }
-
-        set enableFullHttpLogging(value: boolean) {
-            if (value == null) {
-                localStorage.removeItem(Preferences.ENABLE_FULL_HTTP_LOGGING);
-            }
-            else {
-                localStorage.setItem(Preferences.ENABLE_FULL_HTTP_LOGGING, value.toString());
-            }
-        }
-
-        get enableMockHttpCalls(): boolean {
-            return localStorage.getItem(Preferences.ENABLE_MOCK_HTTP_CALLS) === "true";
-        }
-
-        set enableMockHttpCalls(value: boolean) {
-            if (value == null) {
-                localStorage.removeItem(Preferences.ENABLE_MOCK_HTTP_CALLS);
-            }
-            else {
-                localStorage.setItem(Preferences.ENABLE_MOCK_HTTP_CALLS, value.toString());
+                localStorage.setItem(Preferences.SESSION_ID, value);
             }
         }
 
@@ -139,39 +137,6 @@
             }
             else {
                 localStorage.setItem(Preferences.PIN, value);
-            }
-        }
-
-        get categoryOrder(): string[] {
-            var categoryOrder = localStorage.getItem(Preferences.CATEGORY_ORDER);
-
-            if (categoryOrder == null) {
-                return null;
-            }
-            else {
-                return JSON.parse(categoryOrder);
-            }
-        }
-
-        set categoryOrder(value: string[]) {
-            if (value == null) {
-                localStorage.removeItem(Preferences.CATEGORY_ORDER);
-            }
-            else {
-                localStorage.setItem(Preferences.CATEGORY_ORDER, JSON.stringify(value));
-            }
-        }
-
-        get hasCompletedOnboarding(): boolean {
-            return localStorage.getItem(Preferences.HAS_COMPLETED_ONBOARDING) === "true";
-        }
-
-        set hasCompletedOnboarding(value: boolean) {
-            if (value == null) {
-                localStorage.removeItem(Preferences.HAS_COMPLETED_ONBOARDING);
-            }
-            else {
-                localStorage.setItem(Preferences.HAS_COMPLETED_ONBOARDING, value.toString());
             }
         }
     }

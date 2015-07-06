@@ -42,19 +42,6 @@
 
         protected logo_click() {
 
-            if (this.Preferences.enableDeveloperTools) {
-                return;
-            }
-
-            this.viewModel.logoClickCount += 1;
-
-            // If they've clicked the logo 10 times, then enable development tools
-            // and push them back to the settings page.
-            if (this.viewModel.logoClickCount > 9) {
-                this.Preferences.enableDeveloperTools = true;
-                this.UiHelper.toast.showShortBottom("Development Tools Enabled!");
-                this.$location.path("/app/settings");
-            }
         }
 
         protected copyrightInfo_click(): void {

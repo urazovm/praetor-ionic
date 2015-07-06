@@ -264,7 +264,7 @@ var PraetorApp;
             $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|ghttps?|ms-appx|x-wmapp0|chrome-extension):/);
             $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|ms-appx|x-wmapp0):|data:image\//);
             // Register our custom interceptor with the HTTP provider so we can hook into AJAX request events.
-            $httpProvider.interceptors.push(PraetorApp.Services.HttpInterceptor.ID);
+            //$httpProvider.interceptors.push(Services.HttpInterceptor.ID);
             // Setup all of the client side routes and their controllers and views.
             PraetorApp.RouteConfig.setupRoutes($stateProvider, $urlRouterProvider);
             // If mock API calls are enabled, then we'll add a random delay for all HTTP requests to simulate
@@ -297,6 +297,7 @@ var PraetorApp;
             // Potentially display the PIN screen.
             UiHelper.showPinEntryAfterResume().then(function () {
                 isShowingPinPrompt = false;
+                debugger;
                 // If the user hasn't completed onboarding (eg new, first-time use of the app)
                 // then we'll push them straight into the onboarding flow. Note that we do this
                 // purposefully after the PIN screen for the case where the user may be upgrading
@@ -323,7 +324,7 @@ var PraetorApp;
                         disableBack: true
                     });
                     // Navigate the user to their default view.
-                    $location.path(Utilities.defaultCategory.href.substring(1));
+                    //$location.path(Utilities.defaultCategory.href.substring(1));
                     $location.replace();
                 }
             });
@@ -403,78 +404,12 @@ var PraetorApp;
                 controller: PraetorApp.Controllers.MenuController.ID
             });
             // An blank view useful as a place holder etc.
-            $stateProvider.state("app.blank", {
-                url: "/blank",
+            $stateProvider.state("app.login", {
+                url: "/login",
                 views: {
                     "menuContent": {
-                        templateUrl: "templates/Blank.html"
-                    }
-                }
-            });
-            // A shared view used between categories, assigned a number via the route URL (categoryNumber).
-            $stateProvider.state("app.category", {
-                url: "/category/:categoryNumber",
-                views: {
-                    "menuContent": {
-                        templateUrl: "templates/Category.html",
-                        controller: PraetorApp.Controllers.CategoryController.ID
-                    }
-                }
-            });
-            //#region Onboarding
-            $stateProvider.state("app.onboarding-splash", {
-                url: "/onboarding/splash",
-                views: {
-                    "menuContent": {
-                        templateUrl: "templates/Onboarding/Onboarding-Splash.html",
-                        controller: PraetorApp.Controllers.OnboardingSplashController.ID
-                    }
-                }
-            });
-            $stateProvider.state("app.onboarding-register", {
-                url: "/onboarding/register",
-                views: {
-                    "menuContent": {
-                        templateUrl: "templates/Onboarding/Onboarding-Register.html",
-                        controller: PraetorApp.Controllers.OnboardingRegisterController.ID
-                    }
-                }
-            });
-            $stateProvider.state("app.onboarding-share", {
-                url: "/onboarding/share",
-                views: {
-                    "menuContent": {
-                        templateUrl: "templates/Onboarding/Onboarding-Share.html",
-                        controller: PraetorApp.Controllers.OnboardingShareController.ID
-                    }
-                }
-            });
-            //#endregion
-            //#region Settings
-            $stateProvider.state("app.settings-list", {
-                url: "/settings/list",
-                views: {
-                    "menuContent": {
-                        templateUrl: "templates/Settings/Settings-List.html",
-                        controller: PraetorApp.Controllers.SettingsListController.ID
-                    }
-                }
-            });
-            $stateProvider.state("app.cloud-sync", {
-                url: "/settings/cloud-sync",
-                views: {
-                    "menuContent": {
-                        templateUrl: "templates/Settings/Cloud-Sync.html",
-                        controller: PraetorApp.Controllers.CloudSyncController.ID
-                    }
-                }
-            });
-            $stateProvider.state("app.configure-pin", {
-                url: "/settings/configure-pin",
-                views: {
-                    "menuContent": {
-                        templateUrl: "templates/Settings/Configure-Pin.html",
-                        controller: PraetorApp.Controllers.ConfigurePinController.ID
+                        templateUrl: "templates/Login.html",
+                        controller: PraetorApp.Controllers.LoginController.ID
                     }
                 }
             });
@@ -487,9 +422,8 @@ var PraetorApp;
                     }
                 }
             });
-            //#endregion
             // If none of the above states are matched, use the blank route.
-            $urlRouterProvider.otherwise("/app/blank");
+            $urlRouterProvider.otherwise('/app/login');
         };
         return RouteConfig;
     })();
@@ -779,30 +713,75 @@ var PraetorApp;
 (function (PraetorApp) {
     var Controllers;
     (function (Controllers) {
-        var CategoryController = (function (_super) {
-            __extends(CategoryController, _super);
-            function CategoryController($scope, $stateParams) {
-                _super.call(this, $scope, PraetorApp.ViewModels.CategoryViewModel);
-                this.$stateParams = $stateParams;
+        var LoginController = (function (_super) {
+            __extends(LoginController, _super);
+            function LoginController($scope, $location, $http, Utilities, UiHelper, Preferences, Praetor) {
+                _super.call(this, $scope, PraetorApp.ViewModels.LoginViewModel);
+                this.$location = $location;
+                this.$http = $http;
+                this.Utilities = Utilities;
+                this.UiHelper = UiHelper;
+                this.Preferences = Preferences;
+                this.Praetor = Praetor;
+                // vyplníme poslední uložený server a login
+                this.viewModel.server = Preferences.serverUrl;
+                this.viewModel.username = Preferences.userId;
+                $scope.$on("http.unauthorized", _.bind(this.http_unauthorized, this));
+                $scope.$on("http.forbidden", _.bind(this.http_forbidden, this));
+                $scope.$on("http.notFound", _.bind(this.http_notFound, this));
             }
-            Object.defineProperty(CategoryController, "$inject", {
+            Object.defineProperty(LoginController, "$inject", {
                 get: function () {
-                    return ["$scope", "$stateParams"];
+                    return ["$scope", "$location", "$http", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.PraetorService.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
-            //#region BaseController Events
-            CategoryController.prototype.view_beforeEnter = function () {
-                _super.prototype.view_beforeEnter.call(this);
-                // Set the category number into the view model using the value as provided
-                // in the view route (via the $stateParameters).
-                this.viewModel.categoryNumber = this.$stateParams.categoryNumber;
+            //#region Event Handlers
+            LoginController.prototype.http_unauthorized = function () {
+                // Unauthorized should mean that a token wasn't sent, but we'll null these out anyways.
+                this.Preferences.userId = null;
+                this.Preferences.token = null;
+                this.UiHelper.toast.showLongBottom("You do not have a token (401); please login.");
             };
-            CategoryController.ID = "CategoryController";
-            return CategoryController;
+            LoginController.prototype.http_forbidden = function () {
+                // A token was sent, but was no longer valid. Null out the invalid token.
+                this.Preferences.userId = null;
+                this.Preferences.token = null;
+                this.UiHelper.toast.showLongBottom("Your token has expired (403); please login again.");
+            };
+            LoginController.prototype.http_notFound = function () {
+                // The restful API services are down maybe?
+                this.UiHelper.toast.showLongBottom("Server not available (404); please contact your administrator.");
+            };
+            //#endregion
+            //#region Controller Methods
+            LoginController.prototype.login = function () {
+                if (!this.viewModel.server) {
+                    this.UiHelper.alert("Zadejte adresu serveru");
+                    return;
+                }
+                if (!this.viewModel.username) {
+                    this.UiHelper.alert("Zadejte přihlašovací jméno");
+                    return;
+                }
+                if (!this.viewModel.password) {
+                    this.UiHelper.alert("Zadejte heslo");
+                    return;
+                }
+                this.UiHelper.progressIndicator.showSimpleWithLabel(true, "Přihlašuji...");
+                var self = this;
+                this.Praetor.login(this.viewModel.server, this.viewModel.username, this.viewModel.password).then(function (data) {
+                    self.UiHelper.alert("Chyba přihlášení");
+                }).finally(function () {
+                    // Zavřeme progress indigator
+                    self.UiHelper.progressIndicator.hide();
+                });
+            };
+            LoginController.ID = "LoginController";
+            return LoginController;
         })(Controllers.BaseController);
-        Controllers.CategoryController = CategoryController;
+        Controllers.LoginController = LoginController;
     })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
@@ -818,10 +797,6 @@ var PraetorApp;
                 this.Utilities = Utilities;
                 this.UiHelper = UiHelper;
                 this.Preferences = Preferences;
-                this.viewModel.categories = this.Utilities.categories;
-                $scope.$on("http.unauthorized", _.bind(this.http_unauthorized, this));
-                $scope.$on("http.forbidden", _.bind(this.http_forbidden, this));
-                $scope.$on("http.notFound", _.bind(this.http_notFound, this));
             }
             Object.defineProperty(MenuController, "$inject", {
                 get: function () {
@@ -830,357 +805,10 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
-            //#region Event Handlers
-            MenuController.prototype.http_unauthorized = function () {
-                // Unauthorized should mean that a token wasn't sent, but we'll null these out anyways.
-                this.Preferences.userId = null;
-                this.Preferences.token = null;
-                this.UiHelper.toast.showLongBottom("You do not have a token (401); please login.");
-            };
-            MenuController.prototype.http_forbidden = function () {
-                // A token was sent, but was no longer valid. Null out the invalid token.
-                this.Preferences.userId = null;
-                this.Preferences.token = null;
-                this.UiHelper.toast.showLongBottom("Your token has expired (403); please login again.");
-            };
-            MenuController.prototype.http_notFound = function () {
-                // The restful API services are down maybe?
-                this.UiHelper.toast.showLongBottom("Server not available (404); please contact your administrator.");
-            };
-            //#endregion
-            //#region Controller Methods
-            MenuController.prototype.reorder_click = function () {
-                var _this = this;
-                this.UiHelper.showDialog(this.UiHelper.DialogIds.ReorderCategories).then(function () {
-                    // After the re-order dialog is closed, re-populate the category
-                    // items since they may have been re-ordered.
-                    _this.viewModel.categories = _this.Utilities.categories;
-                });
-            };
             MenuController.ID = "MenuController";
             return MenuController;
         })(Controllers.BaseController);
         Controllers.MenuController = MenuController;
-    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var Controllers;
-    (function (Controllers) {
-        var PinEntryController = (function (_super) {
-            __extends(PinEntryController, _super);
-            function PinEntryController($scope, Utilities, Preferences, UiHelper) {
-                _super.call(this, $scope, PraetorApp.ViewModels.PinEntryViewModel, UiHelper.DialogIds.PinEntry);
-                this.Utilities = Utilities;
-                this.Preferences = Preferences;
-                this.UiHelper = UiHelper;
-            }
-            Object.defineProperty(PinEntryController, "$inject", {
-                get: function () {
-                    return ["$scope", PraetorApp.Services.Utilities.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.UiHelper.ID];
-                },
-                enumerable: true,
-                configurable: true
-            });
-            //#region BaseDialogController Overrides
-            PinEntryController.prototype.dialog_shown = function () {
-                _super.prototype.dialog_shown.call(this);
-                this.viewModel.pin = "";
-                this.viewModel.showBackButton = !!this.getData().showBackButton;
-                this.viewModel.promptText = this.getData().promptText;
-                this.viewModel.pinToMatch = this.getData().pinToMatch;
-            };
-            //#endregion
-            //#region Private Methods
-            PinEntryController.prototype.validatePin = function () {
-                if (this.viewModel.pinToMatch) {
-                    // If there is a PIN to match, then we'll see if it matches. This is
-                    // for the case when we are validating a user entered PIN against one
-                    // that is already configured.
-                    if (this.viewModel.pin === this.viewModel.pinToMatch) {
-                        // If the PIN values match, then close this dialog instance.
-                        this.close(new PraetorApp.Models.PinEntryDialogResultModel(true, false, this.viewModel.pin));
-                    }
-                    else {
-                        // If the PIN values do not match, then clear the fields and remain
-                        // open so the user can try again.
-                        this.viewModel.pin = "";
-                        this.UiHelper.toast.showShortTop("Invalid pin; please try again.");
-                        this.scope.$apply();
-                    }
-                }
-                else {
-                    // If we aren't attempting to match a PIN, then this must be a prompt
-                    // for a new PIN value. In this case we can just set the result and
-                    // close this modal instance.
-                    this.close(new PraetorApp.Models.PinEntryDialogResultModel(null, false, this.viewModel.pin));
-                }
-            };
-            //#endregion
-            //#region Controller Methods
-            PinEntryController.prototype.number_click = function (value) {
-                if (this.viewModel.pin.length < 4) {
-                    this.viewModel.pin += value;
-                    // If all four digits have been entered then we need to take action.
-                    // We wait a fraction of a second so that the user can see the last
-                    // digit in the PIN appear in the UI.
-                    if (this.viewModel.pin.length === 4) {
-                        _.delay(_.bind(this.validatePin, this), 700);
-                    }
-                }
-            };
-            PinEntryController.prototype.clear_click = function () {
-                this.viewModel.pin = "";
-            };
-            PinEntryController.prototype.back_click = function () {
-                this.close(new PraetorApp.Models.PinEntryDialogResultModel(null, true, null));
-            };
-            PinEntryController.ID = "PinEntryController";
-            return PinEntryController;
-        })(Controllers.BaseDialogController);
-        Controllers.PinEntryController = PinEntryController;
-    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var Controllers;
-    (function (Controllers) {
-        var ReorderCategoriesController = (function (_super) {
-            __extends(ReorderCategoriesController, _super);
-            function ReorderCategoriesController($scope, Utilities, Preferences, UiHelper) {
-                _super.call(this, $scope, PraetorApp.ViewModels.ReorderCategoriesViewModel, UiHelper.DialogIds.ReorderCategories);
-                this.Utilities = Utilities;
-                this.Preferences = Preferences;
-            }
-            Object.defineProperty(ReorderCategoriesController, "$inject", {
-                get: function () {
-                    return ["$scope", PraetorApp.Services.Utilities.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.UiHelper.ID];
-                },
-                enumerable: true,
-                configurable: true
-            });
-            //#region BaseDialogController Overrides
-            ReorderCategoriesController.prototype.dialog_shown = function () {
-                _super.prototype.dialog_shown.call(this);
-                // Grab the available categories.
-                this.viewModel.categories = this.Utilities.categories;
-            };
-            //#endregion
-            //#region Controller Methods
-            ReorderCategoriesController.prototype.item_reorder = function (item, fromIndex, toIndex) {
-                this.viewModel.categories.splice(fromIndex, 1);
-                this.viewModel.categories.splice(toIndex, 0, item);
-            };
-            ReorderCategoriesController.prototype.done_click = function () {
-                var categoryOrder = [];
-                this.viewModel.categories.forEach(function (categoryItem) {
-                    categoryOrder.push(categoryItem.name);
-                });
-                this.Preferences.categoryOrder = categoryOrder;
-                this.close();
-            };
-            ReorderCategoriesController.ID = "ReorderCategoriesController";
-            return ReorderCategoriesController;
-        })(Controllers.BaseDialogController);
-        Controllers.ReorderCategoriesController = ReorderCategoriesController;
-    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var Controllers;
-    (function (Controllers) {
-        var OnboardingRegisterController = (function (_super) {
-            __extends(OnboardingRegisterController, _super);
-            function OnboardingRegisterController($scope, $location, $ionicViewService, Utilities, UiHelper, Preferences) {
-                _super.call(this, $scope, PraetorApp.ViewModels.OnboardingRegisterViewModel);
-                this.$location = $location;
-                this.$ionicViewService = $ionicViewService;
-                this.Utilities = Utilities;
-                this.UiHelper = UiHelper;
-                this.Preferences = Preferences;
-            }
-            Object.defineProperty(OnboardingRegisterController, "$inject", {
-                get: function () {
-                    return ["$scope", "$location", "$ionicViewService", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
-                },
-                enumerable: true,
-                configurable: true
-            });
-            //#region BaseController Events
-            OnboardingRegisterController.prototype.view_beforeEnter = function () {
-                _super.prototype.view_beforeEnter.call(this);
-                this.viewModel.showSignIn = false;
-            };
-            //#endregion
-            //#region UI Events
-            OnboardingRegisterController.prototype.createAccount_click = function () {
-                var _this = this;
-                if (!this.viewModel.email) {
-                    this.UiHelper.alert("Please enter an e-mail address.");
-                    return;
-                }
-                if (!this.viewModel.password || !this.viewModel.confirmPassword) {
-                    this.UiHelper.alert("Please fill in both password fields.");
-                    return;
-                }
-                if (this.viewModel.password !== this.viewModel.confirmPassword) {
-                    this.UiHelper.alert("The passwords do not match; please try again.");
-                    this.viewModel.password = "";
-                    this.viewModel.confirmPassword = "";
-                    return;
-                }
-                this.UiHelper.progressIndicator.showSimpleWithLabel(true, "Creating Account...");
-                // Simulate a wait period for an HTTP request.
-                // This is where you'd use a service to interact with your API.
-                setTimeout(function () {
-                    _this.UiHelper.progressIndicator.hide();
-                    // Tell Ionic to not animate and clear the history (hide the back button)
-                    // for the next view that we'll be navigating to below.
-                    _this.$ionicViewService.nextViewOptions({
-                        disableAnimate: true,
-                        disableBack: true
-                    });
-                    // Navigate the user to the next onboarding view.
-                    _this.$location.path("/app/onboarding/share");
-                    _this.$location.replace();
-                }, 3000);
-            };
-            OnboardingRegisterController.prototype.signIn_click = function () {
-                var _this = this;
-                if (!this.viewModel.email) {
-                    this.UiHelper.alert("Please enter an e-mail address.");
-                    return;
-                }
-                if (!this.viewModel.password) {
-                    this.UiHelper.alert("Please enter a password.");
-                    return;
-                }
-                this.UiHelper.progressIndicator.showSimpleWithLabel(true, "Signing in...");
-                // Simulate a wait period for an HTTP request.
-                // This is where you'd use a service to interact with your API.
-                setTimeout(function () {
-                    _this.UiHelper.progressIndicator.hide();
-                    // Tell Ionic to not animate and clear the history (hide the back button)
-                    // for the next view that we'll be navigating to below.
-                    _this.$ionicViewService.nextViewOptions({
-                        disableAnimate: true,
-                        disableBack: true
-                    });
-                    // Navigate the user to the next onboarding view.
-                    _this.$location.path("/app/onboarding/share");
-                    _this.$location.replace();
-                }, 3000);
-            };
-            OnboardingRegisterController.prototype.needToCreateAccount_click = function () {
-                this.viewModel.password = "";
-                this.viewModel.confirmPassword = "";
-                this.viewModel.showSignIn = false;
-            };
-            OnboardingRegisterController.prototype.alreadyHaveAccount_click = function () {
-                this.viewModel.confirmPassword = "";
-                this.viewModel.showSignIn = true;
-            };
-            OnboardingRegisterController.prototype.skip_click = function () {
-                // Set the preference value so onboarding doesn't occur again.
-                this.Preferences.hasCompletedOnboarding = true;
-                // Tell Ionic to not animate and clear the history (hide the back button)
-                // for the next view that we'll be navigating to below.
-                this.$ionicViewService.nextViewOptions({
-                    disableAnimate: true,
-                    disableBack: true
-                });
-                // Navigate the user to their default view.
-                this.$location.path(this.Utilities.defaultCategory.href.substring(1));
-                this.$location.replace();
-            };
-            OnboardingRegisterController.ID = "OnboardingRegisterController";
-            return OnboardingRegisterController;
-        })(Controllers.BaseController);
-        Controllers.OnboardingRegisterController = OnboardingRegisterController;
-    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var Controllers;
-    (function (Controllers) {
-        var OnboardingShareController = (function (_super) {
-            __extends(OnboardingShareController, _super);
-            function OnboardingShareController($scope, $location, $ionicViewService, Utilities, UiHelper, Preferences) {
-                _super.call(this, $scope, PraetorApp.ViewModels.EmptyViewModel);
-                this.$location = $location;
-                this.$ionicViewService = $ionicViewService;
-                this.Utilities = Utilities;
-                this.UiHelper = UiHelper;
-                this.Preferences = Preferences;
-            }
-            Object.defineProperty(OnboardingShareController, "$inject", {
-                get: function () {
-                    return ["$scope", "$location", "$ionicViewService", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
-                },
-                enumerable: true,
-                configurable: true
-            });
-            //#region UI Events
-            OnboardingShareController.prototype.share_click = function (platformName) {
-                this.UiHelper.toast.showShortCenter("Share for " + platformName);
-            };
-            OnboardingShareController.prototype.done_click = function () {
-                // Set the preference value so onboarding doesn't occur again.
-                this.Preferences.hasCompletedOnboarding = true;
-                // Tell Ionic to not animate and clear the history (hide the back button)
-                // for the next view that we'll be navigating to below.
-                this.$ionicViewService.nextViewOptions({
-                    disableAnimate: true,
-                    disableBack: true
-                });
-                // Navigate the user to their default view.
-                this.$location.path(this.Utilities.defaultCategory.href.substring(1));
-                this.$location.replace();
-            };
-            OnboardingShareController.ID = "OnboardingShareController";
-            return OnboardingShareController;
-        })(Controllers.BaseController);
-        Controllers.OnboardingShareController = OnboardingShareController;
-    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var Controllers;
-    (function (Controllers) {
-        var OnboardingSplashController = (function (_super) {
-            __extends(OnboardingSplashController, _super);
-            function OnboardingSplashController($scope, $location, $ionicViewService, Utilities, Preferences) {
-                _super.call(this, $scope, PraetorApp.ViewModels.EmptyViewModel);
-                this.$location = $location;
-                this.$ionicViewService = $ionicViewService;
-                this.Utilities = Utilities;
-                this.Preferences = Preferences;
-            }
-            Object.defineProperty(OnboardingSplashController, "$inject", {
-                get: function () {
-                    return ["$scope", "$location", "$ionicViewService", PraetorApp.Services.Utilities.ID, PraetorApp.Services.Preferences.ID];
-                },
-                enumerable: true,
-                configurable: true
-            });
-            //#region UI Events
-            OnboardingSplashController.prototype.skip_click = function () {
-                // Set the preference value so onboarding doesn't occur again.
-                this.Preferences.hasCompletedOnboarding = true;
-                // Tell Ionic to not animate and clear the history (hide the back button)
-                // for the next view that we'll be navigating to below.
-                this.$ionicViewService.nextViewOptions({
-                    disableAnimate: true,
-                    disableBack: true
-                });
-                // Navigate the user to their default view.
-                this.$location.path(this.Utilities.defaultCategory.href.substring(1));
-                this.$location.replace();
-            };
-            OnboardingSplashController.ID = "OnboardingSplashController";
-            return OnboardingSplashController;
-        })(Controllers.BaseController);
-        Controllers.OnboardingSplashController = OnboardingSplashController;
     })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
@@ -1215,17 +843,6 @@ var PraetorApp;
             //#endregion
             //#region Controller Methods
             AboutController.prototype.logo_click = function () {
-                if (this.Preferences.enableDeveloperTools) {
-                    return;
-                }
-                this.viewModel.logoClickCount += 1;
-                // If they've clicked the logo 10 times, then enable development tools
-                // and push them back to the settings page.
-                if (this.viewModel.logoClickCount > 9) {
-                    this.Preferences.enableDeveloperTools = true;
-                    this.UiHelper.toast.showShortBottom("Development Tools Enabled!");
-                    this.$location.path("/app/settings");
-                }
             };
             AboutController.prototype.copyrightInfo_click = function () {
                 window.open(this.versionInfo.copyrightInfoUrl, "_system");
@@ -1240,213 +857,6 @@ var PraetorApp;
             return AboutController;
         })(Controllers.BaseController);
         Controllers.AboutController = AboutController;
-    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var Controllers;
-    (function (Controllers) {
-        var CloudSyncController = (function (_super) {
-            __extends(CloudSyncController, _super);
-            function CloudSyncController($scope, $ionicViewService) {
-                _super.call(this, $scope, PraetorApp.ViewModels.CloudSyncViewModel);
-                this.$ionicViewService = $ionicViewService;
-                // Subscribe to the icon-panel's created event by name ("cloud-icon-panel").
-                this.scope.$on("icon-panel.cloud-icon-panel.created", _.bind(this.iconPanel_created, this));
-            }
-            Object.defineProperty(CloudSyncController, "$inject", {
-                get: function () {
-                    return ["$scope", "$ionicViewService"];
-                },
-                enumerable: true,
-                configurable: true
-            });
-            //#region BaseController Overrides
-            CloudSyncController.prototype.view_beforeEnter = function () {
-                _super.prototype.view_beforeEnter.call(this);
-                // Setup the view model.
-                this.viewModel.showButton = true;
-                this.viewModel.showUserCount = true;
-                this.viewModel.icon = "ion-ios-cloud-upload-outline";
-                this.viewModel.userCount = 2344;
-            };
-            CloudSyncController.prototype.view_leave = function () {
-                _super.prototype.view_leave.call(this);
-                // Stop the toggleIcon function from firing.
-                clearInterval(this.updateInterval);
-            };
-            CloudSyncController.prototype.iconPanel_created = function (event, instance) {
-                // Store a reference to the instance of this icon-panel so we can use it later.
-                this.cloudIconPanel = instance;
-                // Register the toggleIcon function to fire every second to swap the cloud icon.
-                this.updateInterval = setInterval(_.bind(this.toggleIcon, this), 1000);
-            };
-            //#endregion
-            //#region Private Methods
-            CloudSyncController.prototype.toggleIcon = function () {
-                // Simply switch the icon depending on which icon is currently set.
-                if (this.cloudIconPanel.getIcon() === "ion-ios-cloud-upload-outline") {
-                    this.cloudIconPanel.setIcon("ion-ios-cloud-download-outline");
-                }
-                else {
-                    this.cloudIconPanel.setIcon("ion-ios-cloud-upload-outline");
-                }
-                // We have to notify Angular that we want an update manually since the
-                // setInterval causes this function to be executed outside of an Angular
-                // digest cycle.
-                this.scope.$apply();
-            };
-            //#endregion
-            //#region Controller Methods
-            CloudSyncController.prototype.setup_click = function () {
-                // Stop the auto icon swapping.
-                clearInterval(this.updateInterval);
-                // Change the text on the icon panel using the instance directly.
-                this.cloudIconPanel.setText("Unable to contact the cloud!");
-                // Can change the icon via a setIcon call on the directive instance
-                // or by changing the view model property that it is bound to.
-                //this.iconPanel.setIcon("ion-ios-rainy"); // Change via directly the instance.
-                this.viewModel.icon = "ion-ios-rainy"; // Change via view model binding.
-                // Hide the button and user count text.
-                this.viewModel.showButton = false;
-                this.viewModel.showUserCount = false;
-            };
-            CloudSyncController.ID = "CloudSyncController";
-            return CloudSyncController;
-        })(Controllers.BaseController);
-        Controllers.CloudSyncController = CloudSyncController;
-    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var Controllers;
-    (function (Controllers) {
-        var ConfigurePinController = (function (_super) {
-            __extends(ConfigurePinController, _super);
-            function ConfigurePinController($scope, UiHelper, Preferences) {
-                _super.call(this, $scope, PraetorApp.ViewModels.ConfigurePinViewModel);
-                this.UiHelper = UiHelper;
-                this.Preferences = Preferences;
-            }
-            Object.defineProperty(ConfigurePinController, "$inject", {
-                get: function () {
-                    return ["$scope", PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
-                },
-                enumerable: true,
-                configurable: true
-            });
-            //#region BaseController Overrides
-            ConfigurePinController.prototype.view_beforeEnter = function () {
-                _super.prototype.view_beforeEnter.call(this);
-                this.viewModel.isPinSet = this.Preferences.pin !== null;
-            };
-            //#endregion
-            //#region Controller Methods
-            ConfigurePinController.prototype.setPin_click = function () {
-                var _this = this;
-                var options, model;
-                model = new PraetorApp.Models.PinEntryDialogModel("Enter a value for your new PIN", null, true);
-                options = new PraetorApp.Models.DialogOptions(model);
-                // Show the PIN entry dialog.
-                this.UiHelper.showDialog(this.UiHelper.DialogIds.PinEntry, options).then(function (result1) {
-                    // If there was a PIN returned, they didn't cancel.
-                    if (result1.pin) {
-                        // Show a second prompt to make sure they enter the same PIN twice.
-                        // We pass in the first PIN value because we want them to be able to match it.
-                        model.promptText = "Confirm your new PIN";
-                        model.pinToMatch = result1.pin;
-                        options.dialogData = model;
-                        _this.UiHelper.showDialog(_this.UiHelper.DialogIds.PinEntry, options).then(function (result2) {
-                            // If the second PIN entered matched the first one, then use it.
-                            if (result2.matches) {
-                                _this.Preferences.pin = result2.pin;
-                                _this.viewModel.isPinSet = true;
-                                _this.UiHelper.toast.showShortBottom("Your PIN has been configured.");
-                            }
-                        });
-                    }
-                });
-            };
-            ConfigurePinController.prototype.changePin_click = function () {
-                var _this = this;
-                var options, model;
-                model = new PraetorApp.Models.PinEntryDialogModel("Enter your current PIN", this.Preferences.pin, true);
-                options = new PraetorApp.Models.DialogOptions(model);
-                // Show the PIN entry dialog; pass the existing PIN which they need to match.
-                this.UiHelper.showDialog(this.UiHelper.DialogIds.PinEntry, options).then(function (result1) {
-                    // If the PIN matched, then we can continue.
-                    if (result1.matches) {
-                        // Prompt for a new PIN.
-                        model.promptText = "Enter your new PIN";
-                        model.pinToMatch = null;
-                        options.dialogData = model;
-                        _this.UiHelper.showDialog(_this.UiHelper.DialogIds.PinEntry, options).then(function (result2) {
-                            // Show a second prompt to make sure they enter the same PIN twice.
-                            // We pass in the first PIN value because we want them to be able to match it.
-                            model.promptText = "Confirm your new PIN";
-                            model.pinToMatch = result2.pin;
-                            options.dialogData = model;
-                            _this.UiHelper.showDialog(_this.UiHelper.DialogIds.PinEntry, options).then(function (result3) {
-                                // If the second new PIN entered matched the new first one, then use it.
-                                if (result3.matches) {
-                                    _this.Preferences.pin = result3.pin;
-                                    _this.viewModel.isPinSet = true;
-                                    _this.UiHelper.toast.showShortBottom("Your PIN has been configured.");
-                                }
-                            });
-                        });
-                    }
-                });
-            };
-            ConfigurePinController.prototype.removePin_click = function () {
-                var _this = this;
-                var options, model;
-                model = new PraetorApp.Models.PinEntryDialogModel("Enter your current PIN", this.Preferences.pin, true);
-                options = new PraetorApp.Models.DialogOptions(model);
-                // Show the PIN entry dialog; pass the existing PIN which they need to match.
-                this.UiHelper.showDialog(this.UiHelper.DialogIds.PinEntry, options).then(function (result) {
-                    // If the PIN entered matched, then we can remove it.
-                    if (result.matches) {
-                        _this.Preferences.pin = null;
-                        _this.viewModel.isPinSet = false;
-                        _this.UiHelper.toast.showShortBottom("The PIN has been removed.");
-                    }
-                });
-            };
-            ConfigurePinController.ID = "ConfigurePinController";
-            return ConfigurePinController;
-        })(Controllers.BaseController);
-        Controllers.ConfigurePinController = ConfigurePinController;
-    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var Controllers;
-    (function (Controllers) {
-        var SettingsListController = (function (_super) {
-            __extends(SettingsListController, _super);
-            function SettingsListController($scope, Utilities, Preferences) {
-                _super.call(this, $scope, PraetorApp.ViewModels.SettingsListViewModel);
-                this.Utilities = Utilities;
-                this.Preferences = Preferences;
-            }
-            Object.defineProperty(SettingsListController, "$inject", {
-                get: function () {
-                    return ["$scope", PraetorApp.Services.Utilities.ID, PraetorApp.Services.Preferences.ID];
-                },
-                enumerable: true,
-                configurable: true
-            });
-            //#region BaseController Overrides
-            SettingsListController.prototype.view_beforeEnter = function () {
-                _super.prototype.view_beforeEnter.call(this);
-                this.viewModel.isDebugMode = this.Utilities.isDebugMode;
-                this.viewModel.isDeveloperMode = this.Preferences.enableDeveloperTools;
-            };
-            SettingsListController.ID = "SettingsListController";
-            return SettingsListController;
-        })(Controllers.BaseController);
-        Controllers.SettingsListController = SettingsListController;
     })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
@@ -2557,6 +1967,53 @@ var PraetorApp;
 (function (PraetorApp) {
     var Services;
     (function (Services) {
+        var PraetorService = (function () {
+            function PraetorService($q, Utilities, $http) {
+                this.$q = $q;
+                this.$http = $http;
+                this.Utilities = Utilities;
+            }
+            Object.defineProperty(PraetorService, "$inject", {
+                get: function () {
+                    return ["$q", Services.Utilities.ID, "$http"];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            PraetorService.prototype.openFile = function (path) {
+                var q = this.$q.defer();
+                window.handleDocumentWithURL(function () { console.log('success'); q.resolve(true); }, function (error) {
+                    console.log('failure');
+                    if (error == 53) {
+                        console.log('No app that handles this file type.');
+                    }
+                    q.resolve(false);
+                }, path);
+                return q.promise;
+            };
+            PraetorService.prototype.login = function (server, username, password) {
+                var q = this.$q.defer();
+                var data = { username: username, password: password };
+                this.$http.post('http://' + server + '/praetorapi/login', data, {
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                    .then(function (response) {
+                    q.resolve(response.data);
+                })['catch'](function (e) {
+                    q.resolve({ success: false, message: "Error " + e.status });
+                });
+                return q.promise;
+            };
+            PraetorService.ID = "PraetorService";
+            return PraetorService;
+        })();
+        Services.PraetorService = PraetorService;
+    })(Services = PraetorApp.Services || (PraetorApp.Services = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Services;
+    (function (Services) {
         /**
          * Provides a way to easily get/set user preferences.
          *
@@ -2573,10 +2030,55 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(Preferences.prototype, "enableMockHttpCalls", {
+                get: function () {
+                    return localStorage.getItem(Preferences.ENABLE_MOCK_HTTP_CALLS) === "true";
+                },
+                set: function (value) {
+                    if (value == null) {
+                        localStorage.removeItem(Preferences.ENABLE_MOCK_HTTP_CALLS);
+                    }
+                    else {
+                        localStorage.setItem(Preferences.ENABLE_MOCK_HTTP_CALLS, value.toString());
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Preferences.prototype, "hasCompletedOnboarding", {
+                get: function () {
+                    return localStorage.getItem(Preferences.HAS_COMPLETED_ONBOARDING) === "true";
+                },
+                set: function (value) {
+                    if (value == null) {
+                        localStorage.removeItem(Preferences.HAS_COMPLETED_ONBOARDING);
+                    }
+                    else {
+                        localStorage.setItem(Preferences.HAS_COMPLETED_ONBOARDING, value.toString());
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
             Object.defineProperty(Preferences.prototype, "apiUrl", {
                 get: function () {
                     //return localStorage.getItem(Preferences.API_URL);
                     return "sample-app.justin-credible.net/api";
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Preferences.prototype, "serverUrl", {
+                get: function () {
+                    return localStorage.getItem(Preferences.SERVER_URL);
+                },
+                set: function (value) {
+                    if (value == null) {
+                        localStorage.removeItem(Preferences.SERVER_URL);
+                    }
+                    else {
+                        localStorage.setItem(Preferences.SERVER_URL, value);
+                    }
                 },
                 enumerable: true,
                 configurable: true
@@ -2598,59 +2100,14 @@ var PraetorApp;
             });
             Object.defineProperty(Preferences.prototype, "token", {
                 get: function () {
-                    return localStorage.getItem(Preferences.TOKEN);
+                    return localStorage.getItem(Preferences.SESSION_ID);
                 },
                 set: function (value) {
                     if (value == null) {
-                        localStorage.removeItem(Preferences.TOKEN);
+                        localStorage.removeItem(Preferences.SESSION_ID);
                     }
                     else {
-                        localStorage.setItem(Preferences.TOKEN, value);
-                    }
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Preferences.prototype, "enableDeveloperTools", {
-                get: function () {
-                    return sessionStorage.getItem(Preferences.ENABLE_DEVELOPER_TOOLS) === "true";
-                },
-                set: function (value) {
-                    if (value == null) {
-                        sessionStorage.removeItem(Preferences.ENABLE_DEVELOPER_TOOLS);
-                    }
-                    else {
-                        sessionStorage.setItem(Preferences.ENABLE_DEVELOPER_TOOLS, value.toString());
-                    }
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Preferences.prototype, "enableFullHttpLogging", {
-                get: function () {
-                    return localStorage.getItem(Preferences.ENABLE_FULL_HTTP_LOGGING) === "true";
-                },
-                set: function (value) {
-                    if (value == null) {
-                        localStorage.removeItem(Preferences.ENABLE_FULL_HTTP_LOGGING);
-                    }
-                    else {
-                        localStorage.setItem(Preferences.ENABLE_FULL_HTTP_LOGGING, value.toString());
-                    }
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Preferences.prototype, "enableMockHttpCalls", {
-                get: function () {
-                    return localStorage.getItem(Preferences.ENABLE_MOCK_HTTP_CALLS) === "true";
-                },
-                set: function (value) {
-                    if (value == null) {
-                        localStorage.removeItem(Preferences.ENABLE_MOCK_HTTP_CALLS);
-                    }
-                    else {
-                        localStorage.setItem(Preferences.ENABLE_MOCK_HTTP_CALLS, value.toString());
+                        localStorage.setItem(Preferences.SESSION_ID, value);
                     }
                 },
                 enumerable: true,
@@ -2704,53 +2161,15 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
-            Object.defineProperty(Preferences.prototype, "categoryOrder", {
-                get: function () {
-                    var categoryOrder = localStorage.getItem(Preferences.CATEGORY_ORDER);
-                    if (categoryOrder == null) {
-                        return null;
-                    }
-                    else {
-                        return JSON.parse(categoryOrder);
-                    }
-                },
-                set: function (value) {
-                    if (value == null) {
-                        localStorage.removeItem(Preferences.CATEGORY_ORDER);
-                    }
-                    else {
-                        localStorage.setItem(Preferences.CATEGORY_ORDER, JSON.stringify(value));
-                    }
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Preferences.prototype, "hasCompletedOnboarding", {
-                get: function () {
-                    return localStorage.getItem(Preferences.HAS_COMPLETED_ONBOARDING) === "true";
-                },
-                set: function (value) {
-                    if (value == null) {
-                        localStorage.removeItem(Preferences.HAS_COMPLETED_ONBOARDING);
-                    }
-                    else {
-                        localStorage.setItem(Preferences.HAS_COMPLETED_ONBOARDING, value.toString());
-                    }
-                },
-                enumerable: true,
-                configurable: true
-            });
             Preferences.ID = "Preferences";
             Preferences.USER_ID = "USER_ID";
-            Preferences.TOKEN = "TOKEN";
-            Preferences.ENABLE_DEVELOPER_TOOLS = "ENABLE_DEVELOPER_TOOLS";
-            Preferences.ENABLE_FULL_HTTP_LOGGING = "ENABLE_FULL_HTTP_LOGGING";
-            Preferences.ENABLE_MOCK_HTTP_CALLS = "ENABLE_MOCK_HTTP_CALLS";
+            Preferences.SERVER_URL = "SERVER_URL";
+            Preferences.SESSION_ID = "SESSION_ID";
             Preferences.REQUIRE_PIN_THRESHOLD = "REQUIRE_PIN_THRESHOLD";
             Preferences.LAST_PAUSED_AT = "LAST_PAUSED_AT";
-            Preferences.PIN = "PIN";
-            Preferences.CATEGORY_ORDER = "CATEGORY_ORDER";
             Preferences.HAS_COMPLETED_ONBOARDING = "HAS_COMPLETED_ONBOARDING";
+            Preferences.PIN = "PIN";
+            Preferences.ENABLE_MOCK_HTTP_CALLS = "ENABLE_MOCK_HTTP_CALLS";
             // Default setting is 10 minutes.
             Preferences.REQUIRE_PIN_THRESHOLD_DEFAULT = 10;
             return Preferences;
@@ -2779,9 +2198,9 @@ var PraetorApp;
                 this.$q = $q;
                 this.$http = $http;
                 this.$ionicModal = $ionicModal;
-                this.MockPlatformApis = MockPlatformApis;
                 this.Utilities = Utilities;
                 this.Preferences = Preferences;
+                this.MockPlatformApis = MockPlatformApis;
             }
             Object.defineProperty(UiHelper, "$inject", {
                 //#endregion
@@ -3465,79 +2884,11 @@ var PraetorApp;
                 }
                 return guid;
             };
-            Object.defineProperty(Utilities.prototype, "categories", {
-                /**
-                 * Returns the categories for the application in their default sort order.
-                 */
-                get: function () {
-                    // Define the default set of categories.
-                    var categories = [
-                        new PraetorApp.ViewModels.CategoryItemViewModel("Category 1", "#/app/category/1", "ios-pricetags-outline", 0),
-                        new PraetorApp.ViewModels.CategoryItemViewModel("Category 2", "#/app/category/2", "ios-pricetags-outline", 1),
-                        new PraetorApp.ViewModels.CategoryItemViewModel("Category 3", "#/app/category/3", "ios-pricetags-outline", 2),
-                        new PraetorApp.ViewModels.CategoryItemViewModel("Category 4", "#/app/category/4", "ios-pricetags-outline", 3)
-                    ];
-                    // If the user has ordering preferences, then apply their custom ordering.
-                    if (this.Preferences.categoryOrder) {
-                        this.Preferences.categoryOrder.forEach(function (categoryName, index) {
-                            var categoryItem = _.where(categories, { name: categoryName })[0];
-                            if (categoryItem) {
-                                categoryItem.order = index;
-                            }
-                        });
-                    }
-                    // Ensure the list is sorted by the order.
-                    categories = _.sortBy(categories, "order");
-                    return categories;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Utilities.prototype, "defaultCategory", {
-                /**
-                 * Returns the view that is set as the default.
-                 *
-                 * Currently, this is the category that is set in the first position.
-                 */
-                get: function () {
-                    return this.categories[0];
-                },
-                enumerable: true,
-                configurable: true
-            });
             Utilities.ID = "Utilities";
             return Utilities;
         })();
         Services.Utilities = Utilities;
     })(Services = PraetorApp.Services || (PraetorApp.Services = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var ViewModels;
-    (function (ViewModels) {
-        var CategoryItemViewModel = (function () {
-            function CategoryItemViewModel(name, href, icon, order) {
-                this.name = name;
-                this.href = href;
-                this.icon = icon;
-                this.order = order;
-            }
-            return CategoryItemViewModel;
-        })();
-        ViewModels.CategoryItemViewModel = CategoryItemViewModel;
-    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var ViewModels;
-    (function (ViewModels) {
-        var CategoryViewModel = (function () {
-            function CategoryViewModel() {
-            }
-            return CategoryViewModel;
-        })();
-        ViewModels.CategoryViewModel = CategoryViewModel;
-    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
 (function (PraetorApp) {
@@ -3560,6 +2911,18 @@ var PraetorApp;
 (function (PraetorApp) {
     var ViewModels;
     (function (ViewModels) {
+        var LoginViewModel = (function () {
+            function LoginViewModel() {
+            }
+            return LoginViewModel;
+        })();
+        ViewModels.LoginViewModel = LoginViewModel;
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
         var MenuViewModel = (function () {
             function MenuViewModel() {
             }
@@ -3572,117 +2935,12 @@ var PraetorApp;
 (function (PraetorApp) {
     var ViewModels;
     (function (ViewModels) {
-        var PinEntryViewModel = (function () {
-            function PinEntryViewModel() {
-            }
-            return PinEntryViewModel;
-        })();
-        ViewModels.PinEntryViewModel = PinEntryViewModel;
-    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var ViewModels;
-    (function (ViewModels) {
-        var ReorderCategoriesViewModel = (function () {
-            function ReorderCategoriesViewModel() {
-            }
-            return ReorderCategoriesViewModel;
-        })();
-        ViewModels.ReorderCategoriesViewModel = ReorderCategoriesViewModel;
-    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var ViewModels;
-    (function (ViewModels) {
-        var OnboardingRegisterViewModel = (function () {
-            function OnboardingRegisterViewModel() {
-            }
-            return OnboardingRegisterViewModel;
-        })();
-        ViewModels.OnboardingRegisterViewModel = OnboardingRegisterViewModel;
-    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var ViewModels;
-    (function (ViewModels) {
         var AboutViewModel = (function () {
             function AboutViewModel() {
             }
             return AboutViewModel;
         })();
         ViewModels.AboutViewModel = AboutViewModel;
-    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var ViewModels;
-    (function (ViewModels) {
-        var CloudSyncViewModel = (function () {
-            function CloudSyncViewModel() {
-            }
-            return CloudSyncViewModel;
-        })();
-        ViewModels.CloudSyncViewModel = CloudSyncViewModel;
-    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var ViewModels;
-    (function (ViewModels) {
-        var ConfigurePinViewModel = (function () {
-            function ConfigurePinViewModel() {
-            }
-            return ConfigurePinViewModel;
-        })();
-        ViewModels.ConfigurePinViewModel = ConfigurePinViewModel;
-    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var ViewModels;
-    (function (ViewModels) {
-        var DeveloperViewModel = (function () {
-            function DeveloperViewModel() {
-            }
-            return DeveloperViewModel;
-        })();
-        ViewModels.DeveloperViewModel = DeveloperViewModel;
-    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var ViewModels;
-    (function (ViewModels) {
-        var LogsViewModel = (function () {
-            function LogsViewModel() {
-                this.logs = {};
-            }
-            return LogsViewModel;
-        })();
-        ViewModels.LogsViewModel = LogsViewModel;
-        var LogEntryViewModel = (function (_super) {
-            __extends(LogEntryViewModel, _super);
-            function LogEntryViewModel() {
-                _super.apply(this, arguments);
-            }
-            return LogEntryViewModel;
-        })(PraetorApp.Models.LogEntry);
-        ViewModels.LogEntryViewModel = LogEntryViewModel;
-    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var ViewModels;
-    (function (ViewModels) {
-        var SettingsListViewModel = (function () {
-            function SettingsListViewModel() {
-            }
-            return SettingsListViewModel;
-        })();
-        ViewModels.SettingsListViewModel = SettingsListViewModel;
     })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
 })(PraetorApp || (PraetorApp = {}));
 //# sourceMappingURL=appBundle.js.map

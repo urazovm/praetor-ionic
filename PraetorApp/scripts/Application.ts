@@ -261,10 +261,10 @@ module PraetorApp.Application {
         // This event will be fired once the device ready event fires via Cordova.
         $ionicPlatform.ready(function () {
             ionicPlatform_ready($rootScope, $location, $ionicViewService, $ionicPlatform, UiHelper, Utilities, Preferences);
-        });
-
+        });   
+        
         // Mock up or allow HTTP responses.
-        MockHttpApis.mockHttpCalls(Preferences.enableMockHttpCalls);
+        MockHttpApis.mockHttpCalls(Preferences.enableMockHttpCalls);      
     };
 
     /**
@@ -311,7 +311,7 @@ module PraetorApp.Application {
         $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|ms-appx|x-wmapp0):|data:image\//);
 
         // Register our custom interceptor with the HTTP provider so we can hook into AJAX request events.
-        $httpProvider.interceptors.push(Services.HttpInterceptor.ID);
+        //$httpProvider.interceptors.push(Services.HttpInterceptor.ID);
 
         // Setup all of the client side routes and their controllers and views.
         RouteConfig.setupRoutes($stateProvider, $urlRouterProvider);
@@ -320,7 +320,7 @@ module PraetorApp.Application {
         // network latency so we can see the spinners and loading bars. Useful for demo purposes.
         if (localStorage.getItem("ENABLE_MOCK_HTTP_CALLS") === "true") {
             Services.MockHttpApis.setupMockHttpDelay($provide);
-        }
+        } 
     };
 
     //#endregion
@@ -348,11 +348,12 @@ module PraetorApp.Application {
     function device_resume($location: ng.ILocationService, $ionicViewService: any, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences): void {
 
         isShowingPinPrompt = true;
-
+        
         // Potentially display the PIN screen.
         UiHelper.showPinEntryAfterResume().then(() => {
             isShowingPinPrompt = false;
 
+            debugger;
             // If the user hasn't completed onboarding (eg new, first-time use of the app)
             // then we'll push them straight into the onboarding flow. Note that we do this
             // purposefully after the PIN screen for the case where the user may be upgrading
@@ -385,7 +386,7 @@ module PraetorApp.Application {
                 });
 
                 // Navigate the user to their default view.
-                $location.path(Utilities.defaultCategory.href.substring(1));
+                //$location.path(Utilities.defaultCategory.href.substring(1));
                 $location.replace();
             }
         });

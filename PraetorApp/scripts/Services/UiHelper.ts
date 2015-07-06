@@ -56,9 +56,9 @@
         private $q: ng.IQService;
         private $http: ng.IHttpService;
         private $ionicModal: any;
-        private MockPlatformApis: Services.MockPlatformApis;
         private Utilities: Services.Utilities;
         private Preferences: Services.Preferences;
+        private MockPlatformApis: Services.MockPlatformApis;
 
         private isPinEntryOpen = false;
 
@@ -66,10 +66,10 @@
             this.$rootScope = $rootScope;
             this.$q = $q;
             this.$http = $http;
-            this.$ionicModal = $ionicModal;
-            this.MockPlatformApis = MockPlatformApis;
+            this.$ionicModal = $ionicModal;            
             this.Utilities = Utilities;
             this.Preferences = Preferences;
+            this.MockPlatformApis = MockPlatformApis;
         }
 
         //#region Plug-in Accessors

@@ -94,14 +94,15 @@
                     self.$location.path("/app/home");
                     self.$location.replace();
                 }
-                else {                    
+                else {
                     self.UiHelper.alert("Chyba přihlášení");
                 }
-
-            })['finally'](function () {
-                // Zavřeme progress indigator                
-                self.UiHelper.progressIndicator.hide();
             });
+
+            //['finally'](function () {
+            //    // Zavřeme progress indigator                
+            //    self.UiHelper.progressIndicator.hide();
+            //});
         }
 
         //#endregion

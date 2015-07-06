@@ -199,8 +199,6 @@
     "config.xml",
     "www\\lib\\ionic\\js\\ionic.bundle.js",
     "www\\lib\\ionic\\js\\ionic.bundle.min.js",
-    "www\\scripts\\appBundle.js",
-    "www\\scripts\\appBundle.js.map",
     "res\\screens\\bada\\screen-portrait.png",
     "res\\screens\\ios\\screen-iphone-landscape.png",
     "res\\screens\\blackberry\\screen-225.png",
@@ -226,7 +224,9 @@
     "res\\icons\\windows-phone\\icon-173-tile.png",
     "res\\icons\\bada-wac\\icon-50-type3.png",
     "res\\icons\\icon.png",
-    "res\\icons\\webos\\icon-64.png"
+    "res\\icons\\webos\\icon-64.png",
+    "www\\scripts\\appBundle.js",
+    "www\\scripts\\appBundle.js.map"
   ],
   "deletedFilesIos": [
     "www\\lib\\ionic\\js\\ionic.bundle.min.js.crdownload",
@@ -290,12 +290,9 @@
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
-    "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "www\\scripts\\appBundle.js.map",
     "plugins\\android.json",
-    "www\\config.xml",
-    "config.xml"
+    "www\\config.xml"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

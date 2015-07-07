@@ -52,6 +52,16 @@ var PraetorApp;
             registerDirectives(ngModule);
             registerFilters(ngModule);
             registerControllers(ngModule);
+            ngModule.directive("prehledSpisu", function () {
+                return {
+                    restrict: 'E',
+                    scope: {
+                        data: '=data'
+                    },
+                    //template: 'ahoj'
+                    templateUrl: 'templates/directives/prehled-spisu.html'
+                };
+            });
             // Specify the initialize/run and configuration functions.
             ngModule.run(angular_initialize);
             ngModule.config(angular_configure);

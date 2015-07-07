@@ -17,7 +17,7 @@
   <preference name="SuppressesIncrementalRendering" value="False" />
   <preference name="Fullscreen" value="False" />
   <preference name="prerendered-icon" value="true" />
-  <preference name="SplashScreenDelay" value="2000"/>
+  <preference name="SplashScreenDelay" value="5000"/>
   <!-- ios: if icon is prerendered, iOS will not apply it's gloss to the app's icon on the user's home screen -->
   <preference name="stay-in-webview" value="false" />
   <!-- ios: external links should open in the default browser, 'true' would use the webview the app lives in -->

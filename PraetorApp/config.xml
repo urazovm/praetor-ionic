@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<widget xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" xmlns:gap="http://phonegap.com/ns/1.0" id="cz.praetor-systems.praetor2" version="1.0.78" xmlns="http://www.w3.org/ns/widgets" defaultlocale="cs-CZ">
+<widget xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" xmlns:gap="http://phonegap.com/ns/1.0" id="cz.praetor-systems.praetor2" version="1.0.81" xmlns="http://www.w3.org/ns/widgets" defaultlocale="cs-CZ">
   <name>Praetor</name>
   <description>Mobilní aplikace advokátního systému Praetor</description>
-  <author href="http://cordova.io" email="dev@cordova.apache.org">Praetor Systems s. r. o.</author>
+  <author href="http://praetor-systems.cz" email="info@praetor-systems.cz">Praetor Systems s. r. o.</author>
   <content src="index.html" />
   <access origin="*" />
   <vs:features />
+  
+  <preference name="webviewbounce" value="false" />
+  <preference name="UIWebViewBounce" value="false" />
+  <preference name="DisallowOverscroll" value="true" />
+    
   <preference name="permissions" value="none"/>
   <preference name="windows-target-version" value="8.1" />
   <preference name="windows-phone-target-version" value="8.1" />
@@ -17,6 +22,7 @@
   <preference name="Fullscreen" value="False" />
   <preference name="prerendered-icon" value="true" />
   <preference name="SplashScreenDelay" value="2000" />
+  <preference name="SplashScreen" value="splash" />
   <!-- ios: if icon is prerendered, iOS will not apply it's gloss to the app's icon on the user's home screen -->
   <preference name="stay-in-webview" value="false" />
   <!-- ios: external links should open in the default browser, 'true' would use the webview the app lives in -->
@@ -26,12 +32,12 @@
   <!-- ios: controls whether data types (such as phone no. and dates) are automatically turned into links by the system -->
   <preference name="exit-on-suspend" value="false" />
   <!-- ios: if set to true, app will terminate when home button is pressed -->
-  <preference name="show-splash-screen-spinner" value="true" />
+  <preference name="show-splash-screen-spinner" value="false" />
   <!-- ios: if set to false, the spinner won't appear on the splash screen during app loading -->
   <preference name="auto-hide-splash-screen" value="true" />
   <!-- ios: if set to false, the splash screen must be hidden using a JavaScript API -->
   <!--<vs:plugin name="ch.ti8m.documenthandler" version="0.2.1" />-->
-
+  
   <gap:plugin name="org.apache.cordova.splashscreen"/>
 
   <preference name="StatusBarOverlaysWebView" value="false" />

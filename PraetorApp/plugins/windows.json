@@ -8,7 +8,7 @@
     },
     "installed_plugins": {
         "ch.ti8m.documenthandler": {
-            "PACKAGE_NAME": "PraetorApp"
+            "PACKAGE_NAME": "Praetor"
         }
     },
     "dependent_plugins": {}

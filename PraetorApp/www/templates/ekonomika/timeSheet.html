@@ -1,0 +1,42 @@
+﻿<ion-modal-view ng-controller="TimeSheetController">
+    <ion-header-bar>
+        <h1 class="title">Nová činnost</h1>
+    </ion-header-bar>
+    <ion-content has-bouncing="false">
+        <div class="list" ng-init="data.slider = 0">
+            <label class="item item-input">
+                <span class="input-label">Spis</span>
+                <input disabled type="text" ng-model="data.spis">
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label" ng-model="data.datum">Datum</span>
+                <input type="date" value="12.4.2014">
+            </label>
+
+            <div class="item range range-positive" style="padding-left:16px">
+                Čas
+                <input type="range" name="volume" min="0" max="240" step="15" ng-model="data.cas">
+                {{data.cas}} min
+            </div>
+
+            <label class="item item-input item-select">
+                <span class="input-label">
+                    Aktivita
+                </span>
+
+                <select ng-model="data.aktivita" ng-options="aktivita.nazev for aktivita in aktivity"></select>
+            </label>
+
+            <label class="item item-input">
+                <textarea ng-model="data.popis" placeholder="Popis" style="height:5em"></textarea>
+            </label>
+        </div>
+
+        <div class="padding">
+            <button class="button button-block button-positive" ng-click="save()">
+                Uložit
+            </button>
+        </div>
+    </ion-content>
+ </ion-modal-view>

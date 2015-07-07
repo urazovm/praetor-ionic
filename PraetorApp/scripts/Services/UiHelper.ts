@@ -32,8 +32,7 @@
          * Constant IDs for the dialogs. For use with the showDialog helper method.
          */
         public DialogIds = {
-            ReorderCategories: "REORDER_CATEGORIES_DIALOG",
-            PinEntry: "PIN_ENTRY_DIALOG"
+            TimeSheet: "TIME_SHEET_DIALOG"
         };
 
         /**
@@ -42,8 +41,7 @@
          * The template's root element should have a controller that extends BaseDialogController.
          */
         private static dialogTemplateMap = {
-            "REORDER_CATEGORIES_DIALOG": "templates/Dialogs/Reorder-Categories.html",
-            "PIN_ENTRY_DIALOG": "templates/Dialogs/Pin-Entry.html"
+            "TIME_SHEET_DIALOG": "templates/ekonomika/timeSheet.html"
         };
 
         //#endregion

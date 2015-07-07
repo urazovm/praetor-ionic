@@ -208,7 +208,13 @@
     "www\\res\\drawable-port-xxxhdpi\\splash.png",
     "www\\res\\drawable-xxhdpi\\splash.png",
     "www\\res\\drawable-land-xxhdpi\\splash.png",
-    "www\\res\\drawable-port-xhdpi\\splash.png"
+    "www\\res\\drawable-port-xhdpi\\splash.png",
+    "changeList.json",
+    "scripts\\Controllers\\Ekonomika\\TimeSheetController.ts",
+    "www\\templates\\ekonomika\\timeSheet.html",
+    "scripts\\ViewModels\\Ekonomika\\TimeSheetViewModel.ts",
+    "scripts\\Controllers\\Dialogs\\Void.ts",
+    "scripts\\Controllers\\Ekonomika\\TimeSheetParams.ts"
   ],
   "deletedFilesIos": [
     "resources\\icon.png",
@@ -295,7 +301,13 @@
     "res\\drawable-port-ldpi\\splash.png",
     "res\\drawable-xxxhdpi\\splash.png",
     "res\\drawable-land-hdpi\\splash.png",
-    "res\\drawable-mdpi\\icon.png"
+    "res\\drawable-mdpi\\icon.png",
+    "www\\templates\\spis\\cinnost.html",
+    "scripts\\Controllers\\Spis\\SpisyController.ts",
+    "scripts\\Controllers\\Ekonomika\\SpisyController.ts",
+    "www\\templates\\spis\\timeSheet.html",
+    "scripts\\ViewModels\\Ekonomika\\SpisyViewModel.ts",
+    "scripts\\Controllers\\Dialogs\\BaseDialogController - Copy.ts"
   ],
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
@@ -337,7 +349,14 @@
     "www\\templates\\home\\vykazovani.html",
     "www\\templates\\settings\\about.html",
     "www\\templates\\settings\\configure-pin.html",
-    "www\\index.html"
+    "www\\index.html",
+    "changeList.json",
+    "scripts\\Controllers\\Ekonomika\\TimeSheetController.ts",
+    "www\\templates\\ekonomika\\timeSheet.html",
+    "scripts\\ViewModels\\Ekonomika\\TimeSheetViewModel.ts",
+    "www\\templates\\home.html",
+    "scripts\\Controllers\\Dialogs\\Void.ts",
+    "scripts\\Controllers\\Ekonomika\\TimeSheetParams.ts"
   ],
   "deletedFiles": [
     "config.xml",
@@ -365,7 +384,13 @@
     "res\\drawable-port-ldpi\\splash.png",
     "res\\drawable-xxxhdpi\\splash.png",
     "res\\drawable-land-hdpi\\splash.png",
-    "res\\drawable-mdpi\\icon.png"
+    "res\\drawable-mdpi\\icon.png",
+    "www\\templates\\spis\\cinnost.html",
+    "scripts\\Controllers\\Spis\\SpisyController.ts",
+    "scripts\\Controllers\\Ekonomika\\SpisyController.ts",
+    "www\\templates\\spis\\timeSheet.html",
+    "scripts\\ViewModels\\Ekonomika\\SpisyViewModel.ts",
+    "scripts\\Controllers\\Dialogs\\BaseDialogController - Copy.ts"
   ],
   "addedPlugins": [],
   "deletedPlugins": []

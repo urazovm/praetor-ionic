@@ -27,9 +27,9 @@
                     if (error == 53) {
                         console.log('No app that handles this file type.');
                     }
-                    q.resolve(true);
+                    q.resolve(false);
                 },
-                'http://www.example.com/path/to/document.pdf'
+                path
                 );           
 
             return q.promise;

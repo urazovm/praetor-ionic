@@ -67,9 +67,9 @@ module PraetorApp.Application {
             return {
                 restrict: 'E',
                 scope: {
-                    data: '=data'
-                },
-                //template: 'ahoj'
+                    viewModel: '=data',
+                    onSpisClick: '=onSpisClick'
+                },                
                 templateUrl: 'templates/directives/prehled-spisu.html'
             };
         });

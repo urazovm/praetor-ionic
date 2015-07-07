@@ -4,8 +4,8 @@
 
         public static ID = "LoginController";
 
-        public static get $inject(): string[] {
-            return ["$scope", "$location", "$http", Services.Utilities.ID, Services.UiHelper.ID, Services.Preferences.ID, Services.PraetorService.ID];
+        public static get $inject(): string[]{
+            return ["$scope", "$location", "$http", Services.Utilities.ID, Services.UiHelper.ID, Services.Preferences.ID, Services.PraetorService.ID, Services.HashUtilities.ID];
         }
 
         private $location: ng.ILocationService;
@@ -14,8 +14,9 @@
         private UiHelper: Services.UiHelper;
         private Preferences: Services.Preferences;
         private Praetor: Services.PraetorService;
+        private Hash: Services.HashUtilities;
 
-        constructor($scope: ng.IScope, $location: ng.ILocationService, $http: ng.IHttpService, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences, Praetor: Services.PraetorService) {
+        constructor($scope: ng.IScope, $location: ng.ILocationService, $http: ng.IHttpService, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences, Praetor: Services.PraetorService, Hash: Services.HashUtilities) {
             super($scope, ViewModels.LoginViewModel);
 
             this.$location = $location;
@@ -24,6 +25,7 @@
             this.UiHelper = UiHelper;
             this.Preferences = Preferences;
             this.Praetor = Praetor;
+            this.Hash = Hash;
 
             // vyplníme poslední uložený server a login
             this.viewModel.server = Preferences.serverUrl;
@@ -83,13 +85,14 @@
 
             this.UiHelper.progressIndicator.showSimple(true);            
 
-            this.Praetor.login(this.viewModel.server, this.viewModel.username, this.viewModel.password).then(function (data) {
+            this.Praetor.login(this.viewModel.server, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then(function (data) {
                 // Odstraníme 
                 self.UiHelper.progressIndicator.hide();
+                debugger;
                 if (data.success) {
                     self.Preferences.serverUrl = self.viewModel.server;
                     self.Preferences.username = self.viewModel.username;
-                    self.Preferences.password = self.viewModel.password;
+                    self.Preferences.password = self.Hash.md5(self.viewModel.password);
 
                     self.$location.path("/app/home");
                     self.$location.replace();

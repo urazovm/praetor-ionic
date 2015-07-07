@@ -18,6 +18,7 @@
         private static PASSWORD = "PASSWORD";
         private static SERVER_URL = "SERVER_URL";
         private static SESSION_ID = "SESSION_ID";
+        private static SPISY_LOCAL_STORAGE = "SPISY_LOCAL_STORAGE";
         private static REQUIRE_PIN_THRESHOLD = "REQUIRE_PIN_THRESHOLD";
         private static LAST_PAUSED_AT = "LAST_PAUSED_AT";
         private static HAS_COMPLETED_ONBOARDING = "HAS_COMPLETED_ONBOARDING";
@@ -58,6 +59,19 @@
             return "sample-app.justin-credible.net/api";
         }
 
+        get spisy(): string {
+            return localStorage.getItem(Preferences.SPISY_LOCAL_STORAGE);
+        }
+
+        set spisy(value: string) {
+            if (value == null) {
+                localStorage.removeItem(Preferences.SPISY_LOCAL_STORAGE);
+            }
+            else {
+                localStorage.setItem(Preferences.SPISY_LOCAL_STORAGE, value);
+            }
+        }
+
         get serverUrl(): string {
             return localStorage.getItem(Preferences.SERVER_URL);
         }
@@ -80,7 +94,7 @@
                 localStorage.removeItem(Preferences.PASSWORD);
             }
             else {
-                localStorage.setItem(Preferences.USERNAME, value);
+                localStorage.setItem(Preferences.PASSWORD, value);
             }
         }
 

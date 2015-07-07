@@ -926,21 +926,21 @@ var PraetorApp;
     (function (Controllers) {
         var HomeVykazovaniController = (function (_super) {
             __extends(HomeVykazovaniController, _super);
-            function HomeVykazovaniController($scope, $location, $http, Utilities, UiHelper, Preferences) {
+            function HomeVykazovaniController($scope, praetorService) {
                 _super.call(this, $scope, PraetorApp.ViewModels.Home.VykazovaniViewModel);
-                this.$location = $location;
-                this.$http = $http;
-                this.Utilities = Utilities;
-                this.UiHelper = UiHelper;
-                this.Preferences = Preferences;
+                this.PraetorService = praetorService;
             }
             Object.defineProperty(HomeVykazovaniController, "$inject", {
                 get: function () {
-                    return ["$scope", "$location", "$http", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
+                    return ["$scope", PraetorApp.Services.PraetorService.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
+            HomeVykazovaniController.prototype.test = function () {
+                alert('test');
+                this.PraetorService.openFile('http://www.urartuuniversity.com/content_images/pdf-sample.pdf');
+            };
             HomeVykazovaniController.ID = "HomeVykazovaniController";
             return HomeVykazovaniController;
         })(Controllers.BaseController);
@@ -1330,8 +1330,8 @@ var PraetorApp;
                     if (error == 53) {
                         console.log('No app that handles this file type.');
                     }
-                    q.resolve(true);
-                }, 'http://www.example.com/path/to/document.pdf');
+                    q.resolve(false);
+                }, path);
                 return q.promise;
             };
             FileUtilities.ID = "FileUtilities";

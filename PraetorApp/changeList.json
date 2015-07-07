@@ -254,12 +254,8 @@
     "www\\scripts\\appBundle.js.map",
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "www\\res\\android\\icon\\drawable-hdpi-icon.png",
-    "www\\res\\android\\icon\\drawable-ldpi-icon.png",
-    "www\\res\\android\\icon\\drawable-mdpi-icon.png",
-    "www\\res\\android\\icon\\drawable-xhdpi-icon.png",
-    "www\\res\\android\\icon\\drawable-xxhdpi-icon.png",
-    "www\\res\\android\\icon\\drawable-xxxhdpi-icon.png"
+    "config.xml",
+    "www\\config.xml"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

@@ -249,7 +249,9 @@ var PraetorApp;
         /**
          * Function that is used to configure AngularJs.
          */
-        function angular_configure($stateProvider, $urlRouterProvider, $provide, $httpProvider, $compileProvider) {
+        function angular_configure($stateProvider, $urlRouterProvider, $provide, $httpProvider, $compileProvider, $ionicConfigProvider) {
+            $ionicConfigProvider.tabs.position("bottom");
+            $ionicConfigProvider.tabs.style("standard");
             // Intercept the default Angular exception handler.
             $provide.decorator("$exceptionHandler", function ($delegate) {
                 return function (exception, cause) {
@@ -400,7 +402,7 @@ var PraetorApp;
             $stateProvider.state("app", {
                 url: "/app",
                 abstract: true,
-                templateUrl: "templates/Menu.html",
+                templateUrl: "templates/menu.html",
                 controller: PraetorApp.Controllers.MenuController.ID
             });
             // An blank view useful as a place holder etc.
@@ -408,7 +410,7 @@ var PraetorApp;
                 url: "/login",
                 views: {
                     "menuContent": {
-                        templateUrl: "templates/Login.html",
+                        templateUrl: "templates/login.html",
                         controller: PraetorApp.Controllers.LoginController.ID
                     }
                 }
@@ -418,7 +420,7 @@ var PraetorApp;
                 url: "/home",
                 views: {
                     "menuContent": {
-                        templateUrl: "templates/Home.html",
+                        templateUrl: "templates/home.html",
                         controller: PraetorApp.Controllers.HomeController.ID
                     }
                 }
@@ -839,7 +841,7 @@ var PraetorApp;
                     else {
                         self.UiHelper.alert("Chyba přihlášení");
                     }
-                }).finally(function () {
+                })['finally'](function () {
                     // Zavřeme progress indigator                
                     self.UiHelper.progressIndicator.hide();
                 });

@@ -67,9 +67,9 @@ module PraetorApp.Application {
             return {
                 restrict: 'E',
                 scope: {
-                    data: '=data'
-                },
-                //template: 'ahoj'
+                    viewModel: '=data',
+                    onSpisClick: '=onSpisClick'
+                },                
                 templateUrl: 'templates/directives/prehled-spisu.html'
             };
         });
@@ -433,6 +433,8 @@ module PraetorApp.Application {
     function window_onerror(message: any, uri: string, lineNumber: number, columnNumber?: number): void {
         var UiHelper: Services.UiHelper;        
         console.error("Unhandled JS Exception", message, uri, lineNumber, columnNumber);
+
+        window['lastError'] = message;
         debugger;
         try {            
             UiHelper = angular.element(document.body).injector().get(Services.UiHelper.ID);

@@ -1,26 +1,49 @@
 ﻿/// <reference path="Enums.ts" />
+
 declare module PraetorServer.Service.WebServer.Messages {
-    interface LoadHomeRequest extends PraetorServer.Service.WebServer.Messages.Request {
-        loadVsechnySpisy: boolean;
-        loadPosledniSpisy: boolean;
-        pocetPoslednichSpisu: number;
-        loadCinnosti: boolean;
-        cinnostiSince: Date;
-        cinnostiUntil: Date;
+    interface LoadChangedSpisyRequest extends PraetorServer.Service.WebServer.Messages.Request {
+        onlyChangedSince: Date;
     }
     interface Request {
         username: string;
         password: string;
         sessionid: System.Guid;
     }
-    interface LoadHomeResponse extends PraetorServer.Service.WebServer.Messages.Response {
-        vsechnySpisy: PraetorServer.Service.WebServer.Messages.Dto.SpisPrehledEntry[];
-        posledniSpisy: PraetorServer.Service.WebServer.Messages.Dto.SpisPrehledEntry[];
-        cinnosti: PraetorServer.Service.WebServer.Messages.Dto.CinnostPrehledEntry[];
+    interface LoadChangedSpisyResponse extends PraetorServer.Service.WebServer.Messages.Response {
+        changedSpisy: PraetorServer.Service.WebServer.Messages.Dto.SpisPrehledEntry[];
     }
     interface Response {
         success: boolean;
         message: string;
+    }
+    interface LoadCinnostiRequest extends PraetorServer.Service.WebServer.Messages.Request {
+        cinnostiSince: Date;
+        cinnostiUntil: Date;
+    }
+    interface LoadCinnostiResponse extends PraetorServer.Service.WebServer.Messages.Response {
+        cinnosti: PraetorServer.Service.WebServer.Messages.Dto.TimeSheetPrehledEntry[];
+    }
+    interface LoadPosledniSpisyRequest extends PraetorServer.Service.WebServer.Messages.Request {
+        pocet: number;
+    }
+    interface LoadPosledniSpisyResponse extends PraetorServer.Service.WebServer.Messages.Response {
+        posledniSpisy: PraetorServer.Service.WebServer.Messages.Dto.SpisPrehledEntry[];
+    }
+    interface LoadHomeRequest extends PraetorServer.Service.WebServer.Messages.Request {
+    }
+    interface LoadHomeResponse extends PraetorServer.Service.WebServer.Messages.Response {
+    }
+    interface LoadTimeSheetRequest extends PraetorServer.Service.WebServer.Messages.Request {
+        Id_Spis: System.Guid;
+    }
+    interface LoadTimeSheetResponse extends PraetorServer.Service.WebServer.Messages.Response {
+        aktivity: PraetorServer.Service.WebServer.Messages.Dto.Aktivita[];
+        timeSheet: PraetorServer.Service.WebServer.Messages.Dto.TimeSheet;
+    }
+    interface SaveTimeSheetRequest extends PraetorServer.Service.WebServer.Messages.Request {
+        timeSheet: PraetorServer.Service.WebServer.Messages.Dto.TimeSheet;
+    }
+    interface SaveTimeSheetResponse extends PraetorServer.Service.WebServer.Messages.Response {
     }
     interface LoadSpisRequest extends PraetorServer.Service.WebServer.Messages.Request {
         id_Spis: System.Guid;
@@ -31,10 +54,9 @@ declare module PraetorServer.Service.WebServer.Messages {
         cinnostiUntil: Date;
     }
     interface LoadSpisResponse extends PraetorServer.Service.WebServer.Messages.Response {
-        success: boolean;
         spis: PraetorServer.Service.WebServer.Messages.Dto.Spis;
         dokumenty: PraetorServer.Service.WebServer.Messages.Dto.DokumentNode[];
-        cinnosti: PraetorServer.Service.WebServer.Messages.Dto.CinnostPrehledEntry[];
+        cinnosti: PraetorServer.Service.WebServer.Messages.Dto.TimeSheetPrehledEntry[];
     }
     interface LoginRequest extends PraetorServer.Service.WebServer.Messages.Request {
     }
@@ -65,12 +87,25 @@ declare module PraetorServer.Service.WebServer.Messages.Dto {
         predmet: string;
         hlavniKlient: string;
     }
-    interface CinnostPrehledEntry {
-        id_Cinnost: System.Guid;
+    interface TimeSheetPrehledEntry {
+        id_TimeSheet: System.Guid;
         cas: System.TimeSpan;
         popis: string;
         spisovaZnacka: string;
         predmetSpisu: string;
+    }
+    interface Aktivita {
+        id_Aktivita: System.Guid;
+        nazev: string;
+        popis: string;
+    }
+    interface TimeSheet {
+        id_Uzivatel: System.Guid;
+        id_Spis: System.Guid;
+        id_Aktivita: System.Guid;
+        datum: Date;
+        cas: number;
+        popis: string;
     }
     interface Spis {
         id_Spis: System.Guid;

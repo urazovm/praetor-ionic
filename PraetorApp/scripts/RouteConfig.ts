@@ -70,7 +70,7 @@ module PraetorApp {
             });
 
             // If none of the above states are matched, use the blank route.
-            $urlRouterProvider.otherwise('/app/home');
+            $urlRouterProvider.otherwise('/app/login');
         }
     }
 }

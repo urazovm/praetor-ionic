@@ -17,7 +17,7 @@
         }       
         
         public md5(data: string): string {       
-            return (<any>window).hex_md5(data);            
+            return (<any>window).hex_md5("Praetor_salt" + data);            
         }
     }
 }

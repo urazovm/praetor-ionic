@@ -5,21 +5,21 @@
         public static ID = "HomeVykazovaniController";
 
         public static get $inject(): string[]{
-            return ["$scope", Services.PraetorService.ID, Services.UiHelper.ID];
+            return ["$scope", Services.PraetorService.ID, Services.PraetorService.ID, Services.UiHelper.ID];
         }
 
-        private PraetorService: Services.PraetorService;
+        private FileUtilities: Services.FileUtilities;
         private UiHelper: Services.UiHelper;
 
-        constructor($scope: ng.IScope, praetorService: Services.PraetorService, uiHelper: Services.UiHelper) {
+        constructor($scope: ng.IScope, praetorService: Services.PraetorService, fileService: Services.FileUtilities, uiHelper: Services.UiHelper) {
             super($scope, ViewModels.Home.VykazovaniViewModel);
 
-            this.PraetorService = praetorService;                        
+            this.FileUtilities = fileService;                        
         }
 
         public test(url)
         {
-            this.PraetorService.openFile(url);
+            this.FileUtilities.openFile(url);
         }
 
         public loadData()

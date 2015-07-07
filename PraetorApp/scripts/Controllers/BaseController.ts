@@ -31,7 +31,7 @@
             this.scope["controller"] = this;
 
             /* tslint:enable:no-string-literal */
-
+            
             // Subscribe to various events.
             this.scope.$on("$ionicView.loaded", _.bind(this.view_loaded, this));
             this.scope.$on("$ionicView.enter", _.bind(this.view_enter, this));

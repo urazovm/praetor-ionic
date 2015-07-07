@@ -8,9 +8,8 @@
   <vs:features />
   
   <preference name="webviewbounce" value="false" />
-    <preference name="UIWebViewBounce" value="false" />
-    <preference name="DisallowOverscroll" value="true" />
-    
+  <preference name="UIWebViewBounce" value="false" />
+  <preference name="DisallowOverscroll" value="true" />
     
   <preference name="permissions" value="none"/>
   <preference name="windows-target-version" value="8.1" />

@@ -4,7 +4,7 @@
   xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" 
   xmlns:gap="http://phonegap.com/ns/1.0" 
   id="cz.praetor-systems.praetor2" 
-  version="1.0.101" 
+  version="1.0.102" 
   xmlns="http://www.w3.org/ns/widgets" 
   defaultlocale="cs-CZ">
   
@@ -15,6 +15,8 @@
   <access origin="*" />
   <vs:features />
   
+  <preference name="SplashScreen" value="screen" />  
+  
   <preference name="webviewbounce" value="false" />
   <preference name="UIWebViewBounce" value="false" />
   <preference name="DisallowOverscroll" value="true" />
@@ -22,7 +24,7 @@
    <preference name="EnableViewportScale" value="false"/>
    <preference name="KeyboardShrinksView" value="false" />
    
-  <preference name="permissions" value="none"/>
+  <!--<preference name="permissions" value="none"/>-->
   <preference name="windows-target-version" value="8.1" />
   <preference name="windows-phone-target-version" value="8.1" />
   <preference name="phonegap-version" value="cli-5.1.1" />

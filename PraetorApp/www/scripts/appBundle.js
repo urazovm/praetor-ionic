@@ -853,7 +853,7 @@ var PraetorApp;
                         self.$location.replace();
                     }
                     else {
-                        self.UiHelper.alert("Chyba přihlášení");
+                        self.UiHelper.alert(data.message);
                     }
                 })['finally'](function () {
                     // Zavřeme progress indigator                
@@ -2141,7 +2141,7 @@ var PraetorApp;
                     .then(function (response) {
                     q.resolve(response.data);
                 })['catch'](function (e) {
-                    q.resolve({ success: false, message: "Error " + e.status });
+                    q.resolve({ success: false, message: "Error " + e.status + "|" + e.message });
                 });
                 return q.promise;
             };

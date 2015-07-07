@@ -96,8 +96,8 @@
                     self.$location.path("/app/home");
                     self.$location.replace();
                 }
-                else {                    
-                    self.UiHelper.alert("Chyba přihlášení");
+                else {
+                    self.UiHelper.alert(data.message);
                 }
 
             })['finally'](function () {

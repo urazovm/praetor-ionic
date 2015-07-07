@@ -45,7 +45,7 @@
                 q.resolve(response.data);
             })
             ['catch'](function (e) {                
-                q.resolve({ success: false, message: "Error " + e.status });
+                q.resolve({ success: false, message: "Error " + e.status + "|" + e.message });
             });
 
             return q.promise;

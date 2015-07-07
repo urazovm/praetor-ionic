@@ -218,6 +218,8 @@
   "deletedPluginsIos": [],
   "changedFiles": [
     "www\\scripts\\BuildVars.js",
+    "www\\scripts\\appBundle.js",
+    "www\\scripts\\appBundle.js.map",
     "plugins\\android.json"
   ],
   "deletedFiles": [],

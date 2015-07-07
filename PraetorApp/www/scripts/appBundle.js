@@ -368,6 +368,7 @@ var PraetorApp;
         function window_onerror(message, uri, lineNumber, columnNumber) {
             var UiHelper;
             console.error("Unhandled JS Exception", message, uri, lineNumber, columnNumber);
+            window['lastError'] = message;
             debugger;
             try {
                 UiHelper = angular.element(document.body).injector().get(PraetorApp.Services.UiHelper.ID);
@@ -937,9 +938,8 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
-            HomeVykazovaniController.prototype.test = function () {
-                alert('test');
-                this.PraetorService.openFile('http://www.urartuuniversity.com/content_images/pdf-sample.pdf');
+            HomeVykazovaniController.prototype.test = function (url) {
+                this.PraetorService.openFile(url);
             };
             HomeVykazovaniController.ID = "HomeVykazovaniController";
             return HomeVykazovaniController;

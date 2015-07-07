@@ -188,7 +188,9 @@ var PraetorApp;
                 instance.render();
             };
             // Finally, return a function that returns this Angular directive descriptor object.
-            return function () { return descriptor; };
+            return function () {
+                return descriptor;
+            };
         }
         /**
          * Used to create an array of injection property names followed by a function that will be
@@ -221,7 +223,9 @@ var PraetorApp;
          * @param fn The function that will provide the filter's logic.
          */
         function getFilterFactoryFunction(fn) {
-            return function () { return fn; };
+            return function () {
+                return fn;
+            };
         }
         //#endregion
         //#region Platform Configuration
@@ -1009,9 +1013,15 @@ var PraetorApp;
                 // Grab a reference to the root div element.
                 this._rootElement = this.element[0];
                 // Watch for the changing of the value attributes.
-                this.scope.$watch(function () { return _this.scope.icon; }, _.bind(this.icon_listener, this));
-                this.scope.$watch(function () { return _this.scope.iconSize; }, _.bind(this.iconSize_listener, this));
-                this.scope.$watch(function () { return _this.scope.text; }, _.bind(this.text_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.icon;
+                }, _.bind(this.icon_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.iconSize;
+                }, _.bind(this.iconSize_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.text;
+                }, _.bind(this.text_listener, this));
                 // Fire a created event sending along this directive instance.
                 // Parent scopes can listen for this so they can obtain a reference
                 // to the instance so they can call getters/setters etc.
@@ -1312,7 +1322,10 @@ var PraetorApp;
             });
             FileUtilities.prototype.openFile = function (path) {
                 var q = this.$q.defer();
-                window.handleDocumentWithURL(function () { console.log('success'); q.resolve(true); }, function (error) {
+                window.handleDocumentWithURL(function () {
+                    console.log('success');
+                    q.resolve(true);
+                }, function (error) {
                     console.log('failure');
                     if (error == 53) {
                         console.log('No app that handles this file type.');
@@ -1719,7 +1732,6 @@ var PraetorApp;
                         };
                         return $delegate.call(this, method, url, data, interceptor, headers);
                     };
-                    /* tslint:disable:forin */
                     for (var key in $delegate) {
                         proxy[key] = $delegate[key];
                     }
@@ -2114,7 +2126,10 @@ var PraetorApp;
             });
             PraetorService.prototype.openFile = function (path) {
                 var q = this.$q.defer();
-                window.handleDocumentWithURL(function () { console.log('success'); q.resolve(true); }, function (error) {
+                window.handleDocumentWithURL(function () {
+                    console.log('success');
+                    q.resolve(true);
+                }, function (error) {
                     console.log('failure');
                     if (error == 53) {
                         console.log('No app that handles this file type.');
@@ -2128,8 +2143,7 @@ var PraetorApp;
                 var data = { username: username, password: password };
                 this.$http.post('http://' + server + '/praetorapi/login', data, {
                     headers: { 'Content-Type': 'application/json' }
-                })
-                    .then(function (response) {
+                }).then(function (response) {
                     q.resolve(response.data);
                 })['catch'](function (e) {
                     q.resolve({ success: false, message: "Error " + e.status });
@@ -2823,7 +2837,9 @@ var PraetorApp;
                     return "";
                 }
                 // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-                return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+                return str.replace(/\w\S*/g, function (txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                });
             };
             /**
              * Used to format a string by replacing values with the given arguments.
@@ -2874,7 +2890,6 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
-                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -2910,7 +2925,6 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
-                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3019,7 +3033,6 @@ var PraetorApp;
                 j;
                 // Start out with an empty string.
                 guid = "";
-                // Now loop 35 times to generate 35 characters.
                 for (j = 0; j < 32; j++) {
                     // Characters at these indexes are always hyphens.
                     if (j === 8 || j === 12 || j === 16 || j === 20) {

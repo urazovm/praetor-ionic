@@ -59,16 +59,22 @@
             return "sample-app.justin-credible.net/api";
         }
 
-        get spisy(): string {
-            return localStorage.getItem(Preferences.SPISY_LOCAL_STORAGE);
+        get spisy(): PraetorServer.Service.WebServer.Messages.Dto.SpisPrehledEntry[] {
+            var jsonData = localStorage.getItem(Preferences.SPISY_LOCAL_STORAGE);
+
+            if (jsonData == undefined)
+                return null;
+
+            return JSON.parse(jsonData);
         }
 
-        set spisy(value: string) {
+        set spisy(value: PraetorServer.Service.WebServer.Messages.Dto.SpisPrehledEntry[]) {
             if (value == null) {
                 localStorage.removeItem(Preferences.SPISY_LOCAL_STORAGE);
             }
             else {
-                localStorage.setItem(Preferences.SPISY_LOCAL_STORAGE, value);
+                var jsonData = JSON.stringify(value);
+                localStorage.setItem(Preferences.SPISY_LOCAL_STORAGE, jsonData);
             }
         }
 

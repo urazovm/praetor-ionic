@@ -87,8 +87,7 @@
 
             this.Praetor.login(this.viewModel.server, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then(function (data) {
                 // Odstraníme 
-                self.UiHelper.progressIndicator.hide();
-                debugger;
+                self.UiHelper.progressIndicator.hide();                
                 if (data.success) {
                     self.Preferences.serverUrl = self.viewModel.server;
                     self.Preferences.username = self.viewModel.username;

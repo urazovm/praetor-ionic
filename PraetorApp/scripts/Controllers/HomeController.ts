@@ -23,8 +23,8 @@
             this.Utilities = Utilities;
             this.UiHelper = UiHelper;
             this.Preferences = Preferences;
-            this.SpisyUtilities = SpisyUtilities;
-            SpisyUtilities.Synchronize();
+            this.SpisyUtilities = SpisyUtilities;                        
+            this.SpisyUtilities.Synchronize();
         }        
     }
 }

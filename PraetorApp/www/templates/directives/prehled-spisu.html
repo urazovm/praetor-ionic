@@ -9,7 +9,7 @@
         <div ng-show="searchText==''">
             <div class="list">
                 <div class="item item-divider">Nedávno otevřené spisy</div>
-                <div ng-repeat="spis in posledniSpisy">
+                <div ng-repeat="spis in viewModel.posledniSpisy">
                     <a class="item" ng-click="onSpisClick(spis)">
                         <h2>{{spis.spisovaZnacka}} {{spis.predmet}}</h2>
                         <div ng-switch="spis.loading">
@@ -23,8 +23,8 @@
         <div ng-show="searchText!=''">
             <div class="list">
                 <div class="item item-divider">Hledání: {{searchText}}</div>
-                <div ng-repeat="spis in vsechnySpisy | filter:searchText | limitTo:20">
-                    <a class="item" ng-click="openSpis(spis)">
+                <div ng-repeat="spis in viewModel.vsechnySpisy | filter:searchText | limitTo:20">
+                    <a class="item" ng-click="onSpisClick(spis)">
                         <!--<h2 ng-bind-html="spis.spisovaZnacka + ' ' + spis.predmet | highlight:searchText"></h2>-->
                         <h2 ng-bind-html="spis.spisovaZnacka + ' ' + spis.predmet"></h2>
                         <div ng-switch="spis.loading">

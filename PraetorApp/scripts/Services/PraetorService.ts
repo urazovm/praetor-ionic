@@ -26,42 +26,6 @@
 
             var q = this.$q.defer<PraetorServer.Service.WebServer.Messages.LoadHomeResponse>();
 
-            if (this.Preferences.spisy == null) {
-                //this.getData("loadspis", request).then(function (response) {
-                //    var jsonSpisy = JSON.stringify(response.spisy);
-                //    this.Preferences.spisy(jsonSpisy);
-                //    q.resolve(response.spisy);
-                //});
-            } else {       
-                // vrátíme data
-                var spisy = JSON.parse(this.Preferences.spisy)
-                q.resolve(spisy);
-            }
-
-            return q.promise;
-        }
-
-        public synchronizovatSpisy(): ng.IPromise<PraetorServer.Service.WebServer.Messages.Response> {
-
-            var q = this.$q.defer<PraetorServer.Service.WebServer.Messages.Response>();
-
-
-            if (this.Preferences.spisy == null) {
-                var request = <PraetorServer.Service.WebServer.Messages.LoadChangedSpisyRequest>{};
-
-                this.getData("LoadChangedSpisy", request).then(function (response) {
-                    debugger;
-                    //var jsonSpisy = JSON.stringify(response.spisy);
-                    //this.Preferences.spisy(jsonSpisy);
-                    //q.resolve(response.spisy);
-                });
-
-            } else {       
-                // vrátíme data
-                var spisy = JSON.parse(this.Preferences.spisy)
-                q.resolve(spisy);
-            }
-
             return q.promise;
         }
 

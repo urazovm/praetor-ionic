@@ -5,20 +5,20 @@
         public static ID = "HomeVykazovaniController";
 
         public static get $inject(): string[]{
-            return ["$scope", Services.PraetorService.ID];
+            return ["$scope", Services.FileUtilities.ID];
         }
 
-        private PraetorService: Services.PraetorService;
+        private FileUtilities: Services.FileUtilities;
 
-        constructor($scope: ng.IScope, praetorService: Services.PraetorService) {
+        constructor($scope: ng.IScope, fileService: Services.FileUtilities) {
             super($scope, ViewModels.Home.VykazovaniViewModel);
 
-            this.PraetorService = praetorService;                        
+            this.FileUtilities = fileService;                        
         }
 
         public test(url)
         {
-            this.PraetorService.openFile(url);
+            this.FileUtilities.openFile(url);
         }
 
 

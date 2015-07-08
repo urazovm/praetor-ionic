@@ -56,8 +56,8 @@ var PraetorApp;
                 return {
                     restrict: 'E',
                     scope: {
-                        viewModel: '=data',
-                        onSpisClick: '=onSpisClick'
+                        viewModel: '=',
+                        onSpisClick: '&'
                     },
                     templateUrl: 'templates/directives/prehled-spisu.html'
                 };
@@ -454,11 +454,38 @@ var PraetorApp;
                     }
                 }
             });
+            $stateProvider.state("app.spis", {
+                url: "/spis/{id}",
+                views: {
+                    "menuContent": {
+                        templateUrl: "templates/spis.html",
+                        controller: PraetorApp.Controllers.SpisController.ID
+                    }
+                }
+            });
+            $stateProvider.state('app.spis.zakladniudaje', {
+                url: "/zakladniudaje",
+                views: {
+                    'tab-zakladni-udaje': {
+                        templateUrl: "templates/spis/zakladniudaje.html",
+                        controller: PraetorApp.Controllers.SpisZakladniUdajeController.ID
+                    }
+                }
+            });
+            $stateProvider.state('app.spis.dokumenty', {
+                url: "/dokumenty",
+                views: {
+                    'tab-dokumenty': {
+                        templateUrl: "templates/spis/dokumenty.html",
+                        controller: PraetorApp.Controllers.SpisDokumentyController.ID
+                    }
+                }
+            });
             $stateProvider.state("app.about", {
                 url: "/settings/about",
                 views: {
                     "menuContent": {
-                        templateUrl: "templates/Settings/About.html",
+                        templateUrl: "templates/settings/About.html",
                         controller: PraetorApp.Controllers.AboutController.ID
                     }
                 }
@@ -897,6 +924,34 @@ var PraetorApp;
 (function (PraetorApp) {
     var Controllers;
     (function (Controllers) {
+        var SpisController = (function (_super) {
+            __extends(SpisController, _super);
+            function SpisController($scope, $location, $http, $stateParams, Utilities, UiHelper, Preferences) {
+                _super.call(this, $scope, PraetorApp.ViewModels.SpisViewModel);
+                debugger;
+                this.$location = $location;
+                this.$http = $http;
+                this.Utilities = Utilities;
+                this.UiHelper = UiHelper;
+                this.Preferences = Preferences;
+            }
+            Object.defineProperty(SpisController, "$inject", {
+                get: function () {
+                    return ["$scope", "$location", "$http", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            SpisController.ID = "SpisController";
+            return SpisController;
+        })(Controllers.BaseController);
+        Controllers.SpisController = SpisController;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
         var HomeSpisyController = (function (_super) {
             __extends(HomeSpisyController, _super);
             function HomeSpisyController($scope, $location, $http, $state, Utilities, UiHelper, Preferences, SpisyUtilities) {
@@ -920,8 +975,16 @@ var PraetorApp;
                 configurable: true
             });
             HomeSpisyController.prototype.openSpis = function (spis) {
-                // Otevřeme detail spisu
-                this.$state.go('app.spis.dokumenty', { id: spis.id_Spis });
+                var _this = this;
+                // Otevřeme detail spisu            
+                //debugger;
+                //this.$location.state('app.spis').search({ id: spis.id_Spis, title: spis.predmet });
+                this.$state.go('app.spis.zakladniudaje', { id: spis.id_Spis }).then(function (e) {
+                    var t = _this;
+                    debugger;
+                });
+                //this.$location.path("/app/home/cinnosti");
+                //this.$location.replace();
             };
             HomeSpisyController.prototype.changeDataSource = function () {
                 // Došlo k změně u registrované komponenty
@@ -1006,6 +1069,62 @@ var PraetorApp;
             return AboutController;
         })(Controllers.BaseController);
         Controllers.AboutController = AboutController;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
+        var SpisDokumentyController = (function (_super) {
+            __extends(SpisDokumentyController, _super);
+            function SpisDokumentyController($scope, $location, $http, $state, Utilities, UiHelper, Preferences) {
+                _super.call(this, $scope, PraetorApp.ViewModels.Spis.DokumentyViewModel);
+                this.$location = $location;
+                this.$http = $http;
+                this.Utilities = Utilities;
+                this.UiHelper = UiHelper;
+                this.Preferences = Preferences;
+                this.$state = $state;
+            }
+            Object.defineProperty(SpisDokumentyController, "$inject", {
+                get: function () {
+                    return ["$scope", "$location", "$http", "$state", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            SpisDokumentyController.ID = "SpisDokumentyController";
+            return SpisDokumentyController;
+        })(Controllers.BaseController);
+        Controllers.SpisDokumentyController = SpisDokumentyController;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
+        var SpisZakladniUdajeController = (function (_super) {
+            __extends(SpisZakladniUdajeController, _super);
+            function SpisZakladniUdajeController($scope, $location, $http, $state, Utilities, UiHelper, Preferences) {
+                _super.call(this, $scope, PraetorApp.ViewModels.Spis.ZakladniUdajeViewModel);
+                this.$location = $location;
+                this.$http = $http;
+                this.Utilities = Utilities;
+                this.UiHelper = UiHelper;
+                this.Preferences = Preferences;
+                this.$state = $state;
+            }
+            Object.defineProperty(SpisZakladniUdajeController, "$inject", {
+                get: function () {
+                    return ["$scope", "$location", "$http", "$state", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            SpisZakladniUdajeController.ID = "SpisZakladniUdajeController";
+            return SpisZakladniUdajeController;
+        })(Controllers.BaseController);
+        Controllers.SpisZakladniUdajeController = SpisZakladniUdajeController;
     })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
@@ -3229,6 +3348,18 @@ var PraetorApp;
 (function (PraetorApp) {
     var ViewModels;
     (function (ViewModels) {
+        var SpisViewModel = (function () {
+            function SpisViewModel() {
+            }
+            return SpisViewModel;
+        })();
+        ViewModels.SpisViewModel = SpisViewModel;
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
         var Home;
         (function (Home) {
             var SpisyViewModel = (function () {
@@ -3265,5 +3396,35 @@ var PraetorApp;
             return AboutViewModel;
         })();
         ViewModels.AboutViewModel = AboutViewModel;
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
+        var Spis;
+        (function (Spis) {
+            var DokumentyViewModel = (function () {
+                function DokumentyViewModel() {
+                }
+                return DokumentyViewModel;
+            })();
+            Spis.DokumentyViewModel = DokumentyViewModel;
+        })(Spis = ViewModels.Spis || (ViewModels.Spis = {}));
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
+        var Spis;
+        (function (Spis) {
+            var ZakladniUdajeViewModel = (function () {
+                function ZakladniUdajeViewModel() {
+                }
+                return ZakladniUdajeViewModel;
+            })();
+            Spis.ZakladniUdajeViewModel = ZakladniUdajeViewModel;
+        })(Spis = ViewModels.Spis || (ViewModels.Spis = {}));
     })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
 })(PraetorApp || (PraetorApp = {}));

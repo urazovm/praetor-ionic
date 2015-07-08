@@ -6,7 +6,7 @@
 
         public static ID = "HomeSpisyController";
 
-        public static get $inject(): string[]{
+        public static get $inject(): string[] {
             return ["$scope", "$location", "$http", "$state", Services.Utilities.ID, Services.UiHelper.ID, Services.Preferences.ID, Services.SpisyUtilities.ID];
         }
 
@@ -21,7 +21,7 @@
 
         constructor($scope: ng.IScope, $location: ng.ILocationService, $http: ng.IHttpService, $state: ng.ui.IStateService, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences, SpisyUtilities: Services.SpisyUtilities) {
             super($scope, ViewModels.Home.SpisyViewModel);
-                        
+
             this.$location = $location;
             this.$http = $http;
             this.Utilities = Utilities;
@@ -31,13 +31,20 @@
             this.SpisyUtilities = SpisyUtilities;
             this.SpisyUtilities.register(this);
             this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
-            this.viewModel.PrehledSpisu.posledniSpisy = this.SpisyUtilities.Spisy;           
-                                 
+            this.viewModel.PrehledSpisu.posledniSpisy = this.SpisyUtilities.Spisy;
+
         }
 
         openSpis(spis: PraetorServer.Service.WebServer.Messages.Dto.Spis) {
-            // Otevřeme detail spisu
-            this.$state.go('app.spis.dokumenty', { id: spis.id_Spis });
+            // Otevřeme detail spisu            
+            //debugger;
+            //this.$location.state('app.spis').search({ id: spis.id_Spis, title: spis.predmet });
+            this.$state.go('app.spis.zakladniudaje', { id: spis.id_Spis }).then((e) => {
+                var t = this;
+                debugger;
+            });
+            //this.$location.path("/app/home/cinnosti");
+            //this.$location.replace();
         }
 
         changeDataSource() {                

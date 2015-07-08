@@ -32,8 +32,7 @@
          * Constant IDs for the dialogs. For use with the showDialog helper method.
          */
         public DialogIds = {
-            ReorderCategories: "REORDER_CATEGORIES_DIALOG",
-            PinEntry: "PIN_ENTRY_DIALOG"
+            TimeSheet: "TIME_SHEET_DIALOG"
         };
 
         /**
@@ -42,8 +41,7 @@
          * The template's root element should have a controller that extends BaseDialogController.
          */
         private static dialogTemplateMap = {
-            "REORDER_CATEGORIES_DIALOG": "templates/Dialogs/Reorder-Categories.html",
-            "PIN_ENTRY_DIALOG": "templates/Dialogs/Pin-Entry.html"
+            "TIME_SHEET_DIALOG": "templates/ekonomika/timeSheet.html"
         };
 
         //#endregion
@@ -489,56 +487,6 @@
 
                 });
             });
-
-            return q.promise;
-        }
-
-        //#endregion
-
-        //#region Helpers for the device_resume event
-
-        public showPinEntryAfterResume(): ng.IPromise<void> {
-            var q = this.$q.defer<void>(),
-                resumedAt: moment.Moment,
-                options: Models.DialogOptions,
-                model: Models.PinEntryDialogModel;
-
-            // If the PIN entry dialog then there is nothing to do.
-            if (this.isPinEntryOpen) {
-                q.reject(UiHelper.DIALOG_ALREADY_OPEN);
-                return q.promise;
-            }
-
-            // If there is a PIN set and a last paused time then we need to determine if we
-            // need to show the lock screen.
-            if (this.Preferences.pin && this.Preferences.lastPausedAt != null && this.Preferences.lastPausedAt.isValid()) {
-                // Get the current time.
-                resumedAt = moment();
-
-                // If the time elapsed since the last pause event is greater than the threshold,
-                // then we need to show the lock screen.
-                if (resumedAt.diff(this.Preferences.lastPausedAt, "minutes") > this.Preferences.requirePinThreshold) {
-
-                    model = new Models.PinEntryDialogModel("PIN Required", this.Preferences.pin, false);
-                    options = new Models.DialogOptions(model);
-                    options.backdropClickToClose = false;
-                    options.hardwareBackButtonClose = false;
-                    options.showBackground = false;
-
-                    this.showDialog(this.DialogIds.PinEntry, options).then((result: Models.PinEntryDialogResultModel) => {
-                        // Once a matching PIN is entered, then we can resolve.
-                        q.resolve();
-                    });
-                }
-                else {
-                    // If we don't need to show the PIN screen, then immediately resolve.
-                    q.resolve();
-                }
-            }
-            else {
-                // If we don't need to show the PIN screen, then immediately resolve.
-                q.resolve();
-            }
 
             return q.promise;
         }

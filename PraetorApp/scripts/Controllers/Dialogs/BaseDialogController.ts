@@ -29,7 +29,6 @@
         //#region Events
 
         private modal_shown(ngEvent: ng.IAngularEvent, instance: any) {
-
             // Only respond to modal.shown events for this dialog.
             if (this.dialogId !== instance.dialogId) {
                 return;

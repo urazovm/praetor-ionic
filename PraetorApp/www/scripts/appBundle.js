@@ -1133,22 +1133,28 @@ var PraetorApp;
             };
             HomeCinnostiController.prototype.CreateDatedCinnost = function (date) {
                 var _this = this;
-                // TODO: načíst ID spisu z dialogu.
-                var id_Spis = "e84dc039-7bfb-4b6d-846a-00ab7cb7bc10";
-                var params = new Controllers.CinnostParams(id_Spis, date);
-                var options = new PraetorApp.Models.DialogOptions(params);
-                this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(function () {
-                    _this.ReloadData();
+                this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, new PraetorApp.Models.DialogOptions()).then(function (result) {
+                    if (!result.Success)
+                        return;
+                    var id_Spis = result.Id_Spis;
+                    var params = new Controllers.CinnostParams(id_Spis, date);
+                    var options = new PraetorApp.Models.DialogOptions(params);
+                    _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, options).then(function () {
+                        _this.ReloadData();
+                    });
                 });
             };
             HomeCinnostiController.prototype.CreateCinnost = function () {
                 var _this = this;
-                // TODO: načíst ID spisu z dialogu.
-                var id_Spis = "e84dc039-7bfb-4b6d-846a-00ab7cb7bc10";
-                var params = new Controllers.CinnostParams(id_Spis);
-                var options = new PraetorApp.Models.DialogOptions(params);
-                this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(function () {
-                    _this.ReloadData();
+                this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, new PraetorApp.Models.DialogOptions()).then(function (result) {
+                    if (!result.Success)
+                        return;
+                    var id_Spis = result.Id_Spis;
+                    var params = new Controllers.CinnostParams(id_Spis);
+                    var options = new PraetorApp.Models.DialogOptions(params);
+                    _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, options).then(function () {
+                        _this.ReloadData();
+                    });
                 });
             };
             HomeCinnostiController.ID = "HomeCinnostiController";
@@ -1297,6 +1303,64 @@ var PraetorApp;
             return SpisDokumentyController;
         })(Controllers.BaseController);
         Controllers.SpisDokumentyController = SpisDokumentyController;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
+        var VyberSpisuController = (function (_super) {
+            __extends(VyberSpisuController, _super);
+            function VyberSpisuController($scope, PraetorService, Utilities, Preferences, UiHelper, SpisyUtilities) {
+                _super.call(this, $scope, PraetorApp.ViewModels.Spis.VyberSpisuViewModel, UiHelper.DialogIds.VyberSpisu);
+                this.PraetorService = PraetorService;
+                this.Utilities = Utilities;
+                this.Preferences = Preferences;
+                this.UiHelper = UiHelper;
+                this.scope.$on("modal.shown", _.bind(this.Shown, this));
+                this.SpisyUtilities = SpisyUtilities;
+                this.SpisyUtilities.register(this);
+                this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
+                this.viewModel.PrehledSpisu.posledniSpisy = this.SpisyUtilities.Spisy;
+            }
+            Object.defineProperty(VyberSpisuController, "$inject", {
+                get: function () {
+                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.Utilities.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.SpisyUtilities.ID];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            VyberSpisuController.prototype.SelectSpis = function (spis) {
+                this.close(new Controllers.VyberSpisuResult(true, spis.id_Spis));
+            };
+            VyberSpisuController.prototype.Cancel = function () {
+                this.close(new Controllers.VyberSpisuResult(false, undefined));
+            };
+            VyberSpisuController.prototype.Shown = function () {
+            };
+            VyberSpisuController.prototype.changeDataSource = function () {
+                // Došlo k změně u registrované komponenty
+                // aktualizujeme seznam spisů
+                this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
+            };
+            VyberSpisuController.ID = "VyberSpisuController";
+            return VyberSpisuController;
+        })(Controllers.BaseDialogController);
+        Controllers.VyberSpisuController = VyberSpisuController;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
+        var VyberSpisuResult = (function () {
+            function VyberSpisuResult(success, id_Spis) {
+                this.Success = success;
+                this.Id_Spis = id_Spis;
+            }
+            return VyberSpisuResult;
+        })();
+        Controllers.VyberSpisuResult = VyberSpisuResult;
     })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
@@ -2849,7 +2913,8 @@ var PraetorApp;
                  * Constant IDs for the dialogs. For use with the showDialog helper method.
                  */
                 this.DialogIds = {
-                    Cinnost: "CINNOST_DIALOG"
+                    Cinnost: "CINNOST_DIALOG",
+                    VyberSpisu: "VYBER_SPISU_DIALOG"
                 };
                 this.isPinEntryOpen = false;
                 this.$rootScope = $rootScope;
@@ -3125,7 +3190,8 @@ var PraetorApp;
              * The template's root element should have a controller that extends BaseDialogController.
              */
             UiHelper.dialogTemplateMap = {
-                "CINNOST_DIALOG": "templates/ekonomika/cinnost.html"
+                "CINNOST_DIALOG": "templates/ekonomika/cinnost.html",
+                "VYBER_SPISU_DIALOG": "templates/spis/vyber-spisu.html"
             };
             return UiHelper;
         })();
@@ -3696,6 +3762,21 @@ var PraetorApp;
                 return DokumentyViewModel;
             })();
             Spis.DokumentyViewModel = DokumentyViewModel;
+        })(Spis = ViewModels.Spis || (ViewModels.Spis = {}));
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
+        var Spis;
+        (function (Spis) {
+            var VyberSpisuViewModel = (function () {
+                function VyberSpisuViewModel() {
+                }
+                return VyberSpisuViewModel;
+            })();
+            Spis.VyberSpisuViewModel = VyberSpisuViewModel;
         })(Spis = ViewModels.Spis || (ViewModels.Spis = {}));
     })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
 })(PraetorApp || (PraetorApp = {}));

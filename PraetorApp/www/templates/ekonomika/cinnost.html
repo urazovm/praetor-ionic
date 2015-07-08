@@ -1,5 +1,6 @@
 ﻿<ion-modal-view ng-controller="CinnostController">
-    <ion-header-bar class="bar-positive">
+    <ion-header-bar class="bar-positive" align-title="center">
+        <button class="button button-icon icon ion-ios-arrow-back" ng-click="controller.Cancel()"></button>
         <h1 class="title">Nová činnost</h1>
     </ion-header-bar>
     <ion-content has-bouncing="false">
@@ -33,9 +34,6 @@
             </label>
 
             <div class="row">
-                <div class="col">
-                    <input type="button" class="button button-block" ng-click="controller.Cancel()" value="Storno">
-                </div>
                 <div class="col">
                     <input type="submit" class="button button-block button-positive" ng-click="controller.SaveData()" value="Uložit">
                 </div>

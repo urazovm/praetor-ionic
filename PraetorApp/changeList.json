@@ -151,7 +151,11 @@
     "scripts\\Controllers\\AppController.ts",
     "scripts\\ViewModels\\AppViewModel.ts",
     "www\\templates\\app.html",
-    "www\\templates\\settings\\login.html"
+    "www\\templates\\settings\\login.html",
+    "scripts\\Controllers\\Spis\\VyberSpisuResult.ts",
+    "scripts\\Controllers\\Spis\\VyberSpisuController.ts",
+    "scripts\\ViewModels\\Spis\\VyberSpisuViewModel.ts",
+    "www\\templates\\spis\\vyber-spisu.html"
   ],
   "deletedFilesIos": [
     "scripts\\Application.ts.BASE.ts",
@@ -181,15 +185,21 @@
     "www\\config.xml.LOCAL.xml",
     "www\\config.xml.BASE.xml",
     "www\\config.xml.REMOTE.xml",
-    "www\\templates\\home\\vykazovani.html"
+    "www\\templates\\home\\vykazovani.html",
+    "scripts\\Controllers\\Ekonomika\\CinnostController - Copy.ts",
+    "scripts\\Controllers\\Ekonomika\\CinnostResult - Copy.ts",
+    "scripts\\ViewModels\\Home\\SpisyViewModel - Copy.ts",
+    "scripts\\Controllers\\Ekonomika\\VyberSpisuResult.ts",
+    "scripts\\Controllers\\Ekonomika\\VyberSpisuController.ts",
+    "scripts\\ViewModels\\Home\\VyberSpisuViewModel.ts",
+    "www\\templates\\spis\\cinnost.html"
   ],
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json",
-    "www\\templates\\home\\cinnosti.html"
+    "plugins\\android.json"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

@@ -1,0 +1,51 @@
+﻿module PraetorApp.Controllers {
+
+    export class VyberSpisuController extends BaseDialogController<ViewModels.Spis.VyberSpisuViewModel, Void, VyberSpisuResult>
+        implements PraetorApp.Definitely.ISpisyUtilitiesDataChange {
+
+        public static ID = "VyberSpisuController";
+
+        public static get $inject(): string[]{
+            return ["$scope", Services.PraetorService.ID, Services.Utilities.ID, Services.Preferences.ID, Services.UiHelper.ID, Services.SpisyUtilities.ID];
+        }
+
+        private PraetorService: Services.PraetorService;
+        private Utilities: Services.Utilities;
+        private Preferences: Services.Preferences;
+        private UiHelper: Services.UiHelper;
+        private SpisyUtilities: Services.SpisyUtilities;
+
+        constructor($scope: ng.IScope, PraetorService: Services.PraetorService, Utilities: Services.Utilities, Preferences: Services.Preferences, UiHelper: Services.UiHelper, SpisyUtilities: Services.SpisyUtilities) {
+            super($scope, ViewModels.Spis.VyberSpisuViewModel, UiHelper.DialogIds.VyberSpisu);
+
+            this.PraetorService = PraetorService;
+            this.Utilities = Utilities;
+            this.Preferences = Preferences;                        
+            this.UiHelper = UiHelper;
+
+            this.scope.$on("modal.shown", _.bind(this.Shown, this));
+
+            this.SpisyUtilities = SpisyUtilities;
+            this.SpisyUtilities.register(this);
+            this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
+            this.viewModel.PrehledSpisu.posledniSpisy = this.SpisyUtilities.Spisy;
+        }
+
+        public SelectSpis(spis: PraetorServer.Service.WebServer.Messages.Dto.Spis) {
+            this.close(new VyberSpisuResult(true, spis.id_Spis));
+        }
+
+        public Cancel() {
+            this.close(new VyberSpisuResult(false, undefined));
+        }
+
+        private Shown() {
+        }
+
+        changeDataSource() {                
+            // Došlo k změně u registrované komponenty
+            // aktualizujeme seznam spisů
+            this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
+        }
+    }
+}

@@ -123,6 +123,7 @@ declare module PraetorServer.Service.WebServer.Messages.Dto {
 		id_Aktivita: System.Guid;
 		nazev: string;
 		popis: string;
+		ord: number;
 	}
 	interface TimeSheet {
 		id_Spis: System.Guid;

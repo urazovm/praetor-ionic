@@ -30,9 +30,10 @@
             this.PraetorService.loadTimeSheet(request).then(
                 response => {
                     this.viewModel.Data = response.timeSheet;
-                    this.viewModel.Aktivity = response.aktivity;
+                    this.viewModel.Aktivity = _.sortBy(response.aktivity, x => x.ord);
                     this.viewModel.Datum = new Date(<any>response.timeSheet.datum);
                     this.viewModel.Aktivita = _.find(response.aktivity, x => x.id_Aktivita == response.timeSheet.id_Aktivita);
+                    this.AktivitaChanged();
                 },
                 ex => {
                     this.close();

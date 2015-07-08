@@ -49,9 +49,9 @@
                 this.loadSpisy();
             }
 
-            this.interval = setInterval(function () {
-                self.loadSpisy();
-            }, 10000);
+            //this.interval = setInterval(function () {
+            //    self.loadSpisy();
+            //}, 10000);
         }
 
         private loadSpisy() {
@@ -67,8 +67,7 @@
             });
         }
 
-        private onChangedDataSource() {
-            debugger;        
+        private onChangedDataSource() {                    
             _.each(this.registerController,
                 function (controller: PraetorApp.Definitely.ISpisyUtilitiesDataChange) {                    
                     controller.changeDataSource.apply(controller);

@@ -203,7 +203,7 @@
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
     "plugins\\android.json",
-    "www\\templates\\home\\spisy.html",
+    "config.xml",
     "www\\config.xml"
   ],
   "deletedFiles": [],

@@ -908,8 +908,9 @@ var PraetorApp;
                 this.Preferences = Preferences;
                 this.$state = $state;
                 this.SpisyUtilities = SpisyUtilities;
+                this.SpisyUtilities.register(this);
                 this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
-                this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
+                this.viewModel.PrehledSpisu.posledniSpisy = this.SpisyUtilities.Spisy;
             }
             Object.defineProperty(HomeSpisyController, "$inject", {
                 get: function () {
@@ -918,12 +919,14 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
-            HomeSpisyController.prototype.changedSpisy = function () {
-                this.scope.$apply();
-            };
             HomeSpisyController.prototype.openSpis = function (spis) {
                 // Otevřeme detail spisu
                 this.$state.go('app.spis.dokumenty', { id: spis.id_Spis });
+            };
+            HomeSpisyController.prototype.changeDataSource = function () {
+                // Došlo k změně u registrované komponenty
+                // aktualizujeme seznam spisů
+                this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
             };
             HomeSpisyController.ID = "HomeSpisyController";
             return HomeSpisyController;
@@ -2384,6 +2387,7 @@ var PraetorApp;
                 this.$timeout = $timeout;
                 this.praetorService = praetorService;
                 this.Preferences = Preferences;
+                this.registerController = [];
             }
             Object.defineProperty(SpisyUtilities, "$inject", {
                 get: function () {
@@ -2396,25 +2400,47 @@ var PraetorApp;
                 get: function () {
                     return this._spisy;
                 },
+                set: function (value) {
+                    this._spisy = value;
+                },
                 enumerable: true,
                 configurable: true
             });
             SpisyUtilities.prototype.Synchronize = function () {
                 var self = this;
+                this.Preferences.spisy = null;
                 // Zjistíme jestli máme načtené spisy
                 // pokud ano tak je hned nastavíme
                 if (this.Preferences.spisy != null) {
-                    this._spisy = this.Preferences.spisy;
+                    this.Spisy = this.Preferences.spisy;
+                    self.onChangedDataSource();
                 }
                 if (this.Preferences.spisy == null) {
-                    var request = {};
-                    this.praetorService.getData("LoadChangedSpisy", request).then(function (response) {
-                        if (response.success) {
-                            self.Preferences.spisy = response.changedSpisy;
-                            self._spisy = response.changedSpisy;
-                        }
-                    });
+                    this.loadSpisy();
                 }
+                this.interval = setInterval(function () {
+                    self.loadSpisy();
+                }, 10000);
+            };
+            SpisyUtilities.prototype.loadSpisy = function () {
+                var self = this;
+                var request = {};
+                this.praetorService.getData("LoadChangedSpisy", request).then(function (response) {
+                    if (response.success) {
+                        self.Preferences.spisy = response.changedSpisy;
+                        self.Spisy = response.changedSpisy;
+                        self.onChangedDataSource();
+                    }
+                });
+            };
+            SpisyUtilities.prototype.onChangedDataSource = function () {
+                debugger;
+                _.each(this.registerController, function (controller) {
+                    controller.changeDataSource.apply(controller);
+                });
+            };
+            SpisyUtilities.prototype.register = function (controller) {
+                this.registerController.push(controller);
             };
             SpisyUtilities.ID = "SpisyUtilities";
             return SpisyUtilities;
@@ -3242,4 +3268,3 @@ var PraetorApp;
         ViewModels.AboutViewModel = AboutViewModel;
     })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
 })(PraetorApp || (PraetorApp = {}));
-//# sourceMappingURL=appBundle.js.map

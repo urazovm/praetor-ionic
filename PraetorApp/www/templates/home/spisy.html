@@ -1,8 +1,6 @@
 ﻿<ion-view title="Praetor" hide-back-button="true">
-    <ion-content has-bouncing="false">
-        <p>vgg</p>
-        <prehled-spisu onSpisClick="controller.openSpis" data="viewModel.PrehledSpisu"></prehled-spisu>
-        <p>ggg</p>
+    <ion-content has-bouncing="false">        
+        <prehled-spisu on-spis-click="controller.openSpis(spis)" view-model="viewModel.PrehledSpisu"></prehled-spisu>        
     </ion-content>
 </ion-view>
 

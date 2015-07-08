@@ -67,8 +67,8 @@ module PraetorApp.Application {
             return {
                 restrict: 'E',
                 scope: {
-                    viewModel: '=data',
-                    onSpisClick: '=onSpisClick'
+                    viewModel: '=',
+                    onSpisClick: '&'
                 },                
                 templateUrl: 'templates/directives/prehled-spisu.html'
             };
@@ -388,6 +388,7 @@ module PraetorApp.Application {
                     disableBack: true
                 });
 
+                
                 // Navigate the user to the onboarding splash view.
                 $location.path("/app/onboarding/splash");
                 $location.replace();

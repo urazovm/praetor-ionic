@@ -287,7 +287,10 @@ module PraetorApp.Application {
      * on the Codrova device ready event.
      */
     function ionicPlatform_ready($rootScope: ng.IScope, $location: ng.ILocationService, $ionicViewService: any, $ionicPlatform: Ionic.IPlatform, UiHelper: Services.UiHelper, Utilities: Services.Utilities, Preferences: Services.Preferences): void {
-        
+
+        if (window.StatusBar)
+            window.StatusBar.overlaysWebView(false);
+
         // Subscribe to device events.
         document.addEventListener("pause", _.bind(device_pause, null, Preferences));
         document.addEventListener("resume", _.bind(device_resume, null, $location, $ionicViewService, Utilities, UiHelper, Preferences));

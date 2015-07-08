@@ -27,7 +27,7 @@ declare module PraetorServer.Service.WebServer.Messages {
 		cinnostiUntil: Date;
 	}
 	interface LoadCinnostiResponse extends PraetorServer.Service.WebServer.Messages.Response {
-		cinnosti: PraetorServer.Service.WebServer.Messages.Dto.TimeSheetPrehledEntry[];
+		cinnosti: PraetorServer.Service.WebServer.Messages.Dto.CinnostPrehledEntry[];
 	}
 	interface LoadPosledniSpisyRequest extends PraetorServer.Service.WebServer.Messages.Request {
 		pocet: number;
@@ -51,17 +51,17 @@ declare module PraetorServer.Service.WebServer.Messages {
 	interface LoadSpisDokumentyResponse extends PraetorServer.Service.WebServer.Messages.Response {
 		dokumenty: PraetorServer.Service.WebServer.Messages.Dto.DokumentNode[];
 	}
-	interface LoadTimeSheetRequest extends PraetorServer.Service.WebServer.Messages.Request {
+	interface LoadCinnostRequest extends PraetorServer.Service.WebServer.Messages.Request {
 		id_Spis: System.Guid;
 	}
-	interface LoadTimeSheetResponse extends PraetorServer.Service.WebServer.Messages.Response {
+	interface LoadCinnostResponse extends PraetorServer.Service.WebServer.Messages.Response {
 		aktivity: PraetorServer.Service.WebServer.Messages.Dto.Aktivita[];
-		timeSheet: PraetorServer.Service.WebServer.Messages.Dto.TimeSheet;
+		cinnost: PraetorServer.Service.WebServer.Messages.Dto.Cinnost;
 	}
-	interface SaveTimeSheetRequest extends PraetorServer.Service.WebServer.Messages.Request {
-		timeSheet: PraetorServer.Service.WebServer.Messages.Dto.TimeSheet;
+	interface SaveCinnostRequest extends PraetorServer.Service.WebServer.Messages.Request {
+		cinnost: PraetorServer.Service.WebServer.Messages.Dto.Cinnost;
 	}
-	interface SaveTimeSheetResponse extends PraetorServer.Service.WebServer.Messages.Response {
+	interface SaveCinnostResponse extends PraetorServer.Service.WebServer.Messages.Response {
 	}
 	interface LoadSpisCinnostiRequest extends PraetorServer.Service.WebServer.Messages.Request {
 		id_Spis: System.Guid;
@@ -69,7 +69,7 @@ declare module PraetorServer.Service.WebServer.Messages {
 		cinnostiUntil: Date;
 	}
 	interface LoadSpisCinnostiResponse extends PraetorServer.Service.WebServer.Messages.Response {
-		cinnosti: PraetorServer.Service.WebServer.Messages.Dto.TimeSheetPrehledEntry[];
+		cinnosti: PraetorServer.Service.WebServer.Messages.Dto.CinnostPrehledEntry[];
 	}
 	interface LoginRequest extends PraetorServer.Service.WebServer.Messages.Request {
 	}
@@ -100,8 +100,9 @@ declare module PraetorServer.Service.WebServer.Messages.Dto {
 		predmet: string;
 		hlavniKlient: string;
 	}
-	interface TimeSheetPrehledEntry {
-		id_TimeSheet: System.Guid;
+	interface CinnostPrehledEntry {
+		id_Cinnost: System.Guid;
+		datum: Date;
 		cas: System.TimeSpan;
 		popis: string;
 		spisovaZnacka: string;
@@ -125,7 +126,7 @@ declare module PraetorServer.Service.WebServer.Messages.Dto {
 		popis: string;
 		ord: number;
 	}
-	interface TimeSheet {
+	interface Cinnost {
 		id_Spis: System.Guid;
 		spisOznaceni: string;
 		id_Aktivita: System.Guid;

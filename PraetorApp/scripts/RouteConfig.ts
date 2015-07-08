@@ -53,8 +53,8 @@ module PraetorApp {
                 url: "/cinnosti",
                 views: {
                     'tab-cinnosti': {
-                        templateUrl: "templates/home/vykazovani.html",
-                        controller: Controllers.HomeVykazovaniController.ID
+                        templateUrl: "templates/home/cinnosti.html",
+                        controller: Controllers.HomeCinnostiController.ID
                     }
                 }
             });

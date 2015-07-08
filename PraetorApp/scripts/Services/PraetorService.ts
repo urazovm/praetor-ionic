@@ -117,12 +117,12 @@
             return this.getData("LoadCinnosti", request);
         }
 
-        public loadTimeSheet(request: PraetorServer.Service.WebServer.Messages.LoadTimeSheetRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoadTimeSheetResponse> {
-            return this.getData("LoadTimeSheet", request);
+        public loadCinnost(request: PraetorServer.Service.WebServer.Messages.LoadCinnostRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoadCinnostResponse> {
+            return this.getData("LoadCinnost", request);
         }
 
-        public SaveTimeSheet(request: PraetorServer.Service.WebServer.Messages.SaveTimeSheetRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.SaveTimeSheetResponse> {
-            return this.getData("SaveTimeSheet", request);
+        public SaveCinnost(request: PraetorServer.Service.WebServer.Messages.SaveCinnostRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.SaveCinnostResponse> {
+            return this.getData("SaveCinnost", request);
         }
     }
 

@@ -1,5 +1,5 @@
 ﻿module PraetorApp.Controllers {
-    export class TimeSheetResult {
+    export class CinnostResult {
         public Success: boolean;
 
         constructor(success: boolean) {

@@ -80,7 +80,8 @@ module PraetorApp.Application {
                 scope: {
                     viewModel: '=',
                     onCinnostClick: '&',
-                    onAddClick: '&'
+                    onAddClick: '&',
+                    onLoadPreviousClick: '&'
                 },
                 templateUrl: 'templates/directives/prehled-cinnosti.html'
             };
@@ -299,6 +300,9 @@ module PraetorApp.Application {
      * on the Codrova device ready event.
      */
     function ionicPlatform_ready($rootScope: ng.IScope, $location: ng.ILocationService, $ionicViewService: any, $ionicPlatform: Ionic.IPlatform, UiHelper: Services.UiHelper, Utilities: Services.Utilities, Preferences: Services.Preferences): void {
+        if (navigator.splashscreen)
+            navigator.splashscreen.hide();
+
         if (window.StatusBar)
             window.StatusBar.overlaysWebView(false);
 

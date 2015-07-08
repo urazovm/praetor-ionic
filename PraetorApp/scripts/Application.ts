@@ -74,6 +74,17 @@ module PraetorApp.Application {
             };
         });
 
+        ngModule.directive("prehledabc", function () {
+            return {
+                restrict: 'E',
+                scope: {
+                    viewModel: '=',
+                    onSpisClick: '&'                  
+                },
+                templateUrl: 'templates/directives/prehled-spisu.html'
+            };
+        });
+
         // Specify the initialize/run and configuration functions.
         ngModule.run(angular_initialize);
         ngModule.config(angular_configure);
@@ -289,7 +300,7 @@ module PraetorApp.Application {
     function ionicPlatform_ready($rootScope: ng.IScope, $location: ng.ILocationService, $ionicViewService: any, $ionicPlatform: Ionic.IPlatform, UiHelper: Services.UiHelper, Utilities: Services.Utilities, Preferences: Services.Preferences): void {
         if (navigator.splashscreen)
             navigator.splashscreen.hide();
-        alert(navigator.splashscreen);
+        window.alert("skryt");
 
         if (window.StatusBar)
             window.StatusBar.overlaysWebView(false);

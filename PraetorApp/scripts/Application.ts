@@ -87,9 +87,25 @@ module PraetorApp.Application {
             };
         });
 
+        window.addEventListener('native.showkeyboard', onkeyboardshow);
+
+        window.addEventListener('native.hidekeyboard', onkeyboardhide);
+
         // Specify the initialize/run and configuration functions.
         ngModule.run(angular_initialize);
         ngModule.config(angular_configure);
+    }
+
+    function onkeyboardshow() {
+        var style = document.createElement("style");
+        style.appendChild(document.createTextNode("div.tabs.tab-nav {display: none !important } .has-tabs { bottom: 0 !important }"));
+        style.id = 'style_hidetabs';
+        document.head.appendChild(style);
+    }
+
+    function onkeyboardhide() {
+        var el = document.getElementById('style_hidetabs');
+        if(el) el.parentNode.removeChild(el);
     }
 
     //#region Helpers

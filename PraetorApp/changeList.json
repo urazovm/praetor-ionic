@@ -6,7 +6,6 @@
     "scripts\\Services\\Utilities.ts",
     "scripts\\typings\\jquery\\jquery.d.ts",
     "scripts\\typings\\custom\\ionic.d.ts",
-    "scripts\\Controllers\\Spis\\DokumentyUdajeController.ts",
     "scripts\\ViewModels\\LoginViewModel.ts",
     "scripts\\typings\\cordova\\plugins\\Camera.d.ts",
     "scripts\\typings\\custom\\Interfaces.d.ts",
@@ -225,22 +224,22 @@
     "scripts\\Controllers\\Ekonomika\\TimeSheetParams.ts",
     "scripts\\Controllers\\Dialogs\\Void.ts",
     "www\\templates\\ekonomika\\timeSheet.html",
+    "scripts\\Controllers\\Spis\\SpisDokumentyController.ts",
     "www\\scripts\\appBundle.js"
   ],
   "deletedFilesIos": [
     "www\\templates\\home.html.LOCAL.html",
     "www\\templates\\home.html.REMOTE.html",
     "www\\templates\\home.html.BASE.html",
-    "www\\scripts\\appBundle.js.map"
+    "www\\scripts\\appBundle.js.map",
+    "scripts\\Controllers\\Spis\\DokumentyUdajeController.ts"
   ],
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json",
-    "www\\config.xml",
-    "config.xml"
+    "plugins\\android.json"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

@@ -4,13 +4,23 @@
     color: #fff;
 }
 
-.bar-positive .button i
-{
-    font-size:30px;
-    background-color:transparent;
-    border-color:transparent;    
+    .bar-positive .button i {
+        font-size: 30px;
+        background-color: transparent;
+        border-color: transparent;
+    }
+
+.bar.bar-stable .title {
+    color: #fff;
 }
 
-    .bar.bar-stable .title {
-        color: #fff;
-    }
+.spis-detail-table
+{
+    margin-left:5px;
+    margin-right:5px;
+    margin-top:10px;
+}
+
+.spis-detail-table .header {
+    margin-left:5px;
+}

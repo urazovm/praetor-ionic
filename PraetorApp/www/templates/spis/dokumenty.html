@@ -1,5 +1,19 @@
-﻿<ion-view title="Praetor">
+﻿<ion-view title="Dokumenty">
     <ion-content>
-        dokumenty: {{viewModel.id_spis}}<br /><br />
+        <div class="list">
+            <div ng-repeat="node in viewModel.dokumenty" ng-include="'file_template.html'">
+            </div>
+        </div>
     </ion-content>
 </ion-view>
+<script type="text/ng-template" id="file_template.html">
+    <div ng-switch="node.mime || 'dir'">
+        <div ng-switch-when="dir">
+            <a class="item item-icon-left" onclick="this.nextElementSibling.style.display = (this.nextElementSibling.style.display == 'block') ? 'none' : 'block';"><i class="icon ion-folder"></i>{{node.nazev}}</a>
+            <ul style='display:none' class="dir">
+                <li ng-repeat="node in node.nodes" ng-include="'file_template.html'"></li>
+            </ul>
+        </div>
+        <a ng-switch-default class="item item-icon-left" ng-click="controller.openDokument(node)"><i class="icon ion-document"></i>{{node.nazev}}.{{node.pripona}}<span class="item-note">{{node.downloadProgress}}</span></a>
+    </div>
+</script>

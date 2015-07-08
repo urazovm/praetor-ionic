@@ -12,9 +12,15 @@ declare module PraetorServer.Service.WebServer.Messages {
 		password: string;
 		sessionid: System.Guid;
 	}
+	interface GetFileTokenRequest extends PraetorServer.Service.WebServer.Messages.Request {
+		id_file: System.Guid;
+	}
 	interface Response {
 		success: boolean;
 		message: string;
+	}
+	interface GetFileTokenResponse extends PraetorServer.Service.WebServer.Messages.Response {
+		token: System.Guid;
 	}
 	interface LoadChangedSpisyRequest extends PraetorServer.Service.WebServer.Messages.Request {
 		onlyChangedSince: Date;
@@ -39,10 +45,10 @@ declare module PraetorServer.Service.WebServer.Messages {
 	}
 	interface LoadHomeResponse extends PraetorServer.Service.WebServer.Messages.Response {
 	}
-	interface LoadSpisHomeRequest extends PraetorServer.Service.WebServer.Messages.Request {
+	interface LoadSpisZakladniUdajeRequest extends PraetorServer.Service.WebServer.Messages.Request {
 		id_Spis: System.Guid;
 	}
-	interface LoadSpisHomeResponse extends PraetorServer.Service.WebServer.Messages.Response {
+	interface LoadSpisZakladniUdajeResponse extends PraetorServer.Service.WebServer.Messages.Response {
 		spis: PraetorServer.Service.WebServer.Messages.Dto.Spis;
 	}
 	interface LoadSpisDokumentyRequest extends PraetorServer.Service.WebServer.Messages.Request {
@@ -111,6 +117,15 @@ declare module PraetorServer.Service.WebServer.Messages.Dto {
 		id_Spis: System.Guid;
 		spisovaZnacka: string;
 		predmet: string;
+		hlavniKlient: string;
+		klient: string;
+		protistrana: string;
+		stav: string;
+		stitky: string;
+		pravniKategorie: string;
+		procesniStav: string;
+		poznamka: string;
+		odpovednyAdvokat: string;
 	}
 	interface DokumentNode {
 		id: System.Guid;

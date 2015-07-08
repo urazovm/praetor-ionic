@@ -1177,7 +1177,7 @@ var PraetorApp;
     (function (Controllers) {
         var SpisDokumentyController = (function (_super) {
             __extends(SpisDokumentyController, _super);
-            function SpisDokumentyController($scope, $location, $http, $state, $stateParams, Utilities, UiHelper, Preferences) {
+            function SpisDokumentyController($scope, $location, $http, $state, $stateParams, Utilities, UiHelper, Preferences, FileService, PraetorService) {
                 _super.call(this, $scope, PraetorApp.ViewModels.Spis.DokumentyViewModel);
                 this.$location = $location;
                 this.$http = $http;
@@ -1187,14 +1187,33 @@ var PraetorApp;
                 this.$state = $state;
                 this.$stateParams = $stateParams;
                 this.viewModel.id_spis = this.$stateParams.id;
+                this.FileService = FileService;
+                this.PraetorService = PraetorService;
+                this.loadDokumenty();
             }
             Object.defineProperty(SpisDokumentyController, "$inject", {
                 get: function () {
-                    return ["$scope", "$location", "$http", "$state", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
+                    return ["$scope", "$location", "$http", "$state", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.FileUtilities.ID, PraetorApp.Services.PraetorService.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
+            SpisDokumentyController.prototype.loadDokumenty = function () {
+                var _this = this;
+                var request = {};
+                request.id_Spis = this.viewModel.id_spis;
+                this.PraetorService.loadSpisDokumenty(request).then(function (response) {
+                    _this.viewModel.dokumenty = response.dokumenty;
+                });
+            };
+            SpisDokumentyController.prototype.openDokument = function (dokument) {
+                var _this = this;
+                var request = {};
+                request.id_file = dokument.id;
+                this.PraetorService.getFileToken(request).then(function (response) {
+                    _this.FileService.openFile(response.token);
+                });
+            };
             SpisDokumentyController.ID = "SpisDokumentyController";
             return SpisDokumentyController;
         })(Controllers.BaseController);
@@ -1207,7 +1226,7 @@ var PraetorApp;
     (function (Controllers) {
         var SpisZakladniUdajeController = (function (_super) {
             __extends(SpisZakladniUdajeController, _super);
-            function SpisZakladniUdajeController($scope, $location, $http, $state, $stateParams, Utilities, UiHelper, Preferences) {
+            function SpisZakladniUdajeController($scope, $location, $http, $state, $stateParams, Utilities, UiHelper, Preferences, PraetorService) {
                 _super.call(this, $scope, PraetorApp.ViewModels.Spis.ZakladniUdajeViewModel);
                 this.$location = $location;
                 this.$http = $http;
@@ -1217,14 +1236,24 @@ var PraetorApp;
                 this.$state = $state;
                 this.$stateParams = $stateParams;
                 this.viewModel.id_spis = this.$stateParams.id;
+                this.PraetorService = PraetorService;
+                this.loadSpis();
             }
             Object.defineProperty(SpisZakladniUdajeController, "$inject", {
                 get: function () {
-                    return ["$scope", "$location", "$http", "$state", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
+                    return ["$scope", "$location", "$http", "$state", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.PraetorService.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
+            SpisZakladniUdajeController.prototype.loadSpis = function () {
+                var _this = this;
+                var request = {};
+                request.id_Spis = this.viewModel.id_spis;
+                this.PraetorService.loadSpisZakladniUdaje(request).then(function (response) {
+                    _this.viewModel.spis = response.spis;
+                });
+            };
             SpisZakladniUdajeController.ID = "SpisZakladniUdajeController";
             return SpisZakladniUdajeController;
         })(Controllers.BaseController);
@@ -1539,20 +1568,25 @@ var PraetorApp;
     var Services;
     (function (Services) {
         var FileUtilities = (function () {
-            function FileUtilities($q, Utilities) {
+            function FileUtilities($q, Utilities, Preferences) {
                 this.$q = $q;
                 this.Utilities = Utilities;
+                this.Preferences = Preferences;
             }
             Object.defineProperty(FileUtilities, "$inject", {
                 get: function () {
-                    return ["$q", Services.Utilities.ID];
+                    return ["$q", Services.Utilities.ID, Services.Preferences.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
-            FileUtilities.prototype.openFile = function (path) {
+            FileUtilities.prototype.openFile = function (token) {
                 var q = this.$q.defer();
-                window.handleDocumentWithURL(function () { console.log('success'); q.resolve(true); }, function (error) {
+                var path = 'http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token;
+                window.handleDocumentWithURL(function () {
+                    console.log('success');
+                    q.resolve(true);
+                }, function (error) {
                     console.log('failure');
                     if (error == 53) {
                         console.log('No app that handles this file type.');
@@ -2424,6 +2458,15 @@ var PraetorApp;
             };
             PraetorService.prototype.SaveTimeSheet = function (request) {
                 return this.getData("SaveTimeSheet", request);
+            };
+            PraetorService.prototype.getFileToken = function (request) {
+                return this.getData("getfiletoken", request);
+            };
+            PraetorService.prototype.loadSpisDokumenty = function (request) {
+                return this.getData("loadspisdokumenty", request);
+            };
+            PraetorService.prototype.loadSpisZakladniUdaje = function (request) {
+                return this.getData("loadspiszakladniudaje", request);
             };
             PraetorService.ID = "PraetorService";
             return PraetorService;

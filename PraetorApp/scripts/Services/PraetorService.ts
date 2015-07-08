@@ -124,6 +124,18 @@
         public SaveTimeSheet(request: PraetorServer.Service.WebServer.Messages.SaveTimeSheetRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.SaveTimeSheetResponse> {
             return this.getData("SaveTimeSheet", request);
         }
+
+        public getFileToken(request: PraetorServer.Service.WebServer.Messages.GetFileTokenRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.GetFileTokenResponse> {
+            return this.getData("getfiletoken", request);
+        }
+
+        public loadSpisDokumenty(request: PraetorServer.Service.WebServer.Messages.LoadSpisDokumentyRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoadSpisDokumentyResponse> {
+            return this.getData("loadspisdokumenty", request);
+        }
+
+        public loadSpisZakladniUdaje(request: PraetorServer.Service.WebServer.Messages.LoadSpisZakladniUdajeRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoadSpisZakladniUdajeResponse> {
+            return this.getData("loadspiszakladniudaje", request);
+        }
     }
 
     class GetDataOptions {

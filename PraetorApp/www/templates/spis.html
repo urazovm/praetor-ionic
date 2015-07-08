@@ -1,8 +1,20 @@
 ﻿<ion-pane>
-    <ion-nav-bar class="bar-stable nav-title-slide-ios">
-        <ion-nav-back-button class="button-clear"><i class="icon ion-ios-arrow-back"></i> Zpět</ion-nav-back-button>
-    </ion-nav-bar>
+    <ion-nav-bar class="bar-positive nav-title-slide-ios pr-black" align-title="center">
+        <ion-nav-back-button class="button-icon ion-arrow-left-c">
+        </ion-nav-back-button>
+        <ion-nav-buttons side="left">
+            <button class="button" ui-sref="app.home.spisy">
+                <i class="ion-ios-arrow-back"></i>                
+            </button>
+        </ion-nav-buttons>
+        <!--<ion-nav-buttons side="right">
+            <button class="button">
+                Refresh!
+            </button>
+        </ion-nav-buttons>-->
 
+    </ion-nav-bar>
+    
     <ion-tabs class="tabs-positive tabs-icon-top pr-black">
 
         <ion-tab title="Základní údaje" icon-on="ion-ios-filing" icon-off="ion-ios-filing-outline" ui-sref="app.spis.zakladniudaje">

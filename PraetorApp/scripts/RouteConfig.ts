@@ -47,23 +47,53 @@ module PraetorApp {
                         controller: Controllers.HomeSpisyController.ID
                     }
                 }
-            })
+            });
 
             $stateProvider.state('app.home.cinnosti', {
                 url: "/cinnosti",
                 views: {
-                    'tab-cinnosti':{
+                    'tab-cinnosti': {
                         templateUrl: "templates/home/vykazovani.html",
                         controller: Controllers.HomeVykazovaniController.ID
                     }
                 }
-            })
+            });
+
+            $stateProvider.state("app.spis", {
+                url: "/spis/{id}",
+                views: {
+                    "menuContent": {
+                        templateUrl: "templates/spis.html",
+                        controller: Controllers.SpisController.ID
+                    }
+                }
+            });
+
+            $stateProvider.state('app.spis.zakladniudaje', {
+                url: "/zakladniudaje",
+                views: {
+                    'tab-zakladni-udaje': {
+                        templateUrl: "templates/spis/zakladniudaje.html",
+                        controller: Controllers.SpisZakladniUdajeController.ID
+                    }
+                }
+            });
+
+            $stateProvider.state('app.spis.dokumenty', {
+                url: "/dokumenty",
+                views: {
+                    'tab-dokumenty': {
+                        templateUrl: "templates/spis/dokumenty.html",
+                        controller: Controllers.SpisDokumentyController.ID
+                    }
+                }
+            });
 
             $stateProvider.state("app.about", {
                 url: "/settings/about",
                 views: {
                     "menuContent": {
-                        templateUrl: "templates/Settings/About.html",
+                        templateUrl: "templates/settings/About.html",
                         controller: Controllers.AboutController.ID
                     }
                 }

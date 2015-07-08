@@ -75,7 +75,7 @@ module PraetorApp {
                 views: {
                     'tab-zakladni-udaje': {
                         templateUrl: "templates/spis/zakladniudaje.html",
-                        controller: Controllers.SpisZakladniUdajeController.ID
+                        //controller: Controllers.SpisZakladniUdajeController.ID
                     }
                 }
             });
@@ -86,7 +86,7 @@ module PraetorApp {
                 views: {
                     'tab-dokumenty': {
                         templateUrl: "templates/spis/dokumenty.html",
-                        controller: Controllers.SpisDokumentyController.ID
+                        //controller: Controllers.SpisDokumentyController.ID
                     }
                 }
             });

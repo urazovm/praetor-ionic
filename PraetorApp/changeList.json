@@ -192,14 +192,19 @@
     "scripts\\Controllers\\Ekonomika\\VyberSpisuResult.ts",
     "scripts\\Controllers\\Ekonomika\\VyberSpisuController.ts",
     "scripts\\ViewModels\\Home\\VyberSpisuViewModel.ts",
-    "www\\templates\\spis\\cinnost.html"
+    "www\\templates\\spis\\cinnost.html",
+    "www\\templates\\home\\spisy.html.LOCAL.html",
+    "www\\templates\\home\\spisy.html.BASE.html",
+    "www\\templates\\home\\spisy.html.REMOTE.html"
   ],
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json"
+    "plugins\\android.json",
+    "www\\templates\\home\\spisy.html",
+    "www\\config.xml"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

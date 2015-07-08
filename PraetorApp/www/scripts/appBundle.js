@@ -74,11 +74,24 @@ var PraetorApp;
                     templateUrl: 'templates/directives/prehled-cinnosti.html'
                 };
             });
+            window.addEventListener('native.showkeyboard', onkeyboardshow);
+            window.addEventListener('native.hidekeyboard', onkeyboardhide);
             // Specify the initialize/run and configuration functions.
             ngModule.run(angular_initialize);
             ngModule.config(angular_configure);
         }
         Application.main = main;
+        function onkeyboardshow() {
+            var style = document.createElement("style");
+            style.appendChild(document.createTextNode("div.tabs.tab-nav {display: none !important } .has-tabs { bottom: 0 !important }"));
+            style.id = 'style_hidetabs';
+            document.head.appendChild(style);
+        }
+        function onkeyboardhide() {
+            var el = document.getElementById('style_hidetabs');
+            if (el)
+                el.parentNode.removeChild(el);
+        }
         //#region Helpers
         /**
          * Used construct an instance of an object using the new operator with the given constructor
@@ -455,7 +468,6 @@ var PraetorApp;
                 views: {
                     'tab-zakladni-udaje': {
                         templateUrl: "templates/spis/zakladniudaje.html",
-                        controller: PraetorApp.Controllers.SpisZakladniUdajeController.ID
                     }
                 }
             });
@@ -465,7 +477,6 @@ var PraetorApp;
                 views: {
                     'tab-dokumenty': {
                         templateUrl: "templates/spis/dokumenty.html",
-                        controller: PraetorApp.Controllers.SpisDokumentyController.ID
                     }
                 }
             });
@@ -914,21 +925,50 @@ var PraetorApp;
     (function (Controllers) {
         var SpisController = (function (_super) {
             __extends(SpisController, _super);
-            function SpisController($scope, $location, $http, $stateParams, Utilities, UiHelper, Preferences) {
+            function SpisController($scope, $location, $http, $stateParams, Utilities, UiHelper, Preferences, PraetorService, FileService) {
                 _super.call(this, $scope, PraetorApp.ViewModels.SpisViewModel);
                 this.$location = $location;
                 this.$http = $http;
                 this.Utilities = Utilities;
                 this.UiHelper = UiHelper;
                 this.Preferences = Preferences;
+                this.PraetorService = PraetorService;
+                this.FileService = FileService;
+                this.viewModel.id_spis = $stateParams.id;
+                this.loadSpis();
+                this.loadDokumenty();
             }
             Object.defineProperty(SpisController, "$inject", {
                 get: function () {
-                    return ["$scope", "$location", "$http", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
+                    return ["$scope", "$location", "$http", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.PraetorService.ID, PraetorApp.Services.FileUtilities.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
+            SpisController.prototype.loadSpis = function () {
+                var _this = this;
+                var request = {};
+                request.id_Spis = this.viewModel.id_spis;
+                this.PraetorService.loadSpisZakladniUdaje(request).then(function (response) {
+                    _this.viewModel.spis = response.spis;
+                });
+            };
+            SpisController.prototype.loadDokumenty = function () {
+                var _this = this;
+                var request = {};
+                request.id_Spis = this.viewModel.id_spis;
+                this.PraetorService.loadSpisDokumenty(request).then(function (response) {
+                    _this.viewModel.dokumenty = response.dokumenty;
+                });
+            };
+            SpisController.prototype.openDokument = function (dokument) {
+                var _this = this;
+                var request = {};
+                request.id_file = dokument.id;
+                this.PraetorService.getFileToken(request).then(function (response) {
+                    _this.FileService.openFile(response.token);
+                });
+            };
             SpisController.ID = "SpisController";
             return SpisController;
         })(Controllers.BaseController);
@@ -2522,17 +2562,18 @@ var PraetorApp;
     var Services;
     (function (Services) {
         var PraetorService = (function () {
-            function PraetorService($q, Utilities, $http, $location, Preferences, UiHelper) {
+            function PraetorService($q, Utilities, $http, $location, $ionicLoading, Preferences, UiHelper) {
                 this.$q = $q;
                 this.$http = $http;
                 this.Utilities = Utilities;
                 this.Preferences = Preferences;
                 this.$location = $location;
                 this.UiHelper = UiHelper;
+                this.$ionicLoading = $ionicLoading;
             }
             Object.defineProperty(PraetorService, "$inject", {
                 get: function () {
-                    return ["$q", Services.Utilities.ID, "$http", "$location", Services.Preferences.ID, Services.UiHelper.ID];
+                    return ["$q", Services.Utilities.ID, "$http", "$location", "$ionicLoading", Services.Preferences.ID, Services.UiHelper.ID];
                 },
                 enumerable: true,
                 configurable: true
@@ -2560,8 +2601,11 @@ var PraetorApp;
                     options.ShowMessage = true;
                     options.ShowProgress = true;
                 }
-                if (options.ShowProgress)
-                    this.UiHelper.progressIndicator.showSimple(true);
+                if (options.ShowProgress) {
+                    this.$ionicLoading.show({
+                        template: '<i class="icon ion-loading-c"></i>'
+                    });
+                }
                 var q = this.$q.defer();
                 var server = this.Preferences.serverUrl;
                 data.username = this.Preferences.username;
@@ -2572,8 +2616,9 @@ var PraetorApp;
                     this.$location.replace();
                 }
                 var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, { headers: { 'Content-Type': 'application/json' } }).then(function (response) {
-                    if (options.ShowProgress)
-                        _this.UiHelper.progressIndicator.hide();
+                    if (options.ShowProgress) {
+                        _this.$ionicLoading.hide();
+                    }
                     var responseData = response.data;
                     if (responseData.success) {
                         q.resolve(response.data);
@@ -2586,7 +2631,7 @@ var PraetorApp;
                 })['catch'](function (e) {
                     // TODO: Sjednotit typ objektu v reject?
                     if (options.ShowProgress)
-                        _this.UiHelper.progressIndicator.hide();
+                        _this.$ionicLoading.hide();
                     var qReturn = _this.$q.when();
                     if (options.ShowMessage)
                         qReturn = _this.UiHelper.alert("Error " + e.status);

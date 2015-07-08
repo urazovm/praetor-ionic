@@ -55,10 +55,10 @@
   <gap:plugin name="ch.ti8m.documenthandler" version="0.2.1" />
 
 
-<preference name="StatusBarOverlaysWebView" value="false" /> 
+<!--<preference name="StatusBarOverlaysWebView" value="false" /> 
 <preference name="StatusBarBackgroundColor" value="#000000" />
 <preference name="StatusBarStyle" value="lightcontent" />
-<gap:plugin name="org.apache.cordova.statusbar" version="0.1.4" />
+<gap:plugin name="org.apache.cordova.statusbar" version="0.1.4" />-->
 
   <icon src="icon.png" />
   <gap:splash src="splash.png" />

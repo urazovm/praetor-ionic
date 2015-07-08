@@ -239,9 +239,8 @@
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
     "plugins\\android.json",
-    "www\\templates\\spis.html",
-    "www\\css\\style.css",
-    "www\\config.xml"
+    "www\\config.xml",
+    "config.xml"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

@@ -326,7 +326,7 @@ module PraetorApp.Application {
 
         $ionicConfigProvider.tabs.position("bottom");
         $ionicConfigProvider.tabs.style("standard");
-        $ionicConfigProvider.views.maxCache(0);
+        //$ionicConfigProvider.views.maxCache(0);
 
         // Intercept the default Angular exception handler.
         $provide.decorator("$exceptionHandler", function ($delegate: ng.IExceptionHandlerService) {

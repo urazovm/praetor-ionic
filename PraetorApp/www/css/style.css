@@ -7,8 +7,9 @@
 .bar-positive .button i
 {
     font-size:30px;
+    background-color:transparent;
+    border-color:transparent;    
 }
-
 
     .bar.bar-stable .title {
         color: #fff;

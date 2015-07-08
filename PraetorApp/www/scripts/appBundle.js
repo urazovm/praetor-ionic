@@ -468,7 +468,6 @@ var PraetorApp;
                 views: {
                     'tab-zakladni-udaje': {
                         templateUrl: "templates/spis/zakladniudaje.html",
-                        controller: PraetorApp.Controllers.SpisZakladniUdajeController.ID
                     }
                 }
             });
@@ -478,7 +477,6 @@ var PraetorApp;
                 views: {
                     'tab-dokumenty': {
                         templateUrl: "templates/spis/dokumenty.html",
-                        controller: PraetorApp.Controllers.SpisDokumentyController.ID
                     }
                 }
             });
@@ -927,21 +925,50 @@ var PraetorApp;
     (function (Controllers) {
         var SpisController = (function (_super) {
             __extends(SpisController, _super);
-            function SpisController($scope, $location, $http, $stateParams, Utilities, UiHelper, Preferences) {
+            function SpisController($scope, $location, $http, $stateParams, Utilities, UiHelper, Preferences, PraetorService, FileService) {
                 _super.call(this, $scope, PraetorApp.ViewModels.SpisViewModel);
                 this.$location = $location;
                 this.$http = $http;
                 this.Utilities = Utilities;
                 this.UiHelper = UiHelper;
                 this.Preferences = Preferences;
+                this.PraetorService = PraetorService;
+                this.FileService = FileService;
+                this.viewModel.id_spis = $stateParams.id;
+                this.loadSpis();
+                this.loadDokumenty();
             }
             Object.defineProperty(SpisController, "$inject", {
                 get: function () {
-                    return ["$scope", "$location", "$http", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
+                    return ["$scope", "$location", "$http", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.PraetorService.ID, PraetorApp.Services.FileUtilities.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
+            SpisController.prototype.loadSpis = function () {
+                var _this = this;
+                var request = {};
+                request.id_Spis = this.viewModel.id_spis;
+                this.PraetorService.loadSpisZakladniUdaje(request).then(function (response) {
+                    _this.viewModel.spis = response.spis;
+                });
+            };
+            SpisController.prototype.loadDokumenty = function () {
+                var _this = this;
+                var request = {};
+                request.id_Spis = this.viewModel.id_spis;
+                this.PraetorService.loadSpisDokumenty(request).then(function (response) {
+                    _this.viewModel.dokumenty = response.dokumenty;
+                });
+            };
+            SpisController.prototype.openDokument = function (dokument) {
+                var _this = this;
+                var request = {};
+                request.id_file = dokument.id;
+                this.PraetorService.getFileToken(request).then(function (response) {
+                    _this.FileService.openFile(response.token);
+                });
+            };
             SpisController.ID = "SpisController";
             return SpisController;
         })(Controllers.BaseController);
@@ -1093,8 +1120,8 @@ var PraetorApp;
             };
             HomeCinnostiController.prototype.ReloadData = function () {
                 var request = {};
-                request.cinnostiUntil = this.DateUntil.toUTCString();
-                request.cinnostiSince = this.DateSince.toUTCString();
+                request.cinnostiUntil = this.DateUntil.toJSON();
+                request.cinnostiSince = this.DateSince.toJSON();
                 this.Cinnosti = [];
                 this.LoadData(request);
             };
@@ -1127,17 +1154,19 @@ var PraetorApp;
                         result.spisovaZnacka = x.spisovaZnacka;
                         return result;
                     }));
-                    if (request.cinnostiSince < _this.DateSince)
-                        _this.DateSince = request.cinnostiSince;
-                    if (request.cinnostiUntil > _this.DateUntil)
-                        _this.DateUntil = request.cinnostiUntil;
+                    var requestSince = new Date(request.cinnostiSince);
+                    if (requestSince < _this.DateSince)
+                        _this.DateSince = requestSince;
+                    var requestUntil = new Date(request.cinnostiUntil);
+                    if (requestUntil > _this.DateUntil)
+                        _this.DateUntil = requestUntil;
                     _this.RebuildList();
                 });
             };
             HomeCinnostiController.prototype.LoadPreviousDay = function () {
                 var request = {};
-                request.cinnostiUntil = this.DateSince;
-                request.cinnostiSince = new Date(this.DateSince.getFullYear(), this.DateSince.getMonth(), this.DateSince.getDate() - 1);
+                request.cinnostiUntil = this.DateSince.toJSON();
+                request.cinnostiSince = this.AddDays(this.DateSince, -1).toJSON();
                 this.LoadData(request);
             };
             HomeCinnostiController.prototype.OpenCinnost = function (cinnost) {

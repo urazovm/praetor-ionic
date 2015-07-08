@@ -1,5 +1,5 @@
 ﻿<ion-view title="{{viewModel.spis.spisovaZnacka}}">
-    <ion-content>        
+    <ion-content has-bouncing="false">        
         <table class="spis-detail-table">
             <tr ng-show="viewModel.spis.predmet != undefined">
                 <td class="header">Předmět</td>
@@ -30,7 +30,7 @@
                 <td class="content">{{viewModel.spis.protistrana}}</td>
             </tr>
             <tr ng-show="viewModel.spis.stitky != undefined">
-                <td class="header">Stitky</td>
+                <td class="header">štítky</td>
                 <td class="content">{{viewModel.spis.stitky}}</td>
             </tr>
             <tr ng-show="viewModel.spis.poznamka != undefined">

@@ -248,7 +248,14 @@
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json"
+    "plugins\\android.json",
+    "www\\templates\\directives\\prehled-cinnosti.html",
+    "www\\templates\\home.html",
+    "www\\templates\\settings\\login.html",
+    "www\\templates\\spis.html",
+    "www\\templates\\spis\\dokumenty.html",
+    "www\\templates\\spis\\zakladniudaje.html",
+    "www\\templates\\home\\cinnosti.html"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

@@ -249,6 +249,8 @@ var PraetorApp;
          * on the Codrova device ready event.
          */
         function ionicPlatform_ready($rootScope, $location, $ionicViewService, $ionicPlatform, UiHelper, Utilities, Preferences) {
+            debugger;
+            navigator.splashscreen.hide();
             if (window.StatusBar)
                 window.StatusBar.overlaysWebView(false);
             // Subscribe to device events.

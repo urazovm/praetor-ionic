@@ -298,9 +298,9 @@ module PraetorApp.Application {
      * on the Codrova device ready event.
      */
     function ionicPlatform_ready($rootScope: ng.IScope, $location: ng.ILocationService, $ionicViewService: any, $ionicPlatform: Ionic.IPlatform, UiHelper: Services.UiHelper, Utilities: Services.Utilities, Preferences: Services.Preferences): void {
+        debugger;
         if (navigator.splashscreen)
             navigator.splashscreen.hide();
-        window.alert("skryt");
 
         if (window.StatusBar)
             window.StatusBar.overlaysWebView(false);

@@ -1,5 +1,9 @@
-﻿.tabs-positive > .tabs, .tabs.tabs-positive {
+﻿.tabs-positive > .tabs, .tabs.tabs-positive, .bar.bar-stable {
     border-color: #1d2939;
     background-color: #1d2939;
     color: #fff;
 }
+
+    .bar.bar-stable .title {
+        color: #fff;
+    }

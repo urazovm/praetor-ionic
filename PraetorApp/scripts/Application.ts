@@ -312,6 +312,7 @@ module PraetorApp.Application {
 
         $ionicConfigProvider.tabs.position("bottom");
         $ionicConfigProvider.tabs.style("standard");
+        $ionicConfigProvider.views.maxCache(0);
 
         // Intercept the default Angular exception handler.
         $provide.decorator("$exceptionHandler", function ($delegate: ng.IExceptionHandlerService) {
@@ -438,8 +439,7 @@ module PraetorApp.Application {
         var UiHelper: Services.UiHelper;        
         console.error("Unhandled JS Exception", message, uri, lineNumber, columnNumber);
 
-        window['lastError'] = message;
-        debugger;
+        window['lastError'] = message;        
         try {            
             UiHelper = angular.element(document.body).injector().get(Services.UiHelper.ID);
             UiHelper.toast.showLongBottom("Error0: " + Event.caller);

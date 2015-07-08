@@ -13,26 +13,26 @@ module PraetorApp {
             $stateProvider.state("app", {
                 url: "/app",
                 abstract: true,
-                templateUrl: "templates/menu.html",
-                controller: Controllers.MenuController.ID
+                templateUrl: "templates/app.html",
+                controller: Controllers.AppController.ID
             });
 
             // An blank view useful as a place holder etc.
             $stateProvider.state("app.login", {
                 url: "/login",
                 views: {
-                    "menuContent": {
-                        templateUrl: "templates/login.html",
+                    "appContent": {
+                        templateUrl: "templates/settings/login.html",
                         controller: Controllers.LoginController.ID
                     }
                 }
             });                        
 
             // An blank view useful as a place holder etc.
-            $stateProvider.state("app.home", {
+            $stateProvider.state("app.home", {                
                 url: "/home",
                 views: {
-                    "menuContent": {
+                    "appContent": {
                         templateUrl: "templates/home.html",
                         controller: Controllers.HomeController.ID
                     }
@@ -59,10 +59,10 @@ module PraetorApp {
                 }
             });
 
-            $stateProvider.state("app.spis", {
+            $stateProvider.state("app.spis", {                
                 url: "/spis/{id}",
                 views: {
-                    "menuContent": {
+                    "appContent": {
                         templateUrl: "templates/spis.html",
                         controller: Controllers.SpisController.ID
                     }
@@ -70,6 +70,7 @@ module PraetorApp {
             });
 
             $stateProvider.state('app.spis.zakladniudaje', {
+                cache:true,
                 url: "/zakladniudaje",
                 views: {
                     'tab-zakladni-udaje': {
@@ -80,6 +81,7 @@ module PraetorApp {
             });
 
             $stateProvider.state('app.spis.dokumenty', {
+                cache: true,
                 url: "/dokumenty",
                 views: {
                     'tab-dokumenty': {
@@ -92,7 +94,7 @@ module PraetorApp {
             $stateProvider.state("app.about", {
                 url: "/settings/about",
                 views: {
-                    "menuContent": {
+                    "appContent": {
                         templateUrl: "templates/settings/About.html",
                         controller: Controllers.AboutController.ID
                     }

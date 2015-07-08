@@ -1,11 +1,18 @@
-﻿<ion-tabs class="tabs-positive tabs-icon-top pr-black">
+﻿<ion-pane>
+    <ion-nav-bar class="bar-stable nav-title-slide-ios">
+        <ion-nav-back-button class="button-clear"><i class="icon ion-ios-arrow-back"></i> Zpět</ion-nav-back-button>
+    </ion-nav-bar>
 
-    <ion-tab title="Základní údaje" icon-on="ion-ios-filing" icon-off="ion-ios-filing-outline"  href="#/app/spis/zakladniudaje">
-        <ion-nav-view name="tab-zakladni-udaje"></ion-nav-view>
-    </ion-tab>
+    <ion-tabs class="tabs-positive tabs-icon-top pr-black">
 
-    <ion-tab title="Dokumenty" icon-on="ion-ios-clock" icon-off="ion-ios-clock-outline" href="#/app/spis/dokumenty">
-        <ion-nav-view name="tab-dokumenty"></ion-nav-view>
-    </ion-tab>
+        <ion-tab title="Základní údaje" icon-on="ion-ios-filing" icon-off="ion-ios-filing-outline" ui-sref="app.spis.zakladniudaje">
+            <ion-nav-view name="tab-zakladni-udaje"></ion-nav-view>
+        </ion-tab>
 
-</ion-tabs>
+        <ion-tab title="Dokumenty" icon-on="ion-ios-clock" icon-off="ion-ios-clock-outline" ui-sref="app.spis.dokumenty" >
+            <ion-nav-view name="tab-dokumenty"></ion-nav-view>
+        </ion-tab>
+
+    </ion-tabs>
+
+</ion-pane>

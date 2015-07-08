@@ -55179,7 +55179,7 @@ function($ionicTabsDelegate, $ionicConfig) {
       //inheritance on compile
       var innerElement = jqLite('<div class="tab-nav tabs">');
       innerElement.append(tElement.contents());
-
+      
       tElement.append(innerElement)
               .addClass('tabs-' + $ionicConfig.tabs.position() + ' tabs-' + $ionicConfig.tabs.style());
 

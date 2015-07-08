@@ -188,9 +188,7 @@ var PraetorApp;
                 instance.render();
             };
             // Finally, return a function that returns this Angular directive descriptor object.
-            return function () {
-                return descriptor;
-            };
+            return function () { return descriptor; };
         }
         /**
          * Used to create an array of injection property names followed by a function that will be
@@ -223,9 +221,7 @@ var PraetorApp;
          * @param fn The function that will provide the filter's logic.
          */
         function getFilterFactoryFunction(fn) {
-            return function () {
-                return fn;
-            };
+            return function () { return fn; };
         }
         //#endregion
         //#region Platform Configuration
@@ -268,6 +264,7 @@ var PraetorApp;
         function angular_configure($stateProvider, $urlRouterProvider, $provide, $httpProvider, $compileProvider, $ionicConfigProvider) {
             $ionicConfigProvider.tabs.position("bottom");
             $ionicConfigProvider.tabs.style("standard");
+            $ionicConfigProvider.views.maxCache(0);
             // Intercept the default Angular exception handler.
             $provide.decorator("$exceptionHandler", function ($delegate) {
                 return function (exception, cause) {
@@ -371,7 +368,6 @@ var PraetorApp;
             var UiHelper;
             console.error("Unhandled JS Exception", message, uri, lineNumber, columnNumber);
             window['lastError'] = message;
-            debugger;
             try {
                 UiHelper = angular.element(document.body).injector().get(PraetorApp.Services.UiHelper.ID);
                 UiHelper.toast.showLongBottom("Error0: " + Event.caller);
@@ -419,15 +415,15 @@ var PraetorApp;
             $stateProvider.state("app", {
                 url: "/app",
                 abstract: true,
-                templateUrl: "templates/menu.html",
-                controller: PraetorApp.Controllers.MenuController.ID
+                templateUrl: "templates/app.html",
+                controller: PraetorApp.Controllers.AppController.ID
             });
             // An blank view useful as a place holder etc.
             $stateProvider.state("app.login", {
                 url: "/login",
                 views: {
-                    "menuContent": {
-                        templateUrl: "templates/login.html",
+                    "appContent": {
+                        templateUrl: "templates/settings/login.html",
                         controller: PraetorApp.Controllers.LoginController.ID
                     }
                 }
@@ -436,7 +432,7 @@ var PraetorApp;
             $stateProvider.state("app.home", {
                 url: "/home",
                 views: {
-                    "menuContent": {
+                    "appContent": {
                         templateUrl: "templates/home.html",
                         controller: PraetorApp.Controllers.HomeController.ID
                     }
@@ -463,13 +459,14 @@ var PraetorApp;
             $stateProvider.state("app.spis", {
                 url: "/spis/{id}",
                 views: {
-                    "menuContent": {
+                    "appContent": {
                         templateUrl: "templates/spis.html",
                         controller: PraetorApp.Controllers.SpisController.ID
                     }
                 }
             });
             $stateProvider.state('app.spis.zakladniudaje', {
+                cache: true,
                 url: "/zakladniudaje",
                 views: {
                     'tab-zakladni-udaje': {
@@ -479,6 +476,7 @@ var PraetorApp;
                 }
             });
             $stateProvider.state('app.spis.dokumenty', {
+                cache: true,
                 url: "/dokumenty",
                 views: {
                     'tab-dokumenty': {
@@ -490,7 +488,7 @@ var PraetorApp;
             $stateProvider.state("app.about", {
                 url: "/settings/about",
                 views: {
-                    "menuContent": {
+                    "appContent": {
                         templateUrl: "templates/settings/About.html",
                         controller: PraetorApp.Controllers.AboutController.ID
                     }
@@ -787,10 +785,37 @@ var PraetorApp;
 (function (PraetorApp) {
     var Controllers;
     (function (Controllers) {
+        var AppController = (function (_super) {
+            __extends(AppController, _super);
+            function AppController($scope, $location, $http, Utilities, UiHelper, Preferences) {
+                _super.call(this, $scope, PraetorApp.ViewModels.AppViewModel);
+                this.$location = $location;
+                this.$http = $http;
+                this.Utilities = Utilities;
+                this.UiHelper = UiHelper;
+                this.Preferences = Preferences;
+            }
+            Object.defineProperty(AppController, "$inject", {
+                get: function () {
+                    return ["$scope", "$location", "$http", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            AppController.ID = "AppController";
+            return AppController;
+        })(Controllers.BaseController);
+        Controllers.AppController = AppController;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
         var HomeController = (function (_super) {
             __extends(HomeController, _super);
             function HomeController($scope, $location, $http, Utilities, UiHelper, Preferences, SpisyUtilities) {
-                _super.call(this, $scope, PraetorApp.ViewModels.MenuViewModel);
+                _super.call(this, $scope, PraetorApp.ViewModels.AppViewModel);
                 this.$location = $location;
                 this.$http = $http;
                 this.Utilities = Utilities;
@@ -903,36 +928,9 @@ var PraetorApp;
 (function (PraetorApp) {
     var Controllers;
     (function (Controllers) {
-        var MenuController = (function (_super) {
-            __extends(MenuController, _super);
-            function MenuController($scope, $location, $http, Utilities, UiHelper, Preferences) {
-                _super.call(this, $scope, PraetorApp.ViewModels.MenuViewModel);
-                this.$location = $location;
-                this.$http = $http;
-                this.Utilities = Utilities;
-                this.UiHelper = UiHelper;
-                this.Preferences = Preferences;
-            }
-            Object.defineProperty(MenuController, "$inject", {
-                get: function () {
-                    return ["$scope", "$location", "$http", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
-                },
-                enumerable: true,
-                configurable: true
-            });
-            MenuController.ID = "MenuController";
-            return MenuController;
-        })(Controllers.BaseController);
-        Controllers.MenuController = MenuController;
-    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var Controllers;
-    (function (Controllers) {
         var SpisController = (function (_super) {
             __extends(SpisController, _super);
-            function SpisController($scope, $location, $http, $stateParams, Utilities, UiHelper, Preferences) {
+            function SpisController($scope, $location, $http, $stateParams, $ionicHistory, Utilities, UiHelper, Preferences) {
                 _super.call(this, $scope, PraetorApp.ViewModels.SpisViewModel);
                 debugger;
                 this.$location = $location;
@@ -943,7 +941,7 @@ var PraetorApp;
             }
             Object.defineProperty(SpisController, "$inject", {
                 get: function () {
-                    return ["$scope", "$location", "$http", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
+                    return ["$scope", "$location", "$http", "$stateParams", "$ionicHistory", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
                 },
                 enumerable: true,
                 configurable: true
@@ -983,14 +981,10 @@ var PraetorApp;
             HomeSpisyController.prototype.openSpis = function (spis) {
                 var _this = this;
                 // Otevřeme detail spisu            
-                //debugger;
-                //this.$location.state('app.spis').search({ id: spis.id_Spis, title: spis.predmet });
-                this.$state.go('app.spis.zakladniudaje', { id: spis.id_Spis }).then(function (e) {
-                    var t = _this;
-                    debugger;
-                });
-                //this.$location.path("/app/home/cinnosti");
-                //this.$location.replace();
+                setTimeout(function () {
+                    _this.$state.go('app.spis.zakladniudaje', { id: spis.id_Spis });
+                    _this.scope.$apply();
+                }, 100);
             };
             HomeSpisyController.prototype.changeDataSource = function () {
                 // Došlo k změně u registrované komponenty
@@ -1083,7 +1077,7 @@ var PraetorApp;
     (function (Controllers) {
         var SpisDokumentyController = (function (_super) {
             __extends(SpisDokumentyController, _super);
-            function SpisDokumentyController($scope, $location, $http, $state, Utilities, UiHelper, Preferences) {
+            function SpisDokumentyController($scope, $location, $http, $state, $stateParams, Utilities, UiHelper, Preferences) {
                 _super.call(this, $scope, PraetorApp.ViewModels.Spis.DokumentyViewModel);
                 this.$location = $location;
                 this.$http = $http;
@@ -1091,10 +1085,12 @@ var PraetorApp;
                 this.UiHelper = UiHelper;
                 this.Preferences = Preferences;
                 this.$state = $state;
+                this.$stateParams = $stateParams;
+                this.viewModel.id_spis = this.$stateParams.id;
             }
             Object.defineProperty(SpisDokumentyController, "$inject", {
                 get: function () {
-                    return ["$scope", "$location", "$http", "$state", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
+                    return ["$scope", "$location", "$http", "$state", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
                 },
                 enumerable: true,
                 configurable: true
@@ -1111,7 +1107,7 @@ var PraetorApp;
     (function (Controllers) {
         var SpisZakladniUdajeController = (function (_super) {
             __extends(SpisZakladniUdajeController, _super);
-            function SpisZakladniUdajeController($scope, $location, $http, $state, Utilities, UiHelper, Preferences) {
+            function SpisZakladniUdajeController($scope, $location, $http, $state, $stateParams, Utilities, UiHelper, Preferences) {
                 _super.call(this, $scope, PraetorApp.ViewModels.Spis.ZakladniUdajeViewModel);
                 this.$location = $location;
                 this.$http = $http;
@@ -1119,10 +1115,12 @@ var PraetorApp;
                 this.UiHelper = UiHelper;
                 this.Preferences = Preferences;
                 this.$state = $state;
+                this.$stateParams = $stateParams;
+                this.viewModel.id_spis = this.$stateParams.id;
             }
             Object.defineProperty(SpisZakladniUdajeController, "$inject", {
                 get: function () {
-                    return ["$scope", "$location", "$http", "$state", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
+                    return ["$scope", "$location", "$http", "$state", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID];
                 },
                 enumerable: true,
                 configurable: true
@@ -1151,15 +1149,9 @@ var PraetorApp;
                 // Grab a reference to the root div element.
                 this._rootElement = this.element[0];
                 // Watch for the changing of the value attributes.
-                this.scope.$watch(function () {
-                    return _this.scope.icon;
-                }, _.bind(this.icon_listener, this));
-                this.scope.$watch(function () {
-                    return _this.scope.iconSize;
-                }, _.bind(this.iconSize_listener, this));
-                this.scope.$watch(function () {
-                    return _this.scope.text;
-                }, _.bind(this.text_listener, this));
+                this.scope.$watch(function () { return _this.scope.icon; }, _.bind(this.icon_listener, this));
+                this.scope.$watch(function () { return _this.scope.iconSize; }, _.bind(this.iconSize_listener, this));
+                this.scope.$watch(function () { return _this.scope.text; }, _.bind(this.text_listener, this));
                 // Fire a created event sending along this directive instance.
                 // Parent scopes can listen for this so they can obtain a reference
                 // to the instance so they can call getters/setters etc.
@@ -1460,10 +1452,7 @@ var PraetorApp;
             });
             FileUtilities.prototype.openFile = function (path) {
                 var q = this.$q.defer();
-                window.handleDocumentWithURL(function () {
-                    console.log('success');
-                    q.resolve(true);
-                }, function (error) {
+                window.handleDocumentWithURL(function () { console.log('success'); q.resolve(true); }, function (error) {
                     console.log('failure');
                     if (error == 53) {
                         console.log('No app that handles this file type.');
@@ -1870,6 +1859,7 @@ var PraetorApp;
                         };
                         return $delegate.call(this, method, url, data, interceptor, headers);
                     };
+                    /* tslint:disable:forin */
                     for (var key in $delegate) {
                         proxy[key] = $delegate[key];
                     }
@@ -2273,7 +2263,8 @@ var PraetorApp;
                 var data = { username: username, password: password };
                 this.$http.post('http://' + server + '/praetorapi/login', data, {
                     headers: { 'Content-Type': 'application/json' }
-                }).then(function (response) {
+                })
+                    .then(function (response) {
                     q.resolve(response.data);
                 })['catch'](function (e) {
                     q.resolve({ success: false, message: "Error " + e.status + "|" + e.message });
@@ -2290,7 +2281,8 @@ var PraetorApp;
                     this.$location.path("/app/login");
                     this.$location.replace();
                 }
-                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, { headers: { 'Content-Type': 'application/json' } }).then(function (response) {
+                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, { headers: { 'Content-Type': 'application/json' } })
+                    .then(function (response) {
                     q.resolve(response.data);
                 })['catch'](function (e) {
                     q.resolve({ success: false, message: "Error " + e.status });
@@ -3076,9 +3068,7 @@ var PraetorApp;
                     return "";
                 }
                 // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-                return str.replace(/\w\S*/g, function (txt) {
-                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-                });
+                return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
             };
             /**
              * Used to format a string by replacing values with the given arguments.
@@ -3129,6 +3119,7 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
+                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3164,6 +3155,7 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
+                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3272,6 +3264,7 @@ var PraetorApp;
                 j;
                 // Start out with an empty string.
                 guid = "";
+                // Now loop 35 times to generate 35 characters.
                 for (j = 0; j < 32; j++) {
                     // Characters at these indexes are always hyphens.
                     if (j === 8 || j === 12 || j === 16 || j === 20) {
@@ -3289,6 +3282,18 @@ var PraetorApp;
         })();
         Services.Utilities = Utilities;
     })(Services = PraetorApp.Services || (PraetorApp.Services = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
+        var AppViewModel = (function () {
+            function AppViewModel() {
+            }
+            return AppViewModel;
+        })();
+        ViewModels.AppViewModel = AppViewModel;
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
 (function (PraetorApp) {
@@ -3329,18 +3334,6 @@ var PraetorApp;
             return LoginViewModel;
         })();
         ViewModels.LoginViewModel = LoginViewModel;
-    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var ViewModels;
-    (function (ViewModels) {
-        var MenuViewModel = (function () {
-            function MenuViewModel() {
-            }
-            return MenuViewModel;
-        })();
-        ViewModels.MenuViewModel = MenuViewModel;
     })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;

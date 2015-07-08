@@ -74,11 +74,24 @@ var PraetorApp;
                     templateUrl: 'templates/directives/prehled-cinnosti.html'
                 };
             });
+            window.addEventListener('native.showkeyboard', onkeyboardshow);
+            window.addEventListener('native.hidekeyboard', onkeyboardhide);
             // Specify the initialize/run and configuration functions.
             ngModule.run(angular_initialize);
             ngModule.config(angular_configure);
         }
         Application.main = main;
+        function onkeyboardshow() {
+            var style = document.createElement("style");
+            style.appendChild(document.createTextNode("div.tabs.tab-nav {display: none !important } .has-tabs { bottom: 0 !important }"));
+            style.id = 'style_hidetabs';
+            document.head.appendChild(style);
+        }
+        function onkeyboardhide() {
+            var el = document.getElementById('style_hidetabs');
+            if (el)
+                el.parentNode.removeChild(el);
+        }
         //#region Helpers
         /**
          * Used construct an instance of an object using the new operator with the given constructor
@@ -1188,6 +1201,18 @@ var PraetorApp;
                     _this.$state.go('app.spis.zakladniudaje', { id: spis.id_Spis });
                     _this.scope.$apply();
                 }, 100);
+            };
+            HomeSpisyController.prototype.show = function (s) {
+                if (s) {
+                    var style = document.createElement("style");
+                    style.appendChild(document.createTextNode("div.tabs.tab-nav {display: none !important } .has-tabs { bottom: 0 !important }"));
+                    style.id = 'style_hidetabs';
+                    document.head.appendChild(style);
+                }
+                else {
+                    var el = document.getElementById('style_hidetabs');
+                    el.parentNode.removeChild(el);
+                }
             };
             HomeSpisyController.prototype.changeDataSource = function () {
                 // Došlo k změně u registrované komponenty

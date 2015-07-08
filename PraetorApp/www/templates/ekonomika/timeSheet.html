@@ -3,7 +3,7 @@
         <h1 class="title">Nová činnost</h1>
     </ion-header-bar>
     <ion-content has-bouncing="false">
-        <div class="list">
+        <form class="list">
             <label class="item item-input">
                 <span class="input-label">Spis</span>
                 <input disabled type="text" ng-model="viewModel.Data.spisOznaceni">
@@ -31,19 +31,15 @@
             <label class="item item-input">
                 <textarea ng-model="viewModel.Data.popis" placeholder="Popis" style="height:5em"></textarea>
             </label>
-        </div>
 
-        <div class="row">
-            <div class="col">
-                <button class="button button-block" ng-click="controller.Cancel()">
-                    Storno
-                </button>
+            <div class="row">
+                <div class="col">
+                    <input type="button" class="button button-block" ng-click="controller.Cancel()" value="Storno">
+                </div>
+                <div class="col">
+                    <input type="submit" class="button button-block button-positive" ng-click="controller.SaveData()" value="Uložit">
+                </div>
             </div>
-            <div class="col">
-                <button class="button button-block button-positive" ng-click="controller.SaveData()">
-                    Uložit
-                </button>
-            </div>
-        </div>
+        </form>
     </ion-content>
  </ion-modal-view>

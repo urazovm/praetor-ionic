@@ -1,17 +1,17 @@
 ﻿<ion-modal-view ng-controller="TimeSheetController">
-    <ion-header-bar>
+    <ion-header-bar class="bar-positive">
         <h1 class="title">Nová činnost</h1>
     </ion-header-bar>
     <ion-content has-bouncing="false">
-        <div class="list" ng-init="data.slider = 0">
+        <div class="list">
             <label class="item item-input">
                 <span class="input-label">Spis</span>
                 <input disabled type="text" ng-model="viewModel.Data.spisOznaceni">
             </label>
 
             <label class="item item-input">
-                <span class="input-label" ng-model="viewModel.Data.datum">Datum</span>
-                <input type="date" value="12.4.2014">
+                <span class="input-label">Datum</span>
+                <input type="date" ng-model="viewModel.Datum">
             </label>
 
             <div class="item range range-positive" style="padding-left:16px">
@@ -25,7 +25,7 @@
                     Aktivita
                 </span>
 
-                <select ng-model="viewModel.Data.id_Aktivita" ng-options="aktivita.nazev for aktivita in viewModel.Aktivity"></select>
+                <select ng-model="viewModel.Aktivita" ng-options="aktivita.nazev for aktivita in viewModel.Aktivity" ng-change="controller.AktivitaChanged()"></select>
             </label>
 
             <label class="item item-input">
@@ -33,10 +33,17 @@
             </label>
         </div>
 
-        <div class="padding">
-            <button class="button button-block button-positive" ng-click="controller.SaveData()">
-                Uložit
-            </button>
+        <div class="row">
+            <div class="col">
+                <button class="button button-block" ng-click="controller.Cancel()">
+                    Storno
+                </button>
+            </div>
+            <div class="col">
+                <button class="button button-block button-positive" ng-click="controller.SaveData()">
+                    Uložit
+                </button>
+            </div>
         </div>
     </ion-content>
  </ion-modal-view>

@@ -612,7 +612,6 @@ var PraetorApp;
             }
             //#region Events
             BaseDialogController.prototype.modal_shown = function (ngEvent, instance) {
-                debugger;
                 // Only respond to modal.shown events for this dialog.
                 if (this.dialogId !== instance.dialogId) {
                     return;
@@ -888,8 +887,7 @@ var PraetorApp;
                 this.Utilities = Utilities;
                 this.Preferences = Preferences;
                 this.UiHelper = UiHelper;
-                debugger;
-                this.LoadData();
+                this.scope.$on("modal.shown", _.bind(this.Shown, this));
             }
             Object.defineProperty(TimeSheetController, "$inject", {
                 get: function () {
@@ -900,22 +898,23 @@ var PraetorApp;
             });
             TimeSheetController.prototype.LoadData = function () {
                 var _this = this;
-                var request;
-                {
-                    id_Spis: this.getData().Id_Spis;
-                }
+                var request = {};
+                request.id_Spis = this.getData().Id_Spis;
                 this.PraetorService.loadTimeSheet(request).then(function (response) {
                     _this.viewModel.Data = response.timeSheet;
                     _this.viewModel.Aktivity = response.aktivity;
+                    _this.viewModel.Datum = new Date(response.timeSheet.datum);
+                    _this.viewModel.Aktivita = _.find(response.aktivity, function (x) { return x.id_Aktivita == response.timeSheet.id_Aktivita; });
+                }, function (ex) {
+                    _this.close();
                 });
             };
             TimeSheetController.prototype.SaveData = function () {
                 var _this = this;
-                debugger;
-                var request;
-                {
-                    timeSheet: this.viewModel.Data;
-                }
+                var request = {};
+                this.viewModel.Data.datum = this.viewModel.Datum.toISOString();
+                this.viewModel.Data.id_Aktivita = this.viewModel.Aktivita.id_Aktivita;
+                request.timeSheet = this.viewModel.Data;
                 this.PraetorService.SaveTimeSheet(request).then(function (response) {
                     if (response.success) {
                         _this.close();
@@ -924,6 +923,18 @@ var PraetorApp;
                         _this.UiHelper.alert("Došlo k chybě při ukládání činnosti: " + response.message);
                     }
                 });
+            };
+            TimeSheetController.prototype.AktivitaChanged = function () {
+                var aktivita = this.viewModel.Aktivita;
+                var popis = this.viewModel.Data.popis;
+                if (!popis || _.any(this.viewModel.Aktivity, function (x) { return x.popis == popis; }))
+                    this.viewModel.Data.popis = aktivita.popis;
+            };
+            TimeSheetController.prototype.Cancel = function () {
+                this.close();
+            };
+            TimeSheetController.prototype.Shown = function () {
+                this.LoadData();
             };
             TimeSheetController.ID = "TimeSheetController";
             return TimeSheetController;
@@ -2205,16 +2216,17 @@ var PraetorApp;
     var Services;
     (function (Services) {
         var PraetorService = (function () {
-            function PraetorService($q, Utilities, $http, $location, Preferences) {
+            function PraetorService($q, Utilities, $http, $location, Preferences, UiHelper) {
                 this.$q = $q;
                 this.$http = $http;
                 this.Utilities = Utilities;
                 this.Preferences = Preferences;
                 this.$location = $location;
+                this.UiHelper = UiHelper;
             }
             Object.defineProperty(PraetorService, "$inject", {
                 get: function () {
-                    return ["$q", Services.Utilities.ID, "$http", "$location", Services.Preferences.ID];
+                    return ["$q", Services.Utilities.ID, "$http", "$location", Services.Preferences.ID, Services.UiHelper.ID];
                 },
                 enumerable: true,
                 configurable: true
@@ -2235,7 +2247,15 @@ var PraetorApp;
                 });
                 return q.promise;
             };
-            PraetorService.prototype.getData = function (action, data) {
+            PraetorService.prototype.getData = function (action, data, options) {
+                var _this = this;
+                if (!options) {
+                    options = new GetDataOptions();
+                    options.ShowMessage = true;
+                    options.ShowProgress = true;
+                }
+                if (options.ShowProgress)
+                    this.UiHelper.progressIndicator.showSimple(true);
                 var q = this.$q.defer();
                 var server = this.Preferences.serverUrl;
                 data.username = this.Preferences.username;
@@ -2246,9 +2266,27 @@ var PraetorApp;
                     this.$location.replace();
                 }
                 var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, { headers: { 'Content-Type': 'application/json' } }).then(function (response) {
-                    q.resolve(response.data);
+                    if (options.ShowProgress)
+                        _this.UiHelper.progressIndicator.hide();
+                    var responseData = response.data;
+                    if (responseData.success) {
+                        q.resolve(response.data);
+                    }
+                    else {
+                        if (options.ShowMessage)
+                            _this.UiHelper.alert(responseData.message);
+                        q.reject(responseData);
+                    }
                 })['catch'](function (e) {
-                    q.resolve({ success: false, message: "Error " + e.status });
+                    // TODO: Sjednotit typ objektu v reject?
+                    if (options.ShowProgress)
+                        _this.UiHelper.progressIndicator.hide();
+                    var qReturn = _this.$q.when();
+                    if (options.ShowMessage)
+                        qReturn = _this.UiHelper.alert("Error " + e.status);
+                    qReturn.then(function () {
+                        q.reject(e);
+                    });
                 });
                 return q.promise;
             };
@@ -2265,6 +2303,11 @@ var PraetorApp;
             return PraetorService;
         })();
         Services.PraetorService = PraetorService;
+        var GetDataOptions = (function () {
+            function GetDataOptions() {
+            }
+            return GetDataOptions;
+        })();
     })(Services = PraetorApp.Services || (PraetorApp.Services = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
@@ -2765,7 +2808,6 @@ var PraetorApp;
                 }
                 // Add the ID of this dialog to the list of dialogs that are open.
                 UiHelper.openDialogIds.push(dialogId);
-                debugger;
                 // Define the arguments that will be used to create the modal instance.
                 creationArgs = {
                     // Include the dialog ID so we can identify the dialog later on.

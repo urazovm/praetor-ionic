@@ -430,7 +430,7 @@
 
             // Add the ID of this dialog to the list of dialogs that are open.
             UiHelper.openDialogIds.push(dialogId);
-            debugger;
+
             // Define the arguments that will be used to create the modal instance.
             creationArgs = {
                 // Include the dialog ID so we can identify the dialog later on.

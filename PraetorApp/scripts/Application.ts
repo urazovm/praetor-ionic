@@ -74,14 +74,15 @@ module PraetorApp.Application {
             };
         });
 
-        ngModule.directive("prehledabc", function () {
+        ngModule.directive("prehledCinnosti", function () {
             return {
                 restrict: 'E',
                 scope: {
                     viewModel: '=',
-                    onSpisClick: '&'                  
+                    onCinnostClick: '&',
+                    onAddClick: '&'
                 },
-                templateUrl: 'templates/directives/prehled-spisu.html'
+                templateUrl: 'templates/directives/prehled-cinnosti.html'
             };
         });
 
@@ -298,10 +299,6 @@ module PraetorApp.Application {
      * on the Codrova device ready event.
      */
     function ionicPlatform_ready($rootScope: ng.IScope, $location: ng.ILocationService, $ionicViewService: any, $ionicPlatform: Ionic.IPlatform, UiHelper: Services.UiHelper, Utilities: Services.Utilities, Preferences: Services.Preferences): void {
-        debugger;
-        if (navigator.splashscreen)
-            navigator.splashscreen.hide();
-
         if (window.StatusBar)
             window.StatusBar.overlaysWebView(false);
 

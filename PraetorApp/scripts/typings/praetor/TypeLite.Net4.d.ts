@@ -85,19 +85,6 @@ declare module PraetorServer.Service.WebServer.Messages {
 declare module System {
 	interface Guid {
 	}
-	interface TimeSpan {
-		Ticks: number;
-		Days: number;
-		Hours: number;
-		Milliseconds: number;
-		Minutes: number;
-		Seconds: number;
-		TotalDays: number;
-		TotalHours: number;
-		TotalMilliseconds: number;
-		TotalMinutes: number;
-		TotalSeconds: number;
-	}
 }
 declare module PraetorServer.Service.WebServer.Messages.Dto {
 	interface SpisPrehledEntry {
@@ -109,7 +96,7 @@ declare module PraetorServer.Service.WebServer.Messages.Dto {
 	interface CinnostPrehledEntry {
 		id_Cinnost: System.Guid;
 		datum: Date;
-		cas: System.TimeSpan;
+		cas: string;
 		popis: string;
 		spisovaZnacka: string;
 		predmetSpisu: string;

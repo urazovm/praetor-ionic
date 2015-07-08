@@ -1,7 +1,7 @@
-﻿<ion-view title="Praetor">
+﻿
+<ion-view title="Praetor">
 
     <ion-content has-bouncing="false">
-
         {{message}}
         <form class="list list-inset">
             <label class="item item-input">
@@ -13,12 +13,10 @@
             <label class="item item-input">
                 <input type="password" placeholder="Heslo" ng-model="viewModel.password">
             </label>
+
+            <div class="padding">
+                <input type="submit" class="button button-block button-positive" ng-click="controller.login()" value="Přihlásit" />
+            </div>
         </form>
-
-        <div class="padding">
-            <button class="button button-block button-positive" ng-click="controller.login()">Přihlásit</button>
-        </div>
-
     </ion-content>
-
 </ion-view>

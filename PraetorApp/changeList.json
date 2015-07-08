@@ -219,18 +219,45 @@
     "www\\res\\drawable-land-mdpi\\splash.png",
     "www\\res\\drawable-xxxhdpi\\splash.png",
     "www\\res\\drawable-xxhdpi\\icon.png",
-    "www\\res\\android\\splash\\drawable-port-hdpi-screen.png"
+    "www\\res\\android\\splash\\drawable-port-hdpi-screen.png",
+    "scripts\\ViewModels\\Ekonomika\\TimeSheetViewModel.ts",
+    "scripts\\Controllers\\Ekonomika\\TimeSheetResult.ts",
+    "scripts\\Controllers\\Ekonomika\\TimeSheetController.ts",
+    "scripts\\Controllers\\Ekonomika\\TimeSheetParams.ts",
+    "scripts\\Controllers\\Dialogs\\Void.ts",
+    "www\\scripts\\appBundle.js.map",
+    "www\\templates\\ekonomika\\timeSheet.html"
   ],
-  "deletedFilesIos": [],
+  "deletedFilesIos": [
+    "www\\templates\\home.html.LOCAL.html",
+    "www\\templates\\home.html.REMOTE.html",
+    "www\\templates\\home.html.BASE.html"
+  ],
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
     "plugins\\android.json",
-    "www\\templates\\spis.html"
+    "config.xml",
+    "www\\config.xml",
+    "www\\templates\\settings\\login.html",
+    "www\\templates\\home.html",
+    "www\\templates\\home\\vykazovani.html",
+    "scripts\\ViewModels\\Ekonomika\\TimeSheetViewModel.ts",
+    "scripts\\Controllers\\Ekonomika\\TimeSheetResult.ts",
+    "scripts\\Controllers\\Ekonomika\\TimeSheetController.ts",
+    "scripts\\Controllers\\Ekonomika\\TimeSheetParams.ts",
+    "scripts\\Controllers\\Dialogs\\Void.ts",
+    "www\\scripts\\appBundle.js.map",
+    "www\\templates\\ekonomika\\timeSheet.html",
+    "www\\index.html"
   ],
-  "deletedFiles": [],
+  "deletedFiles": [
+    "www\\templates\\home.html.LOCAL.html",
+    "www\\templates\\home.html.REMOTE.html",
+    "www\\templates\\home.html.BASE.html"
+  ],
   "addedPlugins": [],
   "deletedPlugins": []
 }

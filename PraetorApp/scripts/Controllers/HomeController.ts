@@ -1,6 +1,6 @@
 ﻿module PraetorApp.Controllers {
 
-    export class HomeController extends BaseController<ViewModels.MenuViewModel> {
+    export class HomeController extends BaseController<ViewModels.AppViewModel> {
 
         public static ID = "HomeController";
 
@@ -16,7 +16,7 @@
         private SpisyUtilities: Services.SpisyUtilities;
 
         constructor($scope: ng.IScope, $location: ng.ILocationService, $http: ng.IHttpService, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences, SpisyUtilities: Services.SpisyUtilities) {
-            super($scope, ViewModels.MenuViewModel);
+            super($scope, ViewModels.AppViewModel);
 
             this.$location = $location;
             this.$http = $http;

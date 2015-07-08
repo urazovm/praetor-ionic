@@ -1,11 +1,45 @@
-﻿<ion-tabs class="tabs-positive tabs-icon-top pr-black">
+﻿<ion-pane>
+    <ion-nav-bar class="bar-positive nav-title-slide-ios pr-black" align-title="center">
+        <ion-nav-back-button class="button-icon ion-arrow-left-c">
+        </ion-nav-back-button>
+        <ion-nav-buttons side="left">
+            <button class="button" ui-sref="app.home.spisy">
+                <i class="ion-ios-arrow-back"></i>
+            </button>
+        </ion-nav-buttons>
+        <!--<ion-nav-buttons side="right">
+            <button class="button">
+                Refresh!
+            </button>
+        </ion-nav-buttons>-->
 
-    <ion-tab title="Základní údaje" icon-on="ion-ios-filing" icon-off="ion-ios-filing-outline"  href="#/app/spis/zakladniudaje">
-        <ion-nav-view name="tab-zakladni-udaje"></ion-nav-view>
-    </ion-tab>
+    </ion-nav-bar>
 
-    <ion-tab title="Dokumenty" icon-on="ion-ios-clock" icon-off="ion-ios-clock-outline" href="#/app/spis/dokumenty">
-        <ion-nav-view name="tab-dokumenty"></ion-nav-view>
-    </ion-tab>
+    <ion-tabs class="tabs-positive tabs-icon-top pr-black">
 
-</ion-tabs>
+        <div ui-sref="app.home.spisy" style="
+    background-color: #d9534f;
+    width: 30px;
+    position: absolute;
+    left: 0;
+    height: 100%;
+    top: 0;
+">
+            <i class="icon ion-ios-arrow-back" style="
+    font-size: 25px;
+    margin: 0 auto;
+    padding-left: 8px;
+"></i>
+        </div>
+
+        <ion-tab title="Základní údaje" icon-on="ion-ios-filing" icon-off="ion-ios-filing-outline" ui-sref="app.spis.zakladniudaje">
+            <ion-nav-view name="tab-zakladni-udaje"></ion-nav-view>
+        </ion-tab>
+
+        <ion-tab title="Dokumenty" icon-on="ion-ios-clock" icon-off="ion-ios-clock-outline" ui-sref="app.spis.dokumenty">
+            <ion-nav-view name="tab-dokumenty"></ion-nav-view>
+        </ion-tab>
+
+    </ion-tabs>
+
+</ion-pane>

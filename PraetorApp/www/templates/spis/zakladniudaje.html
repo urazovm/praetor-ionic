@@ -1,3 +1,42 @@
-﻿<ion-view>
-    základní údaje
+﻿<ion-view title="{{viewModel.spis.spisovaZnacka}}">
+    <ion-content>        
+        <table class="spis-detail-table">
+            <tr ng-show="viewModel.spis.predmet != undefined">
+                <td class="header">Předmět</td>
+                <td class="content">{{viewModel.spis.predmet}}</td>
+            </tr>
+            <tr ng-show="viewModel.spis.stav != undefined">
+                <td class="header">Stav</td>
+                <td class="content">{{viewModel.spis.stav}}</td>
+            </tr>            
+            <tr ng-show="viewModel.spis.pravniKategorie != undefined">
+                <td class="header">Právní kategorie</td>
+                <td class="content">{{viewModel.spis.pravniKategorie}}</td>
+            </tr>
+            <tr ng-show="viewModel.spis.procesniStav != undefined">
+                <td class="header">Procesní stav</td>
+                <td class="content">{{viewModel.spis.procesniStav}}</td>
+            </tr>
+            <tr ng-show="viewModel.spis.odpovednyAdvokat != undefined">
+                <td class="header">Odpovědný advokát</td>
+                <td class="content">{{viewModel.spis.odpovednyAdvokat}}</td>
+            </tr>
+            <tr ng-show="viewModel.spis.klient != undefined">
+                <td class="header">Klient</td>
+                <td class="content">{{viewModel.spis.klient}}</td>
+            </tr>
+            <tr ng-show="viewModel.spis.protistrana != undefined">
+                <td class="header">Protistrana</td>
+                <td class="content">{{viewModel.spis.protistrana}}</td>
+            </tr>
+            <tr ng-show="viewModel.spis.stitky != undefined">
+                <td class="header">Stitky</td>
+                <td class="content">{{viewModel.spis.stitky}}</td>
+            </tr>
+            <tr ng-show="viewModel.spis.poznamka != undefined">
+                <td class="header">Poznámka</td>
+                <td class="content">{{viewModel.spis.poznamka}}</td>
+            </tr>
+        </table>
+    </ion-content>
 </ion-view>

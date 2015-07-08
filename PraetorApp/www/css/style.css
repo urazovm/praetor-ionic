@@ -1,5 +1,26 @@
-﻿.tabs-positive > .tabs, .tabs.tabs-positive {
+﻿.tabs-positive > .tabs, .tabs.tabs-positive, .bar.bar-positive, .bar-positive .button {
     border-color: #1d2939;
     background-color: #1d2939;
     color: #fff;
+}
+
+    .bar-positive .button i {
+        font-size: 30px;
+        background-color: transparent;
+        border-color: transparent;
+    }
+
+.bar.bar-stable .title {
+    color: #fff;
+}
+
+.spis-detail-table
+{
+    margin-left:5px;
+    margin-right:5px;
+    margin-top:10px;
+}
+
+.spis-detail-table .header {
+    margin-left:5px;
 }

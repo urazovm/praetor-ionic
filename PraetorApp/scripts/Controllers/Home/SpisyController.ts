@@ -37,14 +37,10 @@
 
         openSpis(spis: PraetorServer.Service.WebServer.Messages.Dto.Spis) {
             // Otevřeme detail spisu            
-            //debugger;
-            //this.$location.state('app.spis').search({ id: spis.id_Spis, title: spis.predmet });
-            this.$state.go('app.spis.zakladniudaje', { id: spis.id_Spis }).then((e) => {
-                var t = this;
-                debugger;
-            });
-            //this.$location.path("/app/home/cinnosti");
-            //this.$location.replace();
+            setTimeout(() => {
+                this.$state.go('app.spis.zakladniudaje', { id: spis.id_Spis });
+                this.scope.$apply();
+            }, 100);
         }
 
         changeDataSource() {                

@@ -4,24 +4,30 @@
 
         public static ID = "FileUtilities";
 
-        public static get $inject(): string[] {
-            return ["$q", Utilities.ID];
+        public static get $inject(): string[]{
+            return ["$q", Utilities.ID, Preferences.ID];
         }
 
         private $q: ng.IQService;
         private Utilities: Utilities;
+        private Preferences: Preferences;
 
-        constructor($q: ng.IQService, Utilities: Utilities) {
+        constructor($q: ng.IQService, Utilities: Utilities, Preferences: Preferences) {
             this.$q = $q;
             this.Utilities = Utilities;
+            this.Preferences = Preferences;
         }       
 
-        public openFile(path: string): ng.IPromise<boolean> {
+        public openFile(token: string): ng.IPromise<boolean> {
             var q = this.$q.defer<boolean>();
 
+            var path = 'http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token;
 
             (<any>window).handleDocumentWithURL(
-                function () { console.log('success'); q.resolve(true); },
+                function () {
+                    console.log('success');
+                    q.resolve(true);
+                },
                 function (error) {
                     console.log('failure');
                     if (error == 53) {

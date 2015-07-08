@@ -6,18 +6,18 @@
         <div class="list" ng-init="data.slider = 0">
             <label class="item item-input">
                 <span class="input-label">Spis</span>
-                <input disabled type="text" ng-model="data.spis">
+                <input disabled type="text" ng-model="viewModel.Data.spisOznaceni">
             </label>
 
             <label class="item item-input">
-                <span class="input-label" ng-model="data.datum">Datum</span>
+                <span class="input-label" ng-model="viewModel.Data.datum">Datum</span>
                 <input type="date" value="12.4.2014">
             </label>
 
             <div class="item range range-positive" style="padding-left:16px">
                 Čas
-                <input type="range" name="volume" min="0" max="240" step="15" ng-model="data.cas">
-                {{data.cas}} min
+                <input type="range" name="volume" min="0" max="240" step="15" ng-model="viewModel.Data.cas">
+                {{viewModel.Data.cas}} min
             </div>
 
             <label class="item item-input item-select">
@@ -25,16 +25,16 @@
                     Aktivita
                 </span>
 
-                <select ng-model="data.aktivita" ng-options="aktivita.nazev for aktivita in aktivity"></select>
+                <select ng-model="viewModel.Data.id_Aktivita" ng-options="aktivita.nazev for aktivita in viewModel.Aktivity"></select>
             </label>
 
             <label class="item item-input">
-                <textarea ng-model="data.popis" placeholder="Popis" style="height:5em"></textarea>
+                <textarea ng-model="viewModel.Data.popis" placeholder="Popis" style="height:5em"></textarea>
             </label>
         </div>
 
         <div class="padding">
-            <button class="button button-block button-positive" ng-click="save()">
+            <button class="button button-block button-positive" ng-click="controller.SaveData()">
                 Uložit
             </button>
         </div>

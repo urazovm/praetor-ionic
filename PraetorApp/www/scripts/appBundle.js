@@ -188,7 +188,9 @@ var PraetorApp;
                 instance.render();
             };
             // Finally, return a function that returns this Angular directive descriptor object.
-            return function () { return descriptor; };
+            return function () {
+                return descriptor;
+            };
         }
         /**
          * Used to create an array of injection property names followed by a function that will be
@@ -221,7 +223,9 @@ var PraetorApp;
          * @param fn The function that will provide the filter's logic.
          */
         function getFilterFactoryFunction(fn) {
-            return function () { return fn; };
+            return function () {
+                return fn;
+            };
         }
         //#endregion
         //#region Platform Configuration
@@ -306,40 +310,6 @@ var PraetorApp;
          */
         function device_resume($location, $ionicViewService, Utilities, UiHelper, Preferences) {
             return;
-            isShowingPinPrompt = true;
-            // Potentially display the PIN screen.
-            UiHelper.showPinEntryAfterResume().then(function () {
-                isShowingPinPrompt = false;
-                // If the user hasn't completed onboarding (eg new, first-time use of the app)
-                // then we'll push them straight into the onboarding flow. Note that we do this
-                // purposefully after the PIN screen for the case where the user may be upgrading
-                // from a version of the application that doesn't have onboarding (we wouldn't
-                // want them to be able to bypass the PIN entry in that case).
-                if (!Preferences.hasCompletedOnboarding) {
-                    // Tell Ionic to not animate and clear the history (hide the back button)
-                    // for the next view that we'll be navigating to below.
-                    $ionicViewService.nextViewOptions({
-                        disableAnimate: true,
-                        disableBack: true
-                    });
-                    // Navigate the user to the onboarding splash view.
-                    $location.path("/app/onboarding/splash");
-                    $location.replace();
-                    return;
-                }
-                // If the user is still at the blank sreen, then push them to their default view.
-                if ($location.url() === "/app/blank") {
-                    // Tell Ionic to not animate and clear the history (hide the back button)
-                    // for the next view that we'll be navigating to below.
-                    $ionicViewService.nextViewOptions({
-                        disableAnimate: true,
-                        disableBack: true
-                    });
-                    // Navigate the user to their default view.
-                    //$location.path(Utilities.defaultCategory.href.substring(1));
-                    $location.replace();
-                }
-            });
         }
         /**
          * Fired when the menu hard (or soft) key is pressed on the device (eg Android menu key).
@@ -642,6 +612,7 @@ var PraetorApp;
             }
             //#region Events
             BaseDialogController.prototype.modal_shown = function (ngEvent, instance) {
+                debugger;
                 // Only respond to modal.shown events for this dialog.
                 if (this.dialogId !== instance.dialogId) {
                     return;
@@ -897,6 +868,99 @@ var PraetorApp;
 (function (PraetorApp) {
     var Controllers;
     (function (Controllers) {
+        var Void = (function () {
+            function Void() {
+            }
+            return Void;
+        })();
+        Controllers.Void = Void;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
+        var TimeSheetController = (function (_super) {
+            __extends(TimeSheetController, _super);
+            function TimeSheetController($scope, PraetorService, Utilities, Preferences, UiHelper) {
+                _super.call(this, $scope, PraetorApp.ViewModels.Ekonomika.TimeSheetViewModel, UiHelper.DialogIds.TimeSheet);
+                this.PraetorService = PraetorService;
+                this.Utilities = Utilities;
+                this.Preferences = Preferences;
+                this.UiHelper = UiHelper;
+                debugger;
+                this.LoadData();
+            }
+            Object.defineProperty(TimeSheetController, "$inject", {
+                get: function () {
+                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.Utilities.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.UiHelper.ID];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            TimeSheetController.prototype.LoadData = function () {
+                var _this = this;
+                var request;
+                {
+                    id_Spis: this.getData().Id_Spis;
+                }
+                this.PraetorService.loadTimeSheet(request).then(function (response) {
+                    _this.viewModel.Data = response.timeSheet;
+                    _this.viewModel.Aktivity = response.aktivity;
+                });
+            };
+            TimeSheetController.prototype.SaveData = function () {
+                var _this = this;
+                debugger;
+                var request;
+                {
+                    timeSheet: this.viewModel.Data;
+                }
+                this.PraetorService.SaveTimeSheet(request).then(function (response) {
+                    if (response.success) {
+                        _this.close();
+                    }
+                    else {
+                        _this.UiHelper.alert("Došlo k chybě při ukládání činnosti: " + response.message);
+                    }
+                });
+            };
+            TimeSheetController.ID = "TimeSheetController";
+            return TimeSheetController;
+        })(Controllers.BaseDialogController);
+        Controllers.TimeSheetController = TimeSheetController;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
+        var TimeSheetParams = (function () {
+            function TimeSheetParams(id_Spis) {
+                this.Id_Spis = id_Spis;
+            }
+            return TimeSheetParams;
+        })();
+        Controllers.TimeSheetParams = TimeSheetParams;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
+        var TimeSheetResult = (function () {
+            function TimeSheetResult(success) {
+                this.Success = success;
+            }
+            return TimeSheetResult;
+        })();
+        Controllers.TimeSheetResult = TimeSheetResult;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
         var HomeSpisyController = (function (_super) {
             __extends(HomeSpisyController, _super);
             function HomeSpisyController($scope, $location, $http, $state, Utilities, UiHelper, Preferences, SpisyUtilities) {
@@ -937,19 +1001,35 @@ var PraetorApp;
     (function (Controllers) {
         var HomeVykazovaniController = (function (_super) {
             __extends(HomeVykazovaniController, _super);
-            function HomeVykazovaniController($scope, fileService) {
+            function HomeVykazovaniController($scope, praetorService, fileService, uiHelper) {
                 _super.call(this, $scope, PraetorApp.ViewModels.Home.VykazovaniViewModel);
+                this.PraetorService = praetorService;
                 this.FileUtilities = fileService;
+                this.UiHelper = uiHelper;
             }
             Object.defineProperty(HomeVykazovaniController, "$inject", {
                 get: function () {
-                    return ["$scope", PraetorApp.Services.FileUtilities.ID];
+                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.PraetorService.ID, PraetorApp.Services.UiHelper.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
             HomeVykazovaniController.prototype.test = function (url) {
                 this.FileUtilities.openFile(url);
+            };
+            HomeVykazovaniController.prototype.loadData = function () {
+                // TODO
+            };
+            HomeVykazovaniController.prototype.CreateTimeSheet = function () {
+                var _this = this;
+                var self = this;
+                // TODO: načíst ID spisu z dialogu.
+                var id_Spis = "e84dc039-7bfb-4b6d-846a-00ab7cb7bc10";
+                var params = new Controllers.TimeSheetParams(id_Spis);
+                var options = new PraetorApp.Models.DialogOptions(params);
+                this.UiHelper.showDialog(this.UiHelper.DialogIds.TimeSheet, options).then(function () {
+                    _this.loadData();
+                });
             };
             HomeVykazovaniController.ID = "HomeVykazovaniController";
             return HomeVykazovaniController;
@@ -1023,9 +1103,15 @@ var PraetorApp;
                 // Grab a reference to the root div element.
                 this._rootElement = this.element[0];
                 // Watch for the changing of the value attributes.
-                this.scope.$watch(function () { return _this.scope.icon; }, _.bind(this.icon_listener, this));
-                this.scope.$watch(function () { return _this.scope.iconSize; }, _.bind(this.iconSize_listener, this));
-                this.scope.$watch(function () { return _this.scope.text; }, _.bind(this.text_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.icon;
+                }, _.bind(this.icon_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.iconSize;
+                }, _.bind(this.iconSize_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.text;
+                }, _.bind(this.text_listener, this));
                 // Fire a created event sending along this directive instance.
                 // Parent scopes can listen for this so they can obtain a reference
                 // to the instance so they can call getters/setters etc.
@@ -1326,7 +1412,10 @@ var PraetorApp;
             });
             FileUtilities.prototype.openFile = function (path) {
                 var q = this.$q.defer();
-                window.handleDocumentWithURL(function () { console.log('success'); q.resolve(true); }, function (error) {
+                window.handleDocumentWithURL(function () {
+                    console.log('success');
+                    q.resolve(true);
+                }, function (error) {
                     console.log('failure');
                     if (error == 53) {
                         console.log('No app that handles this file type.');
@@ -1733,7 +1822,6 @@ var PraetorApp;
                         };
                         return $delegate.call(this, method, url, data, interceptor, headers);
                     };
-                    /* tslint:disable:forin */
                     for (var key in $delegate) {
                         proxy[key] = $delegate[key];
                     }
@@ -2137,8 +2225,7 @@ var PraetorApp;
                 var data = { username: username, password: password };
                 this.$http.post('http://' + server + '/praetorapi/login', data, {
                     headers: { 'Content-Type': 'application/json' }
-                })
-                    .then(function (response) {
+                }).then(function (response) {
                     q.resolve(response.data);
                 })['catch'](function (e) {
                     q.resolve({ success: false, message: "Error " + e.status });
@@ -2155,13 +2242,21 @@ var PraetorApp;
                     this.$location.path("/app/login");
                     this.$location.replace();
                 }
-                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, { headers: { 'Content-Type': 'application/json' } })
-                    .then(function (response) {
+                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, { headers: { 'Content-Type': 'application/json' } }).then(function (response) {
                     q.resolve(response.data);
                 })['catch'](function (e) {
                     q.resolve({ success: false, message: "Error " + e.status });
                 });
                 return q.promise;
+            };
+            PraetorService.prototype.loadCinnosti = function (request) {
+                return this.getData("LoadCinnosti", request);
+            };
+            PraetorService.prototype.loadTimeSheet = function (request) {
+                return this.getData("LoadTimeSheet", request);
+            };
+            PraetorService.prototype.SaveTimeSheet = function (request) {
+                return this.getData("SaveTimeSheet", request);
             };
             PraetorService.ID = "PraetorService";
             return PraetorService;
@@ -2435,8 +2530,7 @@ var PraetorApp;
                  * Constant IDs for the dialogs. For use with the showDialog helper method.
                  */
                 this.DialogIds = {
-                    ReorderCategories: "REORDER_CATEGORIES_DIALOG",
-                    PinEntry: "PIN_ENTRY_DIALOG"
+                    TimeSheet: "TIME_SHEET_DIALOG"
                 };
                 this.isPinEntryOpen = false;
                 this.$rootScope = $rootScope;
@@ -2646,6 +2740,7 @@ var PraetorApp;
                 }
                 // Add the ID of this dialog to the list of dialogs that are open.
                 UiHelper.openDialogIds.push(dialogId);
+                debugger;
                 // Define the arguments that will be used to create the modal instance.
                 creationArgs = {
                     // Include the dialog ID so we can identify the dialog later on.
@@ -2692,44 +2787,6 @@ var PraetorApp;
                 });
                 return q.promise;
             };
-            //#endregion
-            //#region Helpers for the device_resume event
-            UiHelper.prototype.showPinEntryAfterResume = function () {
-                var q = this.$q.defer(), resumedAt, options, model;
-                // If the PIN entry dialog then there is nothing to do.
-                if (this.isPinEntryOpen) {
-                    q.reject(UiHelper.DIALOG_ALREADY_OPEN);
-                    return q.promise;
-                }
-                // If there is a PIN set and a last paused time then we need to determine if we
-                // need to show the lock screen.
-                if (this.Preferences.pin && this.Preferences.lastPausedAt != null && this.Preferences.lastPausedAt.isValid()) {
-                    // Get the current time.
-                    resumedAt = moment();
-                    // If the time elapsed since the last pause event is greater than the threshold,
-                    // then we need to show the lock screen.
-                    if (resumedAt.diff(this.Preferences.lastPausedAt, "minutes") > this.Preferences.requirePinThreshold) {
-                        model = new PraetorApp.Models.PinEntryDialogModel("PIN Required", this.Preferences.pin, false);
-                        options = new PraetorApp.Models.DialogOptions(model);
-                        options.backdropClickToClose = false;
-                        options.hardwareBackButtonClose = false;
-                        options.showBackground = false;
-                        this.showDialog(this.DialogIds.PinEntry, options).then(function (result) {
-                            // Once a matching PIN is entered, then we can resolve.
-                            q.resolve();
-                        });
-                    }
-                    else {
-                        // If we don't need to show the PIN screen, then immediately resolve.
-                        q.resolve();
-                    }
-                }
-                else {
-                    // If we don't need to show the PIN screen, then immediately resolve.
-                    q.resolve();
-                }
-                return q.promise;
-            };
             UiHelper.ID = "UiHelper";
             //#region Dialog Stuff
             /**
@@ -2750,8 +2807,7 @@ var PraetorApp;
              * The template's root element should have a controller that extends BaseDialogController.
              */
             UiHelper.dialogTemplateMap = {
-                "REORDER_CATEGORIES_DIALOG": "templates/Dialogs/Reorder-Categories.html",
-                "PIN_ENTRY_DIALOG": "templates/Dialogs/Pin-Entry.html"
+                "TIME_SHEET_DIALOG": "templates/ekonomika/timeSheet.html"
             };
             return UiHelper;
         })();
@@ -2920,7 +2976,9 @@ var PraetorApp;
                     return "";
                 }
                 // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-                return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+                return str.replace(/\w\S*/g, function (txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                });
             };
             /**
              * Used to format a string by replacing values with the given arguments.
@@ -2971,7 +3029,6 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
-                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3007,7 +3064,6 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
-                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3116,7 +3172,6 @@ var PraetorApp;
                 j;
                 // Start out with an empty string.
                 guid = "";
-                // Now loop 35 times to generate 35 characters.
                 for (j = 0; j < 32; j++) {
                     // Characters at these indexes are always hyphens.
                     if (j === 8 || j === 12 || j === 16 || j === 20) {
@@ -3198,6 +3253,21 @@ var PraetorApp;
             return PrehledSpisuViewModel;
         })();
         ViewModels.PrehledSpisuViewModel = PrehledSpisuViewModel;
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
+        var Ekonomika;
+        (function (Ekonomika) {
+            var TimeSheetViewModel = (function () {
+                function TimeSheetViewModel() {
+                }
+                return TimeSheetViewModel;
+            })();
+            Ekonomika.TimeSheetViewModel = TimeSheetViewModel;
+        })(Ekonomika = ViewModels.Ekonomika || (ViewModels.Ekonomika = {}));
     })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;

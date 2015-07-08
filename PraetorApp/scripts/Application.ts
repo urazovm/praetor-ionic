@@ -362,51 +362,7 @@ module PraetorApp.Application {
      * to switch back to the application.
      */
     function device_resume($location: ng.ILocationService, $ionicViewService: any, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences): void {
-
         return;
-
-        isShowingPinPrompt = true;
-                
-        // Potentially display the PIN screen.
-        UiHelper.showPinEntryAfterResume().then(() => {
-            isShowingPinPrompt = false;
-            
-            // If the user hasn't completed onboarding (eg new, first-time use of the app)
-            // then we'll push them straight into the onboarding flow. Note that we do this
-            // purposefully after the PIN screen for the case where the user may be upgrading
-            // from a version of the application that doesn't have onboarding (we wouldn't
-            // want them to be able to bypass the PIN entry in that case).
-            if (!Preferences.hasCompletedOnboarding) {
-
-                // Tell Ionic to not animate and clear the history (hide the back button)
-                // for the next view that we'll be navigating to below.
-                $ionicViewService.nextViewOptions({
-                    disableAnimate: true,
-                    disableBack: true
-                });
-
-                // Navigate the user to the onboarding splash view.
-                $location.path("/app/onboarding/splash");
-                $location.replace();
-
-                return;
-            }
-
-            // If the user is still at the blank sreen, then push them to their default view.
-            if ($location.url() === "/app/blank") {
-
-                // Tell Ionic to not animate and clear the history (hide the back button)
-                // for the next view that we'll be navigating to below.
-                $ionicViewService.nextViewOptions({
-                    disableAnimate: true,
-                    disableBack: true
-                });
-
-                // Navigate the user to their default view.
-                //$location.path(Utilities.defaultCategory.href.substring(1));
-                $location.replace();
-            }
-        });
     }
 
     /**

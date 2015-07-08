@@ -430,7 +430,7 @@
 
             // Add the ID of this dialog to the list of dialogs that are open.
             UiHelper.openDialogIds.push(dialogId);
-
+            debugger;
             // Define the arguments that will be used to create the modal instance.
             creationArgs = {
                 // Include the dialog ID so we can identify the dialog later on.
@@ -487,56 +487,6 @@
 
                 });
             });
-
-            return q.promise;
-        }
-
-        //#endregion
-
-        //#region Helpers for the device_resume event
-
-        public showPinEntryAfterResume(): ng.IPromise<void> {
-            var q = this.$q.defer<void>(),
-                resumedAt: moment.Moment,
-                options: Models.DialogOptions,
-                model: Models.PinEntryDialogModel;
-
-            // If the PIN entry dialog then there is nothing to do.
-            if (this.isPinEntryOpen) {
-                q.reject(UiHelper.DIALOG_ALREADY_OPEN);
-                return q.promise;
-            }
-
-            // If there is a PIN set and a last paused time then we need to determine if we
-            // need to show the lock screen.
-            if (this.Preferences.pin && this.Preferences.lastPausedAt != null && this.Preferences.lastPausedAt.isValid()) {
-                // Get the current time.
-                resumedAt = moment();
-
-                // If the time elapsed since the last pause event is greater than the threshold,
-                // then we need to show the lock screen.
-                if (resumedAt.diff(this.Preferences.lastPausedAt, "minutes") > this.Preferences.requirePinThreshold) {
-
-                    model = new Models.PinEntryDialogModel("PIN Required", this.Preferences.pin, false);
-                    options = new Models.DialogOptions(model);
-                    options.backdropClickToClose = false;
-                    options.hardwareBackButtonClose = false;
-                    options.showBackground = false;
-
-                    this.showDialog(this.DialogIds.PinEntry, options).then((result: Models.PinEntryDialogResultModel) => {
-                        // Once a matching PIN is entered, then we can resolve.
-                        q.resolve();
-                    });
-                }
-                else {
-                    // If we don't need to show the PIN screen, then immediately resolve.
-                    q.resolve();
-                }
-            }
-            else {
-                // If we don't need to show the PIN screen, then immediately resolve.
-                q.resolve();
-            }
 
             return q.promise;
         }

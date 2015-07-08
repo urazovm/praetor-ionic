@@ -1,4 +1,4 @@
-﻿module PraetorApp.Controllers.Ekonomika {
+﻿module PraetorApp.Controllers {
     export class TimeSheetResult {
         public Success: boolean;
 

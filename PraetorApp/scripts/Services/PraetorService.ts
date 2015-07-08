@@ -78,5 +78,17 @@
 
             return q.promise;
         }
+
+        public loadCinnosti(request: PraetorServer.Service.WebServer.Messages.LoadCinnostiRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoadCinnostiResponse> {
+            return this.getData("LoadCinnosti", request);
+        }
+
+        public loadTimeSheet(request: PraetorServer.Service.WebServer.Messages.LoadTimeSheetRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoadTimeSheetResponse> {
+            return this.getData("LoadTimeSheet", request);
+        }
+
+        public SaveTimeSheet(request: PraetorServer.Service.WebServer.Messages.SaveTimeSheetRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.SaveTimeSheetResponse> {
+            return this.getData("SaveTimeSheet", request);
+        }
     }
 }

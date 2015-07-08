@@ -29,7 +29,7 @@
         //#region Events
 
         private modal_shown(ngEvent: ng.IAngularEvent, instance: any) {
-
+            debugger;
             // Only respond to modal.shown events for this dialog.
             if (this.dialogId !== instance.dialogId) {
                 return;

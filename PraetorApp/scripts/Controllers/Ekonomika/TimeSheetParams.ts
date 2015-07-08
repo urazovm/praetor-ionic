@@ -1,4 +1,4 @@
-﻿module PraetorApp.Controllers.Ekonomika {
+﻿module PraetorApp.Controllers {
     export class TimeSheetParams {
         public Id_Spis: System.Guid;
 

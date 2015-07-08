@@ -2418,9 +2418,9 @@ var PraetorApp;
                 if (this.Preferences.spisy == null) {
                     this.loadSpisy();
                 }
-                this.interval = setInterval(function () {
-                    self.loadSpisy();
-                }, 10000);
+                //this.interval = setInterval(function () {
+                //    self.loadSpisy();
+                //}, 10000);
             };
             SpisyUtilities.prototype.loadSpisy = function () {
                 var self = this;
@@ -2434,7 +2434,6 @@ var PraetorApp;
                 });
             };
             SpisyUtilities.prototype.onChangedDataSource = function () {
-                debugger;
                 _.each(this.registerController, function (controller) {
                     controller.changeDataSource.apply(controller);
                 });

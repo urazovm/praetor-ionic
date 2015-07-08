@@ -1,6 +1,8 @@
 ﻿module PraetorApp.Controllers {
 
-    export class HomeSpisyController extends BaseController<ViewModels.Home.SpisyViewModel> {
+    export class HomeSpisyController
+        extends BaseController<ViewModels.Home.SpisyViewModel>
+        implements PraetorApp.Definitely.ISpisyUtilitiesDataChange {
 
         public static ID = "HomeSpisyController";
 
@@ -27,14 +29,10 @@
             this.Preferences = Preferences;
             this.$state = $state;
             this.SpisyUtilities = SpisyUtilities;
-
+            this.SpisyUtilities.register(this);
             this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
-            this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;                        
+            this.viewModel.PrehledSpisu.posledniSpisy = this.SpisyUtilities.Spisy;           
                                  
-        }
-
-        protected changedSpisy(): void {
-            this.scope.$apply();            
         }
 
         openSpis(spis: PraetorServer.Service.WebServer.Messages.Dto.Spis) {
@@ -42,5 +40,10 @@
             this.$state.go('app.spis.dokumenty', { id: spis.id_Spis });
         }
 
+        changeDataSource() {                
+            // Došlo k změně u registrované komponenty
+            // aktualizujeme seznam spisů
+            this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
+        }
     }
 }

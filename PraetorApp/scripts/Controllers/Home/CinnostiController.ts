@@ -49,8 +49,8 @@
 
         public ReloadData() {
             var request = <PraetorServer.Service.WebServer.Messages.LoadCinnostiRequest>{};
-            request.cinnostiUntil = <any>this.DateUntil.toUTCString();
-            request.cinnostiSince = <any>this.DateSince.toUTCString();
+            request.cinnostiUntil = <any>this.DateUntil.toJSON();
+            request.cinnostiSince = <any>this.DateSince.toJSON();
 
             this.Cinnosti = [];
 
@@ -90,10 +90,12 @@
                         return result;
                     }));
 
-                    if (request.cinnostiSince < this.DateSince)
-                        this.DateSince = request.cinnostiSince;
-                    if (request.cinnostiUntil > this.DateUntil)
-                        this.DateUntil = request.cinnostiUntil;
+                    var requestSince = new Date(<any>request.cinnostiSince);
+                    if (requestSince < this.DateSince)
+                        this.DateSince = requestSince;
+                    var requestUntil = new Date(<any>request.cinnostiUntil);
+                    if (requestUntil > this.DateUntil)
+                        this.DateUntil = requestUntil;
 
                     this.RebuildList();
                 }
@@ -102,8 +104,8 @@
 
         public LoadPreviousDay() {
             var request = <PraetorServer.Service.WebServer.Messages.LoadCinnostiRequest>{};
-            request.cinnostiUntil = this.DateSince;
-            request.cinnostiSince = new Date(this.DateSince.getFullYear(), this.DateSince.getMonth(), this.DateSince.getDate() - 1);
+            request.cinnostiUntil = <any>this.DateSince.toJSON();
+            request.cinnostiSince = <any>this.AddDays(this.DateSince, - 1).toJSON();
 
             this.LoadData(request);
         }

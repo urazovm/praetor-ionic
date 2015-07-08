@@ -1080,8 +1080,8 @@ var PraetorApp;
             };
             HomeCinnostiController.prototype.ReloadData = function () {
                 var request = {};
-                request.cinnostiUntil = this.DateUntil.toUTCString();
-                request.cinnostiSince = this.DateSince.toUTCString();
+                request.cinnostiUntil = this.DateUntil.toJSON();
+                request.cinnostiSince = this.DateSince.toJSON();
                 this.Cinnosti = [];
                 this.LoadData(request);
             };
@@ -1114,17 +1114,19 @@ var PraetorApp;
                         result.spisovaZnacka = x.spisovaZnacka;
                         return result;
                     }));
-                    if (request.cinnostiSince < _this.DateSince)
-                        _this.DateSince = request.cinnostiSince;
-                    if (request.cinnostiUntil > _this.DateUntil)
-                        _this.DateUntil = request.cinnostiUntil;
+                    var requestSince = new Date(request.cinnostiSince);
+                    if (requestSince < _this.DateSince)
+                        _this.DateSince = requestSince;
+                    var requestUntil = new Date(request.cinnostiUntil);
+                    if (requestUntil > _this.DateUntil)
+                        _this.DateUntil = requestUntil;
                     _this.RebuildList();
                 });
             };
             HomeCinnostiController.prototype.LoadPreviousDay = function () {
                 var request = {};
-                request.cinnostiUntil = this.DateSince;
-                request.cinnostiSince = new Date(this.DateSince.getFullYear(), this.DateSince.getMonth(), this.DateSince.getDate() - 1);
+                request.cinnostiUntil = this.DateSince.toJSON();
+                request.cinnostiSince = this.AddDays(this.DateSince, -1).toJSON();
                 this.LoadData(request);
             };
             HomeCinnostiController.prototype.OpenCinnost = function (cinnost) {

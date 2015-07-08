@@ -32,7 +32,7 @@
          * Constant IDs for the dialogs. For use with the showDialog helper method.
          */
         public DialogIds = {
-            TimeSheet: "TIME_SHEET_DIALOG"
+            Cinnost: "CINNOST_DIALOG"
         };
 
         /**
@@ -41,7 +41,7 @@
          * The template's root element should have a controller that extends BaseDialogController.
          */
         private static dialogTemplateMap = {
-            "TIME_SHEET_DIALOG": "templates/ekonomika/timeSheet.html"
+            "CINNOST_DIALOG": "templates/ekonomika/cinnost.html"
         };
 
         //#endregion

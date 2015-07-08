@@ -1,7 +1,7 @@
 ﻿module PraetorApp.ViewModels.Ekonomika {
 
-    export class TimeSheetViewModel {
-        public Data: PraetorServer.Service.WebServer.Messages.Dto.TimeSheet;
+    export class CinnostViewModel {
+        public Data: PraetorServer.Service.WebServer.Messages.Dto.Cinnost;
         public Aktivity: PraetorServer.Service.WebServer.Messages.Dto.Aktivita[];
 
         // Vlastnost, pro bindování se na Data.datum.

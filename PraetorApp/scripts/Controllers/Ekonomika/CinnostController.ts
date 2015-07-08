@@ -1,7 +1,7 @@
 ﻿module PraetorApp.Controllers {
 
-    export class TimeSheetController extends BaseDialogController<ViewModels.Ekonomika.TimeSheetViewModel, TimeSheetParams, TimeSheetResult> {
-        public static ID = "TimeSheetController";
+    export class CinnostController extends BaseDialogController<ViewModels.Ekonomika.CinnostViewModel, CinnostParams, CinnostResult> {
+        public static ID = "CinnostController";
 
         public static get $inject(): string[]{
             return ["$scope", Services.PraetorService.ID, Services.Utilities.ID, Services.Preferences.ID, Services.UiHelper.ID];
@@ -13,7 +13,7 @@
         private UiHelper: Services.UiHelper;
 
         constructor($scope: ng.IScope, PraetorService: Services.PraetorService, Utilities: Services.Utilities, Preferences: Services.Preferences, UiHelper: Services.UiHelper) {
-            super($scope, ViewModels.Ekonomika.TimeSheetViewModel, UiHelper.DialogIds.TimeSheet);
+            super($scope, ViewModels.Ekonomika.CinnostViewModel, UiHelper.DialogIds.Cinnost);
 
             this.PraetorService = PraetorService;
             this.Utilities = Utilities;
@@ -24,15 +24,19 @@
         }
 
         public LoadData() {
-            var request = <PraetorServer.Service.WebServer.Messages.LoadTimeSheetRequest>{};
-            request.id_Spis = this.getData().Id_Spis;
+            var request = <PraetorServer.Service.WebServer.Messages.LoadCinnostRequest>{};
+            var params = this.getData();
+            request.id_Spis = params.Id_Spis;
 
-            this.PraetorService.loadTimeSheet(request).then(
+            this.PraetorService.loadCinnost(request).then(
                 response => {
-                    this.viewModel.Data = response.timeSheet;
+                    this.viewModel.Data = response.cinnost;
                     this.viewModel.Aktivity = _.sortBy(response.aktivity, x => x.ord);
-                    this.viewModel.Datum = new Date(<any>response.timeSheet.datum);
-                    this.viewModel.Aktivita = _.find(response.aktivity, x => x.id_Aktivita == response.timeSheet.id_Aktivita);
+                    if (params.Date)
+                        this.viewModel.Datum = params.Date;
+                    else
+                        this.viewModel.Datum = new Date(<any>response.cinnost.datum);
+                    this.viewModel.Aktivita = _.find(response.aktivity, x => x.id_Aktivita == response.cinnost.id_Aktivita);
                     this.AktivitaChanged();
                 },
                 ex => {
@@ -42,19 +46,16 @@
         }
 
         public SaveData() {
-            var request = <PraetorServer.Service.WebServer.Messages.SaveTimeSheetRequest>{};
-            this.viewModel.Data.datum = <any>this.viewModel.Datum.toISOString();
+            var request = <PraetorServer.Service.WebServer.Messages.SaveCinnostRequest>{};
+            this.viewModel.Data.datum = <any>this.viewModel.Datum.toJSON();
             this.viewModel.Data.id_Aktivita = this.viewModel.Aktivita.id_Aktivita;
-            request.timeSheet = this.viewModel.Data;
+            request.cinnost = this.viewModel.Data;
 
-            this.PraetorService.SaveTimeSheet(request).then(response => {
-                if (response.success) {
+            this.PraetorService.SaveCinnost(request).then(
+                response => {
                     this.close();
                 }
-                else {
-                    this.UiHelper.alert("Došlo k chybě při ukládání činnosti: " + response.message);
-                }
-            });
+            );
         }
 
         private AktivitaChanged() {

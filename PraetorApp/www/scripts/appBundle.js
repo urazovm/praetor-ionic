@@ -68,7 +68,8 @@ var PraetorApp;
                     scope: {
                         viewModel: '=',
                         onCinnostClick: '&',
-                        onAddClick: '&'
+                        onAddClick: '&',
+                        onLoadPreviousClick: '&'
                     },
                     templateUrl: 'templates/directives/prehled-cinnosti.html'
                 };
@@ -199,7 +200,9 @@ var PraetorApp;
                 instance.render();
             };
             // Finally, return a function that returns this Angular directive descriptor object.
-            return function () { return descriptor; };
+            return function () {
+                return descriptor;
+            };
         }
         /**
          * Used to create an array of injection property names followed by a function that will be
@@ -232,7 +235,9 @@ var PraetorApp;
          * @param fn The function that will provide the filter's logic.
          */
         function getFilterFactoryFunction(fn) {
-            return function () { return fn; };
+            return function () {
+                return fn;
+            };
         }
         //#endregion
         //#region Platform Configuration
@@ -430,8 +435,8 @@ var PraetorApp;
                 url: "/cinnosti",
                 views: {
                     'tab-cinnosti': {
-                        templateUrl: "templates/home/vykazovani.html",
-                        controller: PraetorApp.Controllers.HomeVykazovaniController.ID
+                        templateUrl: "templates/home/cinnosti.html",
+                        controller: PraetorApp.Controllers.HomeCinnostiController.ID
                     }
                 }
             });
@@ -973,94 +978,210 @@ var PraetorApp;
 (function (PraetorApp) {
     var Controllers;
     (function (Controllers) {
-        var TimeSheetController = (function (_super) {
-            __extends(TimeSheetController, _super);
-            function TimeSheetController($scope, PraetorService, Utilities, Preferences, UiHelper) {
-                _super.call(this, $scope, PraetorApp.ViewModels.Ekonomika.TimeSheetViewModel, UiHelper.DialogIds.TimeSheet);
+        var CinnostController = (function (_super) {
+            __extends(CinnostController, _super);
+            function CinnostController($scope, PraetorService, Utilities, Preferences, UiHelper) {
+                _super.call(this, $scope, PraetorApp.ViewModels.Ekonomika.CinnostViewModel, UiHelper.DialogIds.Cinnost);
                 this.PraetorService = PraetorService;
                 this.Utilities = Utilities;
                 this.Preferences = Preferences;
                 this.UiHelper = UiHelper;
                 this.scope.$on("modal.shown", _.bind(this.Shown, this));
             }
-            Object.defineProperty(TimeSheetController, "$inject", {
+            Object.defineProperty(CinnostController, "$inject", {
                 get: function () {
                     return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.Utilities.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.UiHelper.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
-            TimeSheetController.prototype.LoadData = function () {
+            CinnostController.prototype.LoadData = function () {
                 var _this = this;
                 var request = {};
-                request.id_Spis = this.getData().Id_Spis;
-                this.PraetorService.loadTimeSheet(request).then(function (response) {
-                    _this.viewModel.Data = response.timeSheet;
+                var params = this.getData();
+                request.id_Spis = params.Id_Spis;
+                this.PraetorService.loadCinnost(request).then(function (response) {
+                    _this.viewModel.Data = response.cinnost;
                     _this.viewModel.Aktivity = _.sortBy(response.aktivity, function (x) { return x.ord; });
-                    _this.viewModel.Datum = new Date(response.timeSheet.datum);
-                    _this.viewModel.Aktivita = _.find(response.aktivity, function (x) { return x.id_Aktivita == response.timeSheet.id_Aktivita; });
+                    if (params.Date)
+                        _this.viewModel.Datum = params.Date;
+                    else
+                        _this.viewModel.Datum = new Date(response.cinnost.datum);
+                    _this.viewModel.Aktivita = _.find(response.aktivity, function (x) { return x.id_Aktivita == response.cinnost.id_Aktivita; });
                     _this.AktivitaChanged();
                 }, function (ex) {
                     _this.close();
                 });
             };
-            TimeSheetController.prototype.SaveData = function () {
+            CinnostController.prototype.SaveData = function () {
                 var _this = this;
                 var request = {};
-                this.viewModel.Data.datum = this.viewModel.Datum.toISOString();
+                this.viewModel.Data.datum = this.viewModel.Datum.toJSON();
                 this.viewModel.Data.id_Aktivita = this.viewModel.Aktivita.id_Aktivita;
-                request.timeSheet = this.viewModel.Data;
-                this.PraetorService.SaveTimeSheet(request).then(function (response) {
-                    if (response.success) {
-                        _this.close();
-                    }
-                    else {
-                        _this.UiHelper.alert("Došlo k chybě při ukládání činnosti: " + response.message);
-                    }
+                request.cinnost = this.viewModel.Data;
+                this.PraetorService.SaveCinnost(request).then(function (response) {
+                    _this.close();
                 });
             };
-            TimeSheetController.prototype.AktivitaChanged = function () {
+            CinnostController.prototype.AktivitaChanged = function () {
                 var aktivita = this.viewModel.Aktivita;
                 var popis = this.viewModel.Data.popis;
                 if (!popis || _.any(this.viewModel.Aktivity, function (x) { return x.popis == popis; }))
                     this.viewModel.Data.popis = aktivita.popis;
             };
-            TimeSheetController.prototype.Cancel = function () {
+            CinnostController.prototype.Cancel = function () {
                 this.close();
             };
-            TimeSheetController.prototype.Shown = function () {
+            CinnostController.prototype.Shown = function () {
                 this.LoadData();
             };
-            TimeSheetController.ID = "TimeSheetController";
-            return TimeSheetController;
+            CinnostController.ID = "CinnostController";
+            return CinnostController;
         })(Controllers.BaseDialogController);
-        Controllers.TimeSheetController = TimeSheetController;
+        Controllers.CinnostController = CinnostController;
     })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
 (function (PraetorApp) {
     var Controllers;
     (function (Controllers) {
-        var TimeSheetParams = (function () {
-            function TimeSheetParams(id_Spis) {
+        var CinnostParams = (function () {
+            function CinnostParams(id_Spis, date) {
                 this.Id_Spis = id_Spis;
+                this.Date = date;
             }
-            return TimeSheetParams;
+            return CinnostParams;
         })();
-        Controllers.TimeSheetParams = TimeSheetParams;
+        Controllers.CinnostParams = CinnostParams;
     })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
 (function (PraetorApp) {
     var Controllers;
     (function (Controllers) {
-        var TimeSheetResult = (function () {
-            function TimeSheetResult(success) {
+        var CinnostResult = (function () {
+            function CinnostResult(success) {
                 this.Success = success;
             }
-            return TimeSheetResult;
+            return CinnostResult;
         })();
-        Controllers.TimeSheetResult = TimeSheetResult;
+        Controllers.CinnostResult = CinnostResult;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
+        var HomeCinnostiController = (function (_super) {
+            __extends(HomeCinnostiController, _super);
+            function HomeCinnostiController($scope, praetorService, fileService, uiHelper) {
+                _super.call(this, $scope, PraetorApp.ViewModels.Home.CinnostiViewModel);
+                this.PraetorService = praetorService;
+                this.FileUtilities = fileService;
+                this.UiHelper = uiHelper;
+                var now = new Date();
+                this.DateSince = this.AddDays(this.GetDate(now), 1);
+                this.DateUntil = this.DateSince;
+                var request = {};
+                request.cinnostiUntil = this.DateUntil.toJSON();
+                request.cinnostiSince = this.AddDays(this.DateSince, -1).toJSON();
+                this.viewModel.PrehledCinnosti = new PraetorApp.ViewModels.PrehledCinnostiViewModel();
+                this.Cinnosti = [];
+                this.LoadData(request);
+            }
+            Object.defineProperty(HomeCinnostiController, "$inject", {
+                get: function () {
+                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.PraetorService.ID, PraetorApp.Services.UiHelper.ID];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            HomeCinnostiController.prototype.test = function (url) {
+                this.FileUtilities.openFile(url);
+            };
+            HomeCinnostiController.prototype.AddDays = function (date, number) {
+                return new Date(date.getFullYear(), date.getMonth(), date.getDate() + number, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
+            };
+            HomeCinnostiController.prototype.GetDate = function (date) {
+                return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            };
+            HomeCinnostiController.prototype.ReloadData = function () {
+                var request = {};
+                request.cinnostiUntil = this.DateUntil.toJSON();
+                request.cinnostiSince = this.DateSince.toJSON();
+                this.Cinnosti = [];
+                this.LoadData(request);
+            };
+            HomeCinnostiController.prototype.RebuildList = function () {
+                var list = new Array();
+                for (var i = 0; i < this.Cinnosti.length; i++) {
+                    var currentDatum = this.GetDate(this.Cinnosti[i].datum);
+                    var datumEntry = _.find(list, function (x) { return x.datum.getTime() == currentDatum.getTime(); });
+                    if (!datumEntry) {
+                        datumEntry = new PraetorApp.ViewModels.Ekonomika.CinnostDateGroup();
+                        datumEntry.datum = currentDatum;
+                        datumEntry.datumString = currentDatum.toLocaleDateString();
+                        datumEntry.cinnosti = new Array();
+                        list.push(datumEntry);
+                    }
+                    datumEntry.cinnosti.push(this.Cinnosti[i]);
+                }
+                this.viewModel.PrehledCinnosti.Cinnosti = _.sortBy(list, function (x) { return x.datum; }).reverse();
+            };
+            HomeCinnostiController.prototype.LoadData = function (request) {
+                var _this = this;
+                this.PraetorService.loadCinnosti(request).then(function (response) {
+                    _this.Cinnosti = _this.Cinnosti.concat(_.map(response.cinnosti, function (x) {
+                        var result = new PraetorApp.ViewModels.Ekonomika.CinnostPrehledEntry();
+                        result.cas = x.cas;
+                        result.datum = new Date(x.datum);
+                        result.id_TimeSheet = x.id_Cinnost;
+                        result.popis = x.popis;
+                        result.predmetSpisu = x.predmetSpisu;
+                        result.spisovaZnacka = x.spisovaZnacka;
+                        return result;
+                    }));
+                    var requestSince = new Date(request.cinnostiSince);
+                    if (requestSince < _this.DateSince)
+                        _this.DateSince = requestSince;
+                    var requestUntil = new Date(request.cinnostiUntil);
+                    if (requestUntil > _this.DateUntil)
+                        _this.DateUntil = requestUntil;
+                    _this.RebuildList();
+                });
+            };
+            HomeCinnostiController.prototype.LoadPreviousDay = function () {
+                var request = {};
+                request.cinnostiUntil = this.DateSince.toJSON();
+                request.cinnostiSince = this.AddDays(this.DateSince, -1).toJSON();
+                this.LoadData(request);
+            };
+            HomeCinnostiController.prototype.OpenCinnost = function (cinnost) {
+            };
+            HomeCinnostiController.prototype.CreateDatedCinnost = function (date) {
+                var _this = this;
+                // TODO: načíst ID spisu z dialogu.
+                var id_Spis = "e84dc039-7bfb-4b6d-846a-00ab7cb7bc10";
+                var params = new Controllers.CinnostParams(id_Spis, date);
+                var options = new PraetorApp.Models.DialogOptions(params);
+                this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(function () {
+                    _this.ReloadData();
+                });
+            };
+            HomeCinnostiController.prototype.CreateCinnost = function () {
+                var _this = this;
+                // TODO: načíst ID spisu z dialogu.
+                var id_Spis = "e84dc039-7bfb-4b6d-846a-00ab7cb7bc10";
+                var params = new Controllers.CinnostParams(id_Spis);
+                var options = new PraetorApp.Models.DialogOptions(params);
+                this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(function () {
+                    _this.ReloadData();
+                });
+            };
+            HomeCinnostiController.ID = "HomeCinnostiController";
+            return HomeCinnostiController;
+        })(Controllers.BaseController);
+        Controllers.HomeCinnostiController = HomeCinnostiController;
     })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
@@ -1106,48 +1227,6 @@ var PraetorApp;
             return HomeSpisyController;
         })(Controllers.BaseController);
         Controllers.HomeSpisyController = HomeSpisyController;
-    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var Controllers;
-    (function (Controllers) {
-        var HomeVykazovaniController = (function (_super) {
-            __extends(HomeVykazovaniController, _super);
-            function HomeVykazovaniController($scope, praetorService, fileService, uiHelper) {
-                _super.call(this, $scope, PraetorApp.ViewModels.Home.VykazovaniViewModel);
-                this.PraetorService = praetorService;
-                this.FileUtilities = fileService;
-                this.UiHelper = uiHelper;
-            }
-            Object.defineProperty(HomeVykazovaniController, "$inject", {
-                get: function () {
-                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.PraetorService.ID, PraetorApp.Services.UiHelper.ID];
-                },
-                enumerable: true,
-                configurable: true
-            });
-            HomeVykazovaniController.prototype.test = function (url) {
-                this.FileUtilities.openFile(url);
-            };
-            HomeVykazovaniController.prototype.loadData = function () {
-                // TODO
-            };
-            HomeVykazovaniController.prototype.CreateTimeSheet = function () {
-                var _this = this;
-                var self = this;
-                // TODO: načíst ID spisu z dialogu.
-                var id_Spis = "e84dc039-7bfb-4b6d-846a-00ab7cb7bc10";
-                var params = new Controllers.TimeSheetParams(id_Spis);
-                var options = new PraetorApp.Models.DialogOptions(params);
-                this.UiHelper.showDialog(this.UiHelper.DialogIds.TimeSheet, options).then(function () {
-                    _this.loadData();
-                });
-            };
-            HomeVykazovaniController.ID = "HomeVykazovaniController";
-            return HomeVykazovaniController;
-        })(Controllers.BaseController);
-        Controllers.HomeVykazovaniController = HomeVykazovaniController;
     })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
@@ -1305,9 +1384,15 @@ var PraetorApp;
                 // Grab a reference to the root div element.
                 this._rootElement = this.element[0];
                 // Watch for the changing of the value attributes.
-                this.scope.$watch(function () { return _this.scope.icon; }, _.bind(this.icon_listener, this));
-                this.scope.$watch(function () { return _this.scope.iconSize; }, _.bind(this.iconSize_listener, this));
-                this.scope.$watch(function () { return _this.scope.text; }, _.bind(this.text_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.icon;
+                }, _.bind(this.icon_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.iconSize;
+                }, _.bind(this.iconSize_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.text;
+                }, _.bind(this.text_listener, this));
                 // Fire a created event sending along this directive instance.
                 // Parent scopes can listen for this so they can obtain a reference
                 // to the instance so they can call getters/setters etc.
@@ -2020,7 +2105,6 @@ var PraetorApp;
                         };
                         return $delegate.call(this, method, url, data, interceptor, headers);
                     };
-                    /* tslint:disable:forin */
                     for (var key in $delegate) {
                         proxy[key] = $delegate[key];
                     }
@@ -2425,8 +2509,7 @@ var PraetorApp;
                 var data = { username: username, password: password };
                 this.$http.post('http://' + server + '/praetorapi/login', data, {
                     headers: { 'Content-Type': 'application/json' }
-                })
-                    .then(function (response) {
+                }).then(function (response) {
                     q.resolve(response.data);
                 })['catch'](function (e) {
                     q.resolve({ success: false, message: "Error " + e.status + "|" + e.message });
@@ -2451,8 +2534,7 @@ var PraetorApp;
                     this.$location.path("/app/login");
                     this.$location.replace();
                 }
-                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, { headers: { 'Content-Type': 'application/json' } })
-                    .then(function (response) {
+                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, { headers: { 'Content-Type': 'application/json' } }).then(function (response) {
                     if (options.ShowProgress)
                         _this.UiHelper.progressIndicator.hide();
                     var responseData = response.data;
@@ -2480,11 +2562,11 @@ var PraetorApp;
             PraetorService.prototype.loadCinnosti = function (request) {
                 return this.getData("LoadCinnosti", request);
             };
-            PraetorService.prototype.loadTimeSheet = function (request) {
-                return this.getData("LoadTimeSheet", request);
+            PraetorService.prototype.loadCinnost = function (request) {
+                return this.getData("LoadCinnost", request);
             };
-            PraetorService.prototype.SaveTimeSheet = function (request) {
-                return this.getData("SaveTimeSheet", request);
+            PraetorService.prototype.SaveCinnost = function (request) {
+                return this.getData("SaveCinnost", request);
             };
             PraetorService.prototype.getFileToken = function (request) {
                 return this.getData("getfiletoken", request);
@@ -2794,7 +2876,7 @@ var PraetorApp;
                  * Constant IDs for the dialogs. For use with the showDialog helper method.
                  */
                 this.DialogIds = {
-                    TimeSheet: "TIME_SHEET_DIALOG"
+                    Cinnost: "CINNOST_DIALOG"
                 };
                 this.isPinEntryOpen = false;
                 this.$rootScope = $rootScope;
@@ -3070,7 +3152,7 @@ var PraetorApp;
              * The template's root element should have a controller that extends BaseDialogController.
              */
             UiHelper.dialogTemplateMap = {
-                "TIME_SHEET_DIALOG": "templates/ekonomika/timeSheet.html"
+                "CINNOST_DIALOG": "templates/ekonomika/cinnost.html"
             };
             return UiHelper;
         })();
@@ -3239,7 +3321,9 @@ var PraetorApp;
                     return "";
                 }
                 // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-                return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+                return str.replace(/\w\S*/g, function (txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                });
             };
             /**
              * Used to format a string by replacing values with the given arguments.
@@ -3290,7 +3374,6 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
-                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3326,7 +3409,6 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
-                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3435,7 +3517,6 @@ var PraetorApp;
                 j;
                 // Start out with an empty string.
                 guid = "";
-                // Now loop 35 times to generate 35 characters.
                 for (j = 0; j < 32; j++) {
                     // Characters at these indexes are always hyphens.
                     if (j === 8 || j === 12 || j === 16 || j === 20) {
@@ -3511,6 +3592,18 @@ var PraetorApp;
 (function (PraetorApp) {
     var ViewModels;
     (function (ViewModels) {
+        var PrehledCinnostiViewModel = (function () {
+            function PrehledCinnostiViewModel() {
+            }
+            return PrehledCinnostiViewModel;
+        })();
+        ViewModels.PrehledCinnostiViewModel = PrehledCinnostiViewModel;
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
         var PrehledSpisuViewModel = (function () {
             function PrehledSpisuViewModel() {
             }
@@ -3537,13 +3630,58 @@ var PraetorApp;
     (function (ViewModels) {
         var Ekonomika;
         (function (Ekonomika) {
-            var TimeSheetViewModel = (function () {
-                function TimeSheetViewModel() {
+            var CinnostDateGroup = (function () {
+                function CinnostDateGroup() {
                 }
-                return TimeSheetViewModel;
+                return CinnostDateGroup;
             })();
-            Ekonomika.TimeSheetViewModel = TimeSheetViewModel;
+            Ekonomika.CinnostDateGroup = CinnostDateGroup;
         })(Ekonomika = ViewModels.Ekonomika || (ViewModels.Ekonomika = {}));
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
+        var Ekonomika;
+        (function (Ekonomika) {
+            var CinnostPrehledEntry = (function () {
+                function CinnostPrehledEntry() {
+                }
+                return CinnostPrehledEntry;
+            })();
+            Ekonomika.CinnostPrehledEntry = CinnostPrehledEntry;
+        })(Ekonomika = ViewModels.Ekonomika || (ViewModels.Ekonomika = {}));
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
+        var Ekonomika;
+        (function (Ekonomika) {
+            var CinnostViewModel = (function () {
+                function CinnostViewModel() {
+                }
+                return CinnostViewModel;
+            })();
+            Ekonomika.CinnostViewModel = CinnostViewModel;
+        })(Ekonomika = ViewModels.Ekonomika || (ViewModels.Ekonomika = {}));
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
+        var Home;
+        (function (Home) {
+            var CinnostiViewModel = (function () {
+                function CinnostiViewModel() {
+                }
+                return CinnostiViewModel;
+            })();
+            Home.CinnostiViewModel = CinnostiViewModel;
+        })(Home = ViewModels.Home || (ViewModels.Home = {}));
     })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
@@ -3558,21 +3696,6 @@ var PraetorApp;
                 return SpisyViewModel;
             })();
             Home.SpisyViewModel = SpisyViewModel;
-        })(Home = ViewModels.Home || (ViewModels.Home = {}));
-    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var ViewModels;
-    (function (ViewModels) {
-        var Home;
-        (function (Home) {
-            var VykazovaniViewModel = (function () {
-                function VykazovaniViewModel() {
-                }
-                return VykazovaniViewModel;
-            })();
-            Home.VykazovaniViewModel = VykazovaniViewModel;
         })(Home = ViewModels.Home || (ViewModels.Home = {}));
     })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
 })(PraetorApp || (PraetorApp = {}));

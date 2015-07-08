@@ -80,7 +80,8 @@ module PraetorApp.Application {
                 scope: {
                     viewModel: '=',
                     onCinnostClick: '&',
-                    onAddClick: '&'
+                    onAddClick: '&',
+                    onLoadPreviousClick: '&'
                 },
                 templateUrl: 'templates/directives/prehled-cinnosti.html'
             };

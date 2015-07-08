@@ -1,0 +1,15 @@
+﻿<div>
+    <div class="list">
+        <div ng-repeat="datumGroup in viewModel.Cinnosti">
+            <div class="item item-divider">{{datumGroup.datumString}}</div>
+            <div ng-repeat="cinnost in datumGroup.cinnosti">
+                <a class="item" ng-click="onCinnostClick({cinnost:cinnost})">
+                    <h2 ng-bind-html="cinnost.cas + ' - ' + cinnost.popis" style="font-weight: bold"></h2>
+                    <span ng-bind-html="cinnost.spisovaZnacka + ' ' + cinnost.predmetSpisu" style="font-size: 75%; color: #3f3f3f"></span>
+                </a>
+            </div>
+            <button class="button button-block button-outline button-positive" ng-click="onAddClick({date:datumGroup.datum})">Vytvořit činnost</button>
+        </div>
+        <button class="button button-block button-positive" ng-click="onLoadPreviousClick()">Načíst další den</button>
+    </div>
+</div>

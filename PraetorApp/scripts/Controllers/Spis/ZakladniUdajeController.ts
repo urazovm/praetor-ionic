@@ -30,7 +30,7 @@
             this.$stateParams = $stateParams;       
             this.viewModel.id_spis = this.$stateParams.id;
             this.PraetorService = PraetorService;
-            this.loadSpis();
+            this.loadSpis();            
         }
 
         private loadSpis() {

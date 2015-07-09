@@ -962,7 +962,7 @@ var PraetorApp;
                 var request = {};
                 request.id_file = dokument.id;
                 this.PraetorService.getFileToken(request).then(function (response) {
-                    _this.FileService.openFile(response.token);
+                    _this.FileService.openFile(response.token, dokument.pripona);
                 });
             };
             SpisController.ID = "SpisController";
@@ -1100,13 +1100,13 @@ var PraetorApp;
             }
             Object.defineProperty(HomeCinnostiController, "$inject", {
                 get: function () {
-                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.PraetorService.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.FileUtilities.ID];
+                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.FileUtilities.ID, PraetorApp.Services.UiHelper.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
             HomeCinnostiController.prototype.test = function (url) {
-                this.FileUtilities.openFile(url);
+                this.FileUtilities.openUrl(url);
             };
             HomeCinnostiController.prototype.AddDays = function (date, number) {
                 return new Date(date.getFullYear(), date.getMonth(), date.getDate() + number, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
@@ -1329,10 +1329,11 @@ var PraetorApp;
             };
             SpisDokumentyController.prototype.openDokument = function (dokument) {
                 var _this = this;
+                debugger;
                 var request = {};
                 request.id_file = dokument.id;
                 this.PraetorService.getFileToken(request).then(function (response) {
-                    _this.FileService.openFile(response.token);
+                    _this.FileService.openFile(response.token, dokument.pripona);
                 });
             };
             SpisDokumentyController.ID = "SpisDokumentyController";
@@ -1809,9 +1810,11 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
-            FileUtilities.prototype.openFile = function (token) {
+            FileUtilities.prototype.openFile = function (token, pripona) {
+                return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token + '#' + pripona);
+            };
+            FileUtilities.prototype.openUrl = function (path) {
                 var q = this.$q.defer();
-                var path = 'http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token;
                 window.handleDocumentWithURL(function () {
                     console.log('success');
                     q.resolve(true);

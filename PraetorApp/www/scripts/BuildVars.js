@@ -1,1 +1,1 @@
-window.buildVars = {debug: 'debug' == 'debug',buildTimestamp: '9. 7. 2015 12:19:33',majorVersion: 1,minorVersion: 0,buildVersion: 131};
+window.buildVars = {debug: 'debug' == 'debug',buildTimestamp: '9. 7. 2015 13:04:35',majorVersion: 1,minorVersion: 0,buildVersion: 131};

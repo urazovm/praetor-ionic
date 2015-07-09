@@ -14,13 +14,17 @@
     color: #fff;
 }
 
-.spis-detail-table
-{
-    margin-left:5px;
-    margin-right:5px;
-    margin-top:10px;
+.praetor-back-button {
+    background-color: #d9534f;
+    width: 40px;
+    position: absolute;
+    left: 0;
+    height: 100%;
+    top: 0;
 }
 
-.spis-detail-table .header {
-    margin-left:5px;
-}
+    .praetor-back-button i {
+        font-size: 25px;
+        margin: 0 auto;
+        padding-left: 13px;
+    }

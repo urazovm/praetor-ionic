@@ -1209,7 +1209,7 @@ var PraetorApp;
     (function (Controllers) {
         var HomeSpisyController = (function (_super) {
             __extends(HomeSpisyController, _super);
-            function HomeSpisyController($scope, $location, $http, $state, Utilities, UiHelper, Preferences, SpisyUtilities) {
+            function HomeSpisyController($scope, $location, $http, $state, Utilities, UiHelper, Preferences, SpisyUtilities, PraetorService) {
                 _super.call(this, $scope, PraetorApp.ViewModels.Home.SpisyViewModel);
                 this.$location = $location;
                 this.$http = $http;
@@ -1219,16 +1219,26 @@ var PraetorApp;
                 this.$state = $state;
                 this.SpisyUtilities = SpisyUtilities;
                 this.SpisyUtilities.register(this);
+                this.PraetorService = PraetorService;
                 this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
-                this.viewModel.PrehledSpisu.posledniSpisy = this.SpisyUtilities.Spisy;
+                this.LoadPosledniSpisy();
+                this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
             }
             Object.defineProperty(HomeSpisyController, "$inject", {
                 get: function () {
-                    return ["$scope", "$location", "$http", "$state", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.SpisyUtilities.ID];
+                    return ["$scope", "$location", "$http", "$state", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.SpisyUtilities.ID, PraetorApp.Services.PraetorService.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
+            HomeSpisyController.prototype.LoadPosledniSpisy = function () {
+                var _this = this;
+                var request = {};
+                request.pocet = 20;
+                this.PraetorService.LoadPosledniSpisy(request).then(function (response) {
+                    _this.viewModel.PrehledSpisu.posledniSpisy = response.posledniSpisy;
+                });
+            };
             HomeSpisyController.prototype.openSpis = function (spis) {
                 var _this = this;
                 // Otevřeme detail spisu            
@@ -1361,7 +1371,8 @@ var PraetorApp;
                 this.SpisyUtilities = SpisyUtilities;
                 this.SpisyUtilities.register(this);
                 this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
-                this.viewModel.PrehledSpisu.posledniSpisy = this.SpisyUtilities.Spisy;
+                this.LoadPosledniSpisy();
+                this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
             }
             Object.defineProperty(VyberSpisuController, "$inject", {
                 get: function () {
@@ -1370,6 +1381,14 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
+            VyberSpisuController.prototype.LoadPosledniSpisy = function () {
+                var _this = this;
+                var request = {};
+                request.pocet = 20;
+                this.PraetorService.LoadPosledniSpisy(request).then(function (response) {
+                    _this.viewModel.PrehledSpisu.posledniSpisy = response.posledniSpisy;
+                });
+            };
             VyberSpisuController.prototype.SelectSpis = function (spis) {
                 this.close(new Controllers.VyberSpisuResult(true, spis.id_Spis));
             };
@@ -2649,6 +2668,9 @@ var PraetorApp;
             };
             PraetorService.prototype.SaveCinnost = function (request) {
                 return this.getData("SaveCinnost", request);
+            };
+            PraetorService.prototype.LoadPosledniSpisy = function (request) {
+                return this.getData("LoadPosledniSpisy", request);
             };
             PraetorService.prototype.getFileToken = function (request) {
                 return this.getData("getfiletoken", request);

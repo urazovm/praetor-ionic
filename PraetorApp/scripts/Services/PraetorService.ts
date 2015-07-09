@@ -132,6 +132,10 @@
             return this.getData("SaveCinnost", request);
         }
 
+        public LoadPosledniSpisy(request: PraetorServer.Service.WebServer.Messages.LoadPosledniSpisyRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoadPosledniSpisyResponse> {
+            return this.getData("LoadPosledniSpisy", request);
+        }
+
         public getFileToken(request: PraetorServer.Service.WebServer.Messages.GetFileTokenRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.GetFileTokenResponse> {
             return this.getData("getfiletoken", request);
         }

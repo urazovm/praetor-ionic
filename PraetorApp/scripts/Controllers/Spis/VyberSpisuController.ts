@@ -27,8 +27,23 @@
 
             this.SpisyUtilities = SpisyUtilities;
             this.SpisyUtilities.register(this);
+
             this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
-            this.viewModel.PrehledSpisu.posledniSpisy = this.SpisyUtilities.Spisy;
+
+            this.LoadPosledniSpisy();
+
+            this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
+        }
+
+        private LoadPosledniSpisy() {
+            var request = <PraetorServer.Service.WebServer.Messages.LoadPosledniSpisyRequest>{};
+            request.pocet = 20;
+
+            this.PraetorService.LoadPosledniSpisy(request).then(
+                response => {
+                    this.viewModel.PrehledSpisu.posledniSpisy = response.posledniSpisy;
+                }
+                );
         }
 
         public SelectSpis(spis: PraetorServer.Service.WebServer.Messages.Dto.Spis) {

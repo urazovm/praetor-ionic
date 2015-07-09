@@ -16,26 +16,22 @@
 
             var out = [];
 
-            _.each(input, (row:any) =>
-            {
-                var jeTam = false;
-
-                _.each(row, (property: any, key:string) => {                    
-
-                    if (key == "id_Spis")
-                        return;
-
-                    if (property.indexOf(search) != -1) {
-                        jeTam = true;
-                    }
-                });
-
-
-                if (jeTam)
-                    out.push(row);
-
+            (<any>input).filter((value, index, array) => {                
+                
                 if (out.length >= 50)
                     return;
+
+                if (value.spisovaZnacka != undefined || value.spisovaZnacka != "")
+                    search += value.spisovaZnacka.toLowerCase()
+
+                if (value.predmet != undefined || value.predmet != "")
+                    search += value.predmet.toLowerCase()
+
+                if (value.hlavniKlient != undefined || value.hlavniKlient != "")
+                    search += value.hlavniKlient.toLowerCase()
+
+                if (search.indexOf(search.toLowerCase()) >= 0)
+                    out.push(value);
             });
 
             return out;

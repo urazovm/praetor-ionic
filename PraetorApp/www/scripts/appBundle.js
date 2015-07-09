@@ -219,9 +219,7 @@ var PraetorApp;
                 instance.render();
             };
             // Finally, return a function that returns this Angular directive descriptor object.
-            return function () {
-                return descriptor;
-            };
+            return function () { return descriptor; };
         }
         /**
          * Used to create an array of injection property names followed by a function that will be
@@ -254,9 +252,7 @@ var PraetorApp;
          * @param fn The function that will provide the filter's logic.
          */
         function getFilterFactoryFunction(fn) {
-            return function () {
-                return fn;
-            };
+            return function () { return fn; };
         }
         //#endregion
         //#region Platform Configuration
@@ -813,6 +809,27 @@ var PraetorApp;
 (function (PraetorApp) {
     var Controllers;
     (function (Controllers) {
+        var DateTools = (function () {
+            function DateTools() {
+            }
+            DateTools.GetDateInJsonFormat = function (date) {
+                return moment(date).format("YYYY-MM-DD");
+            };
+            DateTools.GetDateTimeInJsonFormat = function (date) {
+                return moment(date).format("YYYY-MM-DDTHH:mm:ss");
+            };
+            DateTools.GetDateTimeFromJsonFormat = function (date) {
+                return moment(date).toDate();
+            };
+            return DateTools;
+        })();
+        Controllers.DateTools = DateTools;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
         var HomeController = (function (_super) {
             __extends(HomeController, _super);
             function HomeController($scope, $location, $http, Utilities, UiHelper, Preferences, SpisyUtilities) {
@@ -1025,7 +1042,7 @@ var PraetorApp;
                     if (params.Date)
                         _this.viewModel.Datum = params.Date;
                     else
-                        _this.viewModel.Datum = new Date(response.cinnost.datum);
+                        _this.viewModel.Datum = Controllers.DateTools.GetDateTimeFromJsonFormat(response.cinnost.datum);
                     _this.viewModel.Aktivita = _.find(response.aktivity, function (x) { return x.id_Aktivita == response.cinnost.id_Aktivita; });
                     _this.AktivitaChanged();
                 }, function (ex) {
@@ -1035,7 +1052,7 @@ var PraetorApp;
             CinnostController.prototype.SaveData = function () {
                 var _this = this;
                 var request = {};
-                this.viewModel.Data.datum = this.viewModel.Datum.toJSON();
+                this.viewModel.Data.datum = Controllers.DateTools.GetDateInJsonFormat(this.viewModel.Datum);
                 this.viewModel.Data.id_Aktivita = this.viewModel.Aktivita.id_Aktivita;
                 request.cinnost = this.viewModel.Data;
                 this.PraetorService.SaveCinnost(request).then(function (response) {
@@ -1093,31 +1110,27 @@ var PraetorApp;
     (function (Controllers) {
         var HomeCinnostiController = (function (_super) {
             __extends(HomeCinnostiController, _super);
-            function HomeCinnostiController($scope, praetorService, fileService, uiHelper) {
+            function HomeCinnostiController($scope, praetorService, uiHelper) {
                 _super.call(this, $scope, PraetorApp.ViewModels.Home.CinnostiViewModel);
                 this.PraetorService = praetorService;
-                this.FileUtilities = fileService;
                 this.UiHelper = uiHelper;
                 var now = new Date();
                 this.DateSince = this.AddDays(this.GetDate(now), 1);
                 this.DateUntil = this.DateSince;
                 var request = {};
-                request.cinnostiUntil = this.DateUntil.toJSON();
-                request.cinnostiSince = this.AddDays(this.DateSince, -1).toJSON();
+                request.cinnostiUntil = Controllers.DateTools.GetDateInJsonFormat(this.DateUntil);
+                request.cinnostiSince = Controllers.DateTools.GetDateInJsonFormat(this.AddDays(this.DateSince, -1));
                 this.viewModel.PrehledCinnosti = new PraetorApp.ViewModels.PrehledCinnostiViewModel();
                 this.Cinnosti = [];
                 this.LoadData(request);
             }
             Object.defineProperty(HomeCinnostiController, "$inject", {
                 get: function () {
-                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.FileUtilities.ID, PraetorApp.Services.UiHelper.ID];
+                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.UiHelper.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
-            HomeCinnostiController.prototype.test = function (url) {
-                this.FileUtilities.openUrl(url);
-            };
             HomeCinnostiController.prototype.AddDays = function (date, number) {
                 return new Date(date.getFullYear(), date.getMonth(), date.getDate() + number, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
             };
@@ -1126,8 +1139,8 @@ var PraetorApp;
             };
             HomeCinnostiController.prototype.ReloadData = function () {
                 var request = {};
-                request.cinnostiUntil = this.DateUntil.toJSON();
-                request.cinnostiSince = this.DateSince.toJSON();
+                request.cinnostiUntil = Controllers.DateTools.GetDateInJsonFormat(this.DateUntil);
+                request.cinnostiSince = Controllers.DateTools.GetDateInJsonFormat(this.DateSince);
                 this.Cinnosti = [];
                 this.LoadData(request);
             };
@@ -1153,17 +1166,17 @@ var PraetorApp;
                     _this.Cinnosti = _this.Cinnosti.concat(_.map(response.cinnosti, function (x) {
                         var result = new PraetorApp.ViewModels.Ekonomika.CinnostPrehledEntry();
                         result.cas = x.cas;
-                        result.datum = new Date(x.datum);
+                        result.datum = Controllers.DateTools.GetDateTimeFromJsonFormat(x.datum);
                         result.id_TimeSheet = x.id_Cinnost;
                         result.popis = x.popis;
                         result.predmetSpisu = x.predmetSpisu;
                         result.spisovaZnacka = x.spisovaZnacka;
                         return result;
                     }));
-                    var requestSince = new Date(request.cinnostiSince);
+                    var requestSince = Controllers.DateTools.GetDateTimeFromJsonFormat(request.cinnostiSince);
                     if (requestSince < _this.DateSince)
                         _this.DateSince = requestSince;
-                    var requestUntil = new Date(request.cinnostiUntil);
+                    var requestUntil = Controllers.DateTools.GetDateTimeFromJsonFormat(request.cinnostiUntil);
                     if (requestUntil > _this.DateUntil)
                         _this.DateUntil = requestUntil;
                     _this.RebuildList();
@@ -1171,8 +1184,8 @@ var PraetorApp;
             };
             HomeCinnostiController.prototype.LoadPreviousDay = function () {
                 var request = {};
-                request.cinnostiUntil = this.DateSince.toJSON();
-                request.cinnostiSince = this.AddDays(this.DateSince, -1).toJSON();
+                request.cinnostiUntil = Controllers.DateTools.GetDateInJsonFormat(this.DateSince);
+                request.cinnostiSince = Controllers.DateTools.GetDateInJsonFormat(this.AddDays(this.DateSince, -1));
                 this.LoadData(request);
             };
             HomeCinnostiController.prototype.OpenCinnost = function (cinnost) {
@@ -1478,15 +1491,9 @@ var PraetorApp;
                 // Grab a reference to the root div element.
                 this._rootElement = this.element[0];
                 // Watch for the changing of the value attributes.
-                this.scope.$watch(function () {
-                    return _this.scope.icon;
-                }, _.bind(this.icon_listener, this));
-                this.scope.$watch(function () {
-                    return _this.scope.iconSize;
-                }, _.bind(this.iconSize_listener, this));
-                this.scope.$watch(function () {
-                    return _this.scope.text;
-                }, _.bind(this.text_listener, this));
+                this.scope.$watch(function () { return _this.scope.icon; }, _.bind(this.icon_listener, this));
+                this.scope.$watch(function () { return _this.scope.iconSize; }, _.bind(this.iconSize_listener, this));
+                this.scope.$watch(function () { return _this.scope.text; }, _.bind(this.text_listener, this));
                 // Fire a created event sending along this directive instance.
                 // Parent scopes can listen for this so they can obtain a reference
                 // to the instance so they can call getters/setters etc.
@@ -1655,19 +1662,17 @@ var PraetorApp;
                     return [];
                 }
                 var out = [];
-                _.each(input, function (row) {
-                    var jeTam = false;
-                    _.each(row, function (property, key) {
-                        if (key == "id_Spis")
-                            return;
-                        if (property.indexOf(search) != -1) {
-                            jeTam = true;
-                        }
-                    });
-                    if (jeTam)
-                        out.push(row);
+                input.filter(function (value, index, array) {
                     if (out.length >= 50)
                         return;
+                    if (value.spisovaZnacka != undefined || value.spisovaZnacka != "")
+                        search += value.spisovaZnacka.toLowerCase();
+                    if (value.predmet != undefined || value.predmet != "")
+                        search += value.predmet.toLowerCase();
+                    if (value.hlavniKlient != undefined || value.hlavniKlient != "")
+                        search += value.hlavniKlient.toLowerCase();
+                    if (search.indexOf(search.toLowerCase()) >= 0)
+                        out.push(value);
                 });
                 return out;
             };
@@ -2239,6 +2244,7 @@ var PraetorApp;
                         };
                         return $delegate.call(this, method, url, data, interceptor, headers);
                     };
+                    /* tslint:disable:forin */
                     for (var key in $delegate) {
                         proxy[key] = $delegate[key];
                     }
@@ -2644,7 +2650,8 @@ var PraetorApp;
                 var data = { username: username, password: password };
                 this.$http.post('http://' + server + '/praetorapi/login', data, {
                     headers: { 'Content-Type': 'application/json' }
-                }).then(function (response) {
+                })
+                    .then(function (response) {
                     q.resolve(response.data);
                 })['catch'](function (e) {
                     q.resolve({ success: false, message: "Error " + e.status + "|" + e.message });
@@ -2660,7 +2667,7 @@ var PraetorApp;
                 }
                 if (options.ShowProgress) {
                     this.$ionicLoading.show({
-                        template: '<i class="icon ion-loading-c"></i>'
+                        template: '<i class="icon ion-load-c"></i>'
                     });
                 }
                 var q = this.$q.defer();
@@ -2672,7 +2679,8 @@ var PraetorApp;
                     this.$location.path("/app/login");
                     this.$location.replace();
                 }
-                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, { headers: { 'Content-Type': 'application/json' } }).then(function (response) {
+                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, { headers: { 'Content-Type': 'application/json' } })
+                    .then(function (response) {
                     if (options.ShowProgress) {
                         _this.$ionicLoading.hide();
                     }
@@ -3465,9 +3473,7 @@ var PraetorApp;
                     return "";
                 }
                 // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-                return str.replace(/\w\S*/g, function (txt) {
-                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-                });
+                return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
             };
             /**
              * Used to format a string by replacing values with the given arguments.
@@ -3518,6 +3524,7 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
+                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3553,6 +3560,7 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
+                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3661,6 +3669,7 @@ var PraetorApp;
                 j;
                 // Start out with an empty string.
                 guid = "";
+                // Now loop 35 times to generate 35 characters.
                 for (j = 0; j < 32; j++) {
                     // Characters at these indexes are always hyphens.
                     if (j === 8 || j === 12 || j === 16 || j === 20) {

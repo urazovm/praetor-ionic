@@ -5,7 +5,7 @@
         public static ID = "HomeCinnostiController";
 
         public static get $inject(): string[] {
-            return ["$scope", Services.PraetorService.ID, Services.PraetorService.ID, Services.FileUtilities.ID, Services.UiHelper.ID];
+            return ["$scope", Services.PraetorService.ID, Services.FileUtilities.ID, Services.UiHelper.ID];
         }
 
         private PraetorService: Services.PraetorService;

@@ -1104,7 +1104,7 @@ var PraetorApp;
             }
             Object.defineProperty(HomeCinnostiController, "$inject", {
                 get: function () {
-                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.PraetorService.ID, PraetorApp.Services.FileUtilities.ID, PraetorApp.Services.UiHelper.ID];
+                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.FileUtilities.ID, PraetorApp.Services.UiHelper.ID];
                 },
                 enumerable: true,
                 configurable: true

@@ -4,7 +4,7 @@
   xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" 
   xmlns:gap="http://phonegap.com/ns/1.0" 
   id="cz.praetor-systems.praetor2" 
-  version="1.0.130"
+  version="1.0.131"
   xmlns="http://www.w3.org/ns/widgets" 
   defaultlocale="cs-CZ">
   
@@ -24,7 +24,7 @@
    <preference name="EnableViewportScale" value="false"/>
    <preference name="KeyboardShrinksView" value="false" />
    
-  <!--<preference name="permissions" value="none"/>-->
+  <preference name="permissions" value="none"/>
   <preference name="windows-target-version" value="8.1" />
   <preference name="windows-phone-target-version" value="8.1" />
   <preference name="phonegap-version" value="3.7.0" />

@@ -50,6 +50,7 @@ declare module PraetorServer.Service.WebServer.Messages {
 	}
 	interface LoadSpisZakladniUdajeResponse extends PraetorServer.Service.WebServer.Messages.Response {
 		spis: PraetorServer.Service.WebServer.Messages.Dto.Spis;
+		subjekty: PraetorServer.Service.WebServer.Messages.Dto.SpisSubjekt[];
 	}
 	interface LoadSpisDokumentyRequest extends PraetorServer.Service.WebServer.Messages.Request {
 		id_Spis: System.Guid;
@@ -96,10 +97,11 @@ declare module PraetorServer.Service.WebServer.Messages.Dto {
 	interface CinnostPrehledEntry {
 		id_Cinnost: System.Guid;
 		datum: Date;
-		cas: string;
+		cas: number;
 		popis: string;
 		spisovaZnacka: string;
 		predmetSpisu: string;
+		hlavniKlient: string;
 	}
 	interface Spis {
 		id_Spis: System.Guid;
@@ -114,6 +116,21 @@ declare module PraetorServer.Service.WebServer.Messages.Dto {
 		procesniStav: string;
 		poznamka: string;
 		odpovednyAdvokat: string;
+	}
+	interface SpisSubjekt {
+		idRole: number;
+		idProcesniRole: number;
+		jeHlavniKlient: boolean;
+		jeHlavniPlatce: boolean;
+		identifikace: string;
+		oznaceni: string;
+		stitky: string;
+		spojeni: PraetorServer.Service.WebServer.Messages.Dto.Spojeni[];
+	}
+	interface Spojeni {
+		jePreferovane: boolean;
+		spojeni: string;
+		idTypSpojeni: System.Guid;
 	}
 	interface DokumentNode {
 		id: System.Guid;

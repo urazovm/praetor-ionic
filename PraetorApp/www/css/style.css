@@ -38,3 +38,31 @@
     min-width: 24px;
     min-height: 24px;
 }
+
+.right-float-overlay {
+    float: right;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding-left: 10px;
+    background-color: white;
+}
+
+.right-float-overlay-support {
+    position: relative;
+}
+
+.item.activated .right-float-overlay {
+    background-color: #D9D9D9;
+}
+
+.button-right-float {
+    float: right !important;
+    position: static !important;
+    line-height: inherit !important;
+}
+
+.right-float {
+    float: right !important;
+    margin-left: 10px !important;
+}

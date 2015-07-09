@@ -219,7 +219,9 @@ var PraetorApp;
                 instance.render();
             };
             // Finally, return a function that returns this Angular directive descriptor object.
-            return function () { return descriptor; };
+            return function () {
+                return descriptor;
+            };
         }
         /**
          * Used to create an array of injection property names followed by a function that will be
@@ -252,7 +254,9 @@ var PraetorApp;
          * @param fn The function that will provide the filter's logic.
          */
         function getFilterFactoryFunction(fn) {
-            return function () { return fn; };
+            return function () {
+                return fn;
+            };
         }
         //#endregion
         //#region Platform Configuration
@@ -821,6 +825,14 @@ var PraetorApp;
             DateTools.GetDateTimeFromJsonFormat = function (date) {
                 return moment(date).toDate();
             };
+            DateTools.FormatAsHourDurationFromMinutes = function (duration) {
+                return this.FormatAsHourDuration(moment.duration({ minutes: duration }));
+            };
+            DateTools.FormatAsHourDuration = function (duration) {
+                var hours = Math.floor(duration.asHours());
+                var minutes = duration.minutes();
+                return hours + ":" + (minutes < 10 ? "0" : "") + minutes;
+            };
             return DateTools;
         })();
         Controllers.DateTools = DateTools;
@@ -1046,7 +1058,7 @@ var PraetorApp;
                     _this.viewModel.Aktivita = _.find(response.aktivity, function (x) { return x.id_Aktivita == response.cinnost.id_Aktivita; });
                     _this.AktivitaChanged();
                 }, function (ex) {
-                    _this.close();
+                    _this.close(new Controllers.CinnostResult(false));
                 });
             };
             CinnostController.prototype.SaveData = function () {
@@ -1056,7 +1068,7 @@ var PraetorApp;
                 this.viewModel.Data.id_Aktivita = this.viewModel.Aktivita.id_Aktivita;
                 request.cinnost = this.viewModel.Data;
                 this.PraetorService.SaveCinnost(request).then(function (response) {
-                    _this.close();
+                    _this.close(new Controllers.CinnostResult(true));
                 });
             };
             CinnostController.prototype.AktivitaChanged = function () {
@@ -1066,7 +1078,7 @@ var PraetorApp;
                     this.viewModel.Data.popis = aktivita.popis;
             };
             CinnostController.prototype.Cancel = function () {
-                this.close();
+                this.close(new Controllers.CinnostResult(false));
             };
             CinnostController.prototype.Shown = function () {
                 this.LoadData();
@@ -1146,19 +1158,20 @@ var PraetorApp;
             };
             HomeCinnostiController.prototype.RebuildList = function () {
                 var list = new Array();
-                for (var i = 0; i < this.Cinnosti.length; i++) {
-                    var currentDatum = this.GetDate(this.Cinnosti[i].datum);
-                    var datumEntry = _.find(list, function (x) { return x.datum.getTime() == currentDatum.getTime(); });
-                    if (!datumEntry) {
-                        datumEntry = new PraetorApp.ViewModels.Ekonomika.CinnostDateGroup();
-                        datumEntry.datum = currentDatum;
-                        datumEntry.datumString = currentDatum.toLocaleDateString();
-                        datumEntry.cinnosti = new Array();
-                        list.push(datumEntry);
-                    }
-                    datumEntry.cinnosti.push(this.Cinnosti[i]);
+                var dateUntil = moment(this.DateUntil);
+                var dateSince = dateUntil.clone().add(-1, "days");
+                while (dateSince >= moment(this.DateSince)) {
+                    var datumEntry = new PraetorApp.ViewModels.Ekonomika.CinnostDateGroup();
+                    datumEntry.datum = dateSince.clone().toDate();
+                    datumEntry.datumString = dateSince.format("dddd D. M. YYYY");
+                    datumEntry.cinnosti = _.select(this.Cinnosti, function (x) { return moment(x.datum) >= dateSince && moment(x.datum) < dateUntil; });
+                    datumEntry.cas = _.sum(datumEntry.cinnosti, function (x) { return x.cas; });
+                    datumEntry.casString = Controllers.DateTools.FormatAsHourDurationFromMinutes(datumEntry.cas);
+                    list.push(datumEntry);
+                    dateUntil = dateSince.clone();
+                    dateSince = dateSince.add(-1, "days");
                 }
-                this.viewModel.PrehledCinnosti.Cinnosti = _.sortBy(list, function (x) { return x.datum; }).reverse();
+                this.viewModel.PrehledCinnosti.Cinnosti = list;
             };
             HomeCinnostiController.prototype.LoadData = function (request) {
                 var _this = this;
@@ -1166,11 +1179,13 @@ var PraetorApp;
                     _this.Cinnosti = _this.Cinnosti.concat(_.map(response.cinnosti, function (x) {
                         var result = new PraetorApp.ViewModels.Ekonomika.CinnostPrehledEntry();
                         result.cas = x.cas;
+                        result.casString = Controllers.DateTools.FormatAsHourDurationFromMinutes(x.cas);
                         result.datum = Controllers.DateTools.GetDateTimeFromJsonFormat(x.datum);
                         result.id_TimeSheet = x.id_Cinnost;
                         result.popis = x.popis;
                         result.predmetSpisu = x.predmetSpisu;
                         result.spisovaZnacka = x.spisovaZnacka;
+                        result.hlavniKlient = x.hlavniKlient;
                         return result;
                     }));
                     var requestSince = Controllers.DateTools.GetDateTimeFromJsonFormat(request.cinnostiSince);
@@ -1198,8 +1213,9 @@ var PraetorApp;
                     var id_Spis = result.Id_Spis;
                     var params = new Controllers.CinnostParams(id_Spis, date);
                     var options = new PraetorApp.Models.DialogOptions(params);
-                    _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, options).then(function () {
-                        _this.ReloadData();
+                    _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, options).then(function (result) {
+                        if (result.Success)
+                            _this.ReloadData();
                     });
                 });
             };
@@ -1211,8 +1227,9 @@ var PraetorApp;
                     var id_Spis = result.Id_Spis;
                     var params = new Controllers.CinnostParams(id_Spis);
                     var options = new PraetorApp.Models.DialogOptions(params);
-                    _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, options).then(function () {
-                        _this.ReloadData();
+                    _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, options).then(function (result) {
+                        if (result.Success)
+                            _this.ReloadData();
                     });
                 });
             };
@@ -1491,9 +1508,15 @@ var PraetorApp;
                 // Grab a reference to the root div element.
                 this._rootElement = this.element[0];
                 // Watch for the changing of the value attributes.
-                this.scope.$watch(function () { return _this.scope.icon; }, _.bind(this.icon_listener, this));
-                this.scope.$watch(function () { return _this.scope.iconSize; }, _.bind(this.iconSize_listener, this));
-                this.scope.$watch(function () { return _this.scope.text; }, _.bind(this.text_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.icon;
+                }, _.bind(this.icon_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.iconSize;
+                }, _.bind(this.iconSize_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.text;
+                }, _.bind(this.text_listener, this));
                 // Fire a created event sending along this directive instance.
                 // Parent scopes can listen for this so they can obtain a reference
                 // to the instance so they can call getters/setters etc.
@@ -1767,36 +1790,6 @@ var PraetorApp;
             return DialogOptions;
         })();
         Models.DialogOptions = DialogOptions;
-    })(Models = PraetorApp.Models || (PraetorApp.Models = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var Models;
-    (function (Models) {
-        var PinEntryDialogModel = (function () {
-            function PinEntryDialogModel(promptText, pinToMatch, showBackButton) {
-                this.promptText = promptText;
-                this.pinToMatch = pinToMatch;
-                this.showBackButton = showBackButton;
-            }
-            return PinEntryDialogModel;
-        })();
-        Models.PinEntryDialogModel = PinEntryDialogModel;
-    })(Models = PraetorApp.Models || (PraetorApp.Models = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var Models;
-    (function (Models) {
-        var PinEntryDialogResultModel = (function () {
-            function PinEntryDialogResultModel(matches, cancelled, pin) {
-                this.matches = matches;
-                this.cancelled = cancelled;
-                this.pin = pin;
-            }
-            return PinEntryDialogResultModel;
-        })();
-        Models.PinEntryDialogResultModel = PinEntryDialogResultModel;
     })(Models = PraetorApp.Models || (PraetorApp.Models = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
@@ -2244,7 +2237,6 @@ var PraetorApp;
                         };
                         return $delegate.call(this, method, url, data, interceptor, headers);
                     };
-                    /* tslint:disable:forin */
                     for (var key in $delegate) {
                         proxy[key] = $delegate[key];
                     }
@@ -2650,8 +2642,7 @@ var PraetorApp;
                 var data = { username: username, password: password };
                 this.$http.post('http://' + server + '/praetorapi/login', data, {
                     headers: { 'Content-Type': 'application/json' }
-                })
-                    .then(function (response) {
+                }).then(function (response) {
                     q.resolve(response.data);
                 })['catch'](function (e) {
                     q.resolve({ success: false, message: "Error " + e.status + "|" + e.message });
@@ -2679,8 +2670,7 @@ var PraetorApp;
                     this.$location.path("/app/login");
                     this.$location.replace();
                 }
-                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, { headers: { 'Content-Type': 'application/json' } })
-                    .then(function (response) {
+                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, { headers: { 'Content-Type': 'application/json' } }).then(function (response) {
                     if (options.ShowProgress) {
                         _this.$ionicLoading.hide();
                     }
@@ -3473,7 +3463,9 @@ var PraetorApp;
                     return "";
                 }
                 // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-                return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+                return str.replace(/\w\S*/g, function (txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                });
             };
             /**
              * Used to format a string by replacing values with the given arguments.
@@ -3524,7 +3516,6 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
-                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3560,7 +3551,6 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
-                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3669,7 +3659,6 @@ var PraetorApp;
                 j;
                 // Start out with an empty string.
                 guid = "";
-                // Now loop 35 times to generate 35 characters.
                 for (j = 0; j < 32; j++) {
                     // Characters at these indexes are always hyphens.
                     if (j === 8 || j === 12 || j === 16 || j === 20) {

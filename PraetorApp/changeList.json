@@ -200,15 +200,19 @@
     "www\\templates\\home\\spisy.html.REMOTE.html",
     "www\\templates\\directives\\prehled-spisu.html.LOCAL.html",
     "www\\templates\\directives\\prehled-spisu.html.REMOTE.html",
-    "www\\templates\\directives\\prehled-spisu.html.BASE.html"
+    "www\\templates\\directives\\prehled-spisu.html.BASE.html",
+    "www\\css\\style.css.REMOTE.css",
+    "www\\css\\style.css.BASE.css",
+    "www\\css\\style.css.LOCAL.css",
+    "scripts\\Models\\Dialogs\\PinEntryDialogModel.ts",
+    "scripts\\Models\\Dialogs\\PinEntryDialogResultModel.ts"
   ],
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json",
-    "www\\templates\\ekonomika\\cinnost.html"
+    "plugins\\android.json"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

@@ -1,14 +1,19 @@
 ﻿<div>
     <div class="list">
         <div ng-repeat="datumGroup in viewModel.Cinnosti">
-            <div class="item item-divider item-button-right">
+            <div class="item item-divider">
                 {{datumGroup.datumString}}
-                <button class="button ion-plus-round" ng-click="onAddClick({date:datumGroup.datum})"></button>
+                <span class="right-float">{{datumGroup.casString}}</span>
+                <button class="button button-clear ion-plus-round button-right-float" ng-click="onAddClick({date:datumGroup.datum})"></button>
             </div>
             <div ng-repeat="cinnost in datumGroup.cinnosti">
                 <a class="item" ng-click="onCinnostClick({cinnost:cinnost})">
-                    <h2 ng-bind-html="cinnost.cas + ' - ' + cinnost.popis" style="font-weight: bold"></h2>
-                    <span ng-bind-html="cinnost.spisovaZnacka + ' ' + cinnost.predmetSpisu" style="font-size: 75%; color: #3f3f3f"></span>
+                    <h2 class="right-float-overlay-support" style="font-size: 85%">
+                        {{cinnost.spisovaZnacka + ' ' + cinnost.predmetSpisu}}
+                        <div class="right-float-overlay" ng-bind-html="cinnost.casString"></div>
+                    </h2>
+                    <p ng-bind-html="cinnost.hlavniKlient" style="font-size: 85%; color: #3f3f3f"></p>
+                    <p ng-bind-html="cinnost.popis" style="font-size: 65%; color: #3f3f3f"></p>
                 </a>
             </div>
         </div>

@@ -54,20 +54,23 @@
         public RebuildList() {
             var list = new Array<PraetorApp.ViewModels.Ekonomika.CinnostDateGroup>();
 
-            for (var i = 0; i < this.Cinnosti.length; i++) {
-                var currentDatum = this.GetDate(this.Cinnosti[i].datum);
-                var datumEntry = _.find(list, x => x.datum.getTime() == currentDatum.getTime());
-                if (!datumEntry) {
-                    datumEntry = new PraetorApp.ViewModels.Ekonomika.CinnostDateGroup();
-                    datumEntry.datum = currentDatum;
-                    datumEntry.datumString = currentDatum.toLocaleDateString();
-                    datumEntry.cinnosti = new Array<PraetorApp.ViewModels.Ekonomika.CinnostPrehledEntry>();
-                    list.push(datumEntry);
-                }
-                datumEntry.cinnosti.push(this.Cinnosti[i]);
+            var dateUntil = moment(this.DateUntil);
+            var dateSince = dateUntil.clone().add(-1, "days");
+
+            while (dateSince >= moment(this.DateSince)) {
+                var datumEntry = new PraetorApp.ViewModels.Ekonomika.CinnostDateGroup();
+                datumEntry.datum = dateSince.clone().toDate();
+                datumEntry.datumString = dateSince.format("dddd D. M. YYYY");
+                datumEntry.cinnosti = _.select(this.Cinnosti, x => moment(x.datum) >= dateSince && moment(x.datum) < dateUntil);
+                datumEntry.cas = _.sum(datumEntry.cinnosti, x => x.cas);
+                datumEntry.casString = DateTools.FormatAsHourDurationFromMinutes(datumEntry.cas);
+                list.push(datumEntry);
+
+                dateUntil = dateSince.clone();
+                dateSince = dateSince.add(-1, "days");
             }
 
-            this.viewModel.PrehledCinnosti.Cinnosti = _.sortBy(list, x => x.datum).reverse();
+            this.viewModel.PrehledCinnosti.Cinnosti = list;
         }
 
         public LoadData(request: PraetorServer.Service.WebServer.Messages.LoadCinnostiRequest) {
@@ -75,12 +78,14 @@
                 response => {
                     this.Cinnosti = this.Cinnosti.concat(_.map(response.cinnosti, x => {
                         var result = new PraetorApp.ViewModels.Ekonomika.CinnostPrehledEntry();
-                        result.cas = <any>x.cas;
+                        result.cas = x.cas;
+                        result.casString = DateTools.FormatAsHourDurationFromMinutes(x.cas);
                         result.datum = DateTools.GetDateTimeFromJsonFormat(x.datum);
                         result.id_TimeSheet = x.id_Cinnost;
                         result.popis = x.popis;
                         result.predmetSpisu = x.predmetSpisu;
                         result.spisovaZnacka = x.spisovaZnacka;
+                        result.hlavniKlient = x.hlavniKlient;
                         return result;
                     }));
 
@@ -117,8 +122,9 @@
                     var params = new CinnostParams(id_Spis, date);
                     var options = new Models.DialogOptions(params);
                     this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(
-                        () => {
-                            this.ReloadData();
+                        (result: CinnostResult) => {
+                            if (result.Success)
+                                this.ReloadData();
                         }
                         );
                 }
@@ -135,8 +141,9 @@
                     var params = new CinnostParams(id_Spis);
                     var options = new Models.DialogOptions(params);
                     this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(
-                        () => {
-                            this.ReloadData();
+                        (result: CinnostResult) => {
+                            if (result.Success)
+                                this.ReloadData();
                         }
                         );
                 }

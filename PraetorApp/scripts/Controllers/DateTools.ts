@@ -11,5 +11,16 @@
         public static GetDateTimeFromJsonFormat(date: Date): Date {
             return moment(date).toDate();
         }
+
+        public static FormatAsHourDurationFromMinutes(duration: number): string {
+            return this.FormatAsHourDuration(moment.duration({ minutes: duration }));
+        }
+
+        public static FormatAsHourDuration(duration: moment.Duration): string {
+            var hours = Math.floor(duration.asHours());
+            var minutes = duration.minutes();
+
+            return hours + ":" + (minutes < 10 ? "0" : "") + minutes;
+        }
     }
 }

@@ -40,7 +40,7 @@
                     this.AktivitaChanged();
                 },
                 ex => {
-                    this.close();
+                    this.close(new CinnostResult(false));
                 }
             );
         }
@@ -53,7 +53,7 @@
 
             this.PraetorService.SaveCinnost(request).then(
                 response => {
-                    this.close();
+                    this.close(new CinnostResult(true));
                 }
             );
         }
@@ -67,7 +67,7 @@
         }
 
         public Cancel() {
-            this.close();
+            this.close(new CinnostResult(false));
         }
 
         private Shown() {

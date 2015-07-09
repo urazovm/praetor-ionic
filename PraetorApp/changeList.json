@@ -71,7 +71,6 @@
     "www\\scripts\\Main.js",
     "www\\res\\android\\splash\\drawable-land-xhdpi-screen.png",
     "packages.config",
-    "config.xml",
     "www\\res\\android\\splash\\drawable-port-mdpi-screen.png",
     "www\\res\\wp8\\icon\\ApplicationIcon.png",
     "www\\scripts\\appBundle.js",
@@ -110,7 +109,6 @@
     "www\\res\\drawable-port-mdpi\\splash.png",
     "www\\res\\android\\splash\\drawable-port-xhdpi-screen.png",
     "www\\lib\\md5.js",
-    "www\\config.xml",
     "www\\res\\ios\\icon\\icon-76.png",
     "www\\css\\style.css",
     "www\\templates\\settings\\about.html",
@@ -135,7 +133,9 @@
     "www\\res\\drawable-land-mdpi\\splash.png",
     "www\\res\\drawable-xxxhdpi\\splash.png",
     "www\\res\\drawable-xxhdpi\\icon.png",
-    "www\\res\\android\\splash\\drawable-port-hdpi-screen.png"
+    "www\\res\\android\\splash\\drawable-port-hdpi-screen.png",
+    "config.xml",
+    "www\\config.xml"
   ],
   "deletedFilesIos": [],
   "addedPluginsIos": [],

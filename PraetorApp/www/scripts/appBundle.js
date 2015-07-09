@@ -83,6 +83,10 @@ var PraetorApp;
         Application.main = main;
         function onkeyboardshow() {
             console.log("hiding tabs:" + new Date());
+            if (document.getElementById('style_hidetabs')) {
+                console.log('already hidden');
+                return;
+            }
             var style = document.createElement("style");
             style.appendChild(document.createTextNode("div.tabs.tab-nav {display: none !important } .has-tabs { bottom: 0 !important }"));
             style.id = 'style_hidetabs';

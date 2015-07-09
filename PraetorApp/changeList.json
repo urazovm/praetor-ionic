@@ -238,17 +238,7 @@
   "deletedPluginsIos": [],
   "changedFiles": [
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json",
-    "www\\css\\style.css",
-    "www\\index.html",
-    "www\\templates\\home.html",
-    "www\\templates\\home\\cinnosti.html",
-    "www\\templates\\home\\spisy.html",
-    "www\\scripts\\appBundle.js",
-    "www\\templates\\spis.html",
-    "www\\templates\\settings\\login.html",
-    "www\\config.xml",
-    "www\\templates\\spis\\zakladniudaje.html"
+    "plugins\\android.json"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

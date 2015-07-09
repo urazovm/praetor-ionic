@@ -41,7 +41,7 @@
 
             var configure = <ng.IRequestShortcutConfig>{};
             configure.timeout = 4000;
-            configure.headers = { 'Content-Type': 'application/json' }; 
+            configure.headers = { 'Content-Type': 'application/json' };
 
             this.$http.post(
                 'http://' + server + '/praetorapi/login',
@@ -69,7 +69,10 @@
             if (!options) {
                 options = new GetDataOptions();
                 options.ShowMessage = true;
-                options.ShowProgress = true;
+
+                // odstraníme jen dočasně metodu na načítání
+                // nyní je imlementována v točítku nahoře
+                options.ShowProgress = false;
             }
 
             if (options.ShowProgress) {
@@ -89,10 +92,10 @@
                 this.$location.path("/app/login");
                 this.$location.replace();
             }
-            
+
             var configure = <ng.IRequestShortcutConfig>{};
             configure.timeout = 10000;
-            configure.headers = { 'Content-Type': 'application/json' };            
+            configure.headers = { 'Content-Type': 'application/json' };
 
             var promise = this.$http.post<PraetorServer.Service.WebServer.Messages.Response>(
                 'http://' + server + '/praetorapi/' + action,

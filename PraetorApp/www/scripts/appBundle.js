@@ -2642,7 +2642,9 @@ var PraetorApp;
                 if (!options) {
                     options = new GetDataOptions();
                     options.ShowMessage = true;
-                    options.ShowProgress = true;
+                    // odstraníme jen dočasně metodu na načítání
+                    // nyní je imlementována v točítku nahoře
+                    options.ShowProgress = false;
                 }
                 if (options.ShowProgress) {
                     this.$ionicLoading.show({

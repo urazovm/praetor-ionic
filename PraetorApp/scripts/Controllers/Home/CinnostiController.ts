@@ -58,7 +58,7 @@
         }
 
         public RebuildList() {
-            var list = new Array <PraetorApp.ViewModels.Ekonomika.CinnostDateGroup>();
+            var list = new Array<PraetorApp.ViewModels.Ekonomika.CinnostDateGroup>();
 
             for (var i = 0; i < this.Cinnosti.length; i++) {
                 var currentDatum = this.GetDate(this.Cinnosti[i].datum);
@@ -114,25 +114,37 @@
         }
 
         public CreateDatedCinnost(date: Date) {
-            // TODO: načíst ID spisu z dialogu.
-            var id_Spis = "e84dc039-7bfb-4b6d-846a-00ab7cb7bc10";
-            var params = new CinnostParams(id_Spis, date);
-            var options = new Models.DialogOptions(params);
-            this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(
-                () => {
-                    this.ReloadData();
+            this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, new Models.DialogOptions()).then(
+                (result: VyberSpisuResult) => {
+                    if (!result.Success)
+                        return;
+
+                    var id_Spis = result.Id_Spis;
+                    var params = new CinnostParams(id_Spis, date);
+                    var options = new Models.DialogOptions(params);
+                    this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(
+                        () => {
+                            this.ReloadData();
+                        }
+                        );
                 }
                 );
         }
 
         public CreateCinnost() {
-            // TODO: načíst ID spisu z dialogu.
-            var id_Spis = "e84dc039-7bfb-4b6d-846a-00ab7cb7bc10";
-            var params = new CinnostParams(id_Spis);
-            var options = new Models.DialogOptions(params);
-            this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(
-                () => {
-                    this.ReloadData();
+            this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, new Models.DialogOptions()).then(
+                (result: VyberSpisuResult) => {
+                    if (!result.Success)
+                        return;
+
+                    var id_Spis = result.Id_Spis;
+                    var params = new CinnostParams(id_Spis);
+                    var options = new Models.DialogOptions(params);
+                    this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(
+                        () => {
+                            this.ReloadData();
+                        }
+                        );
                 }
                 );
         }

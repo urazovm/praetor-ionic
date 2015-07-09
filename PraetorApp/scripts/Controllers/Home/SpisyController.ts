@@ -43,20 +43,6 @@
             }, 100);
         }
 
-        show(s: boolean) {
-            if (s) {
-                var style = document.createElement("style");
-                style.appendChild(document.createTextNode("div.tabs.tab-nav {display: none !important } .has-tabs { bottom: 0 !important }"));
-                style.id = 'style_hidetabs';
-                document.head.appendChild(style);
-            }
-            else {
-                var el = document.getElementById('style_hidetabs');
-                el.parentNode.removeChild(el);
-            }
-
-        }
-
         changeDataSource() {                
             // Došlo k změně u registrované komponenty
             // aktualizujeme seznam spisů

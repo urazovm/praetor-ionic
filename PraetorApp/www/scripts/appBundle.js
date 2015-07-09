@@ -213,7 +213,9 @@ var PraetorApp;
                 instance.render();
             };
             // Finally, return a function that returns this Angular directive descriptor object.
-            return function () { return descriptor; };
+            return function () {
+                return descriptor;
+            };
         }
         /**
          * Used to create an array of injection property names followed by a function that will be
@@ -246,7 +248,9 @@ var PraetorApp;
          * @param fn The function that will provide the filter's logic.
          */
         function getFilterFactoryFunction(fn) {
-            return function () { return fn; };
+            return function () {
+                return fn;
+            };
         }
         //#endregion
         //#region Platform Configuration
@@ -1169,22 +1173,28 @@ var PraetorApp;
             };
             HomeCinnostiController.prototype.CreateDatedCinnost = function (date) {
                 var _this = this;
-                // TODO: načíst ID spisu z dialogu.
-                var id_Spis = "e84dc039-7bfb-4b6d-846a-00ab7cb7bc10";
-                var params = new Controllers.CinnostParams(id_Spis, date);
-                var options = new PraetorApp.Models.DialogOptions(params);
-                this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(function () {
-                    _this.ReloadData();
+                this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, new PraetorApp.Models.DialogOptions()).then(function (result) {
+                    if (!result.Success)
+                        return;
+                    var id_Spis = result.Id_Spis;
+                    var params = new Controllers.CinnostParams(id_Spis, date);
+                    var options = new PraetorApp.Models.DialogOptions(params);
+                    _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, options).then(function () {
+                        _this.ReloadData();
+                    });
                 });
             };
             HomeCinnostiController.prototype.CreateCinnost = function () {
                 var _this = this;
-                // TODO: načíst ID spisu z dialogu.
-                var id_Spis = "e84dc039-7bfb-4b6d-846a-00ab7cb7bc10";
-                var params = new Controllers.CinnostParams(id_Spis);
-                var options = new PraetorApp.Models.DialogOptions(params);
-                this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(function () {
-                    _this.ReloadData();
+                this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, new PraetorApp.Models.DialogOptions()).then(function (result) {
+                    if (!result.Success)
+                        return;
+                    var id_Spis = result.Id_Spis;
+                    var params = new Controllers.CinnostParams(id_Spis);
+                    var options = new PraetorApp.Models.DialogOptions(params);
+                    _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, options).then(function () {
+                        _this.ReloadData();
+                    });
                 });
             };
             HomeCinnostiController.ID = "HomeCinnostiController";
@@ -1226,18 +1236,6 @@ var PraetorApp;
                     _this.$state.go('app.spis.zakladniudaje', { id: spis.id_Spis });
                     _this.scope.$apply();
                 }, 100);
-            };
-            HomeSpisyController.prototype.show = function (s) {
-                if (s) {
-                    var style = document.createElement("style");
-                    style.appendChild(document.createTextNode("div.tabs.tab-nav {display: none !important } .has-tabs { bottom: 0 !important }"));
-                    style.id = 'style_hidetabs';
-                    document.head.appendChild(style);
-                }
-                else {
-                    var el = document.getElementById('style_hidetabs');
-                    el.parentNode.removeChild(el);
-                }
             };
             HomeSpisyController.prototype.changeDataSource = function () {
                 // Došlo k změně u registrované komponenty
@@ -1351,6 +1349,64 @@ var PraetorApp;
 (function (PraetorApp) {
     var Controllers;
     (function (Controllers) {
+        var VyberSpisuController = (function (_super) {
+            __extends(VyberSpisuController, _super);
+            function VyberSpisuController($scope, PraetorService, Utilities, Preferences, UiHelper, SpisyUtilities) {
+                _super.call(this, $scope, PraetorApp.ViewModels.Spis.VyberSpisuViewModel, UiHelper.DialogIds.VyberSpisu);
+                this.PraetorService = PraetorService;
+                this.Utilities = Utilities;
+                this.Preferences = Preferences;
+                this.UiHelper = UiHelper;
+                this.scope.$on("modal.shown", _.bind(this.Shown, this));
+                this.SpisyUtilities = SpisyUtilities;
+                this.SpisyUtilities.register(this);
+                this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
+                this.viewModel.PrehledSpisu.posledniSpisy = this.SpisyUtilities.Spisy;
+            }
+            Object.defineProperty(VyberSpisuController, "$inject", {
+                get: function () {
+                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.Utilities.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.SpisyUtilities.ID];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            VyberSpisuController.prototype.SelectSpis = function (spis) {
+                this.close(new Controllers.VyberSpisuResult(true, spis.id_Spis));
+            };
+            VyberSpisuController.prototype.Cancel = function () {
+                this.close(new Controllers.VyberSpisuResult(false, undefined));
+            };
+            VyberSpisuController.prototype.Shown = function () {
+            };
+            VyberSpisuController.prototype.changeDataSource = function () {
+                // Došlo k změně u registrované komponenty
+                // aktualizujeme seznam spisů
+                this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
+            };
+            VyberSpisuController.ID = "VyberSpisuController";
+            return VyberSpisuController;
+        })(Controllers.BaseDialogController);
+        Controllers.VyberSpisuController = VyberSpisuController;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
+        var VyberSpisuResult = (function () {
+            function VyberSpisuResult(success, id_Spis) {
+                this.Success = success;
+                this.Id_Spis = id_Spis;
+            }
+            return VyberSpisuResult;
+        })();
+        Controllers.VyberSpisuResult = VyberSpisuResult;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
         var SpisZakladniUdajeController = (function (_super) {
             __extends(SpisZakladniUdajeController, _super);
             function SpisZakladniUdajeController($scope, $location, $http, $state, $stateParams, Utilities, UiHelper, Preferences, PraetorService) {
@@ -1405,9 +1461,15 @@ var PraetorApp;
                 // Grab a reference to the root div element.
                 this._rootElement = this.element[0];
                 // Watch for the changing of the value attributes.
-                this.scope.$watch(function () { return _this.scope.icon; }, _.bind(this.icon_listener, this));
-                this.scope.$watch(function () { return _this.scope.iconSize; }, _.bind(this.iconSize_listener, this));
-                this.scope.$watch(function () { return _this.scope.text; }, _.bind(this.text_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.icon;
+                }, _.bind(this.icon_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.iconSize;
+                }, _.bind(this.iconSize_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.text;
+                }, _.bind(this.text_listener, this));
                 // Fire a created event sending along this directive instance.
                 // Parent scopes can listen for this so they can obtain a reference
                 // to the instance so they can call getters/setters etc.
@@ -2120,7 +2182,6 @@ var PraetorApp;
                         };
                         return $delegate.call(this, method, url, data, interceptor, headers);
                     };
-                    /* tslint:disable:forin */
                     for (var key in $delegate) {
                         proxy[key] = $delegate[key];
                     }
@@ -2526,8 +2587,7 @@ var PraetorApp;
                 var data = { username: username, password: password };
                 this.$http.post('http://' + server + '/praetorapi/login', data, {
                     headers: { 'Content-Type': 'application/json' }
-                })
-                    .then(function (response) {
+                }).then(function (response) {
                     q.resolve(response.data);
                 })['catch'](function (e) {
                     q.resolve({ success: false, message: "Error " + e.status + "|" + e.message });
@@ -2555,8 +2615,7 @@ var PraetorApp;
                     this.$location.path("/app/login");
                     this.$location.replace();
                 }
-                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, { headers: { 'Content-Type': 'application/json' } })
-                    .then(function (response) {
+                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, { headers: { 'Content-Type': 'application/json' } }).then(function (response) {
                     if (options.ShowProgress) {
                         _this.$ionicLoading.hide();
                     }
@@ -2899,7 +2958,8 @@ var PraetorApp;
                  * Constant IDs for the dialogs. For use with the showDialog helper method.
                  */
                 this.DialogIds = {
-                    Cinnost: "CINNOST_DIALOG"
+                    Cinnost: "CINNOST_DIALOG",
+                    VyberSpisu: "VYBER_SPISU_DIALOG"
                 };
                 this.isPinEntryOpen = false;
                 this.$rootScope = $rootScope;
@@ -3175,7 +3235,8 @@ var PraetorApp;
              * The template's root element should have a controller that extends BaseDialogController.
              */
             UiHelper.dialogTemplateMap = {
-                "CINNOST_DIALOG": "templates/ekonomika/cinnost.html"
+                "CINNOST_DIALOG": "templates/ekonomika/cinnost.html",
+                "VYBER_SPISU_DIALOG": "templates/spis/vyber-spisu.html"
             };
             return UiHelper;
         })();
@@ -3344,7 +3405,9 @@ var PraetorApp;
                     return "";
                 }
                 // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-                return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+                return str.replace(/\w\S*/g, function (txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                });
             };
             /**
              * Used to format a string by replacing values with the given arguments.
@@ -3395,7 +3458,6 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
-                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3431,7 +3493,6 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
-                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3540,7 +3601,6 @@ var PraetorApp;
                 j;
                 // Start out with an empty string.
                 guid = "";
-                // Now loop 35 times to generate 35 characters.
                 for (j = 0; j < 32; j++) {
                     // Characters at these indexes are always hyphens.
                     if (j === 8 || j === 12 || j === 16 || j === 20) {
@@ -3747,6 +3807,21 @@ var PraetorApp;
                 return DokumentyViewModel;
             })();
             Spis.DokumentyViewModel = DokumentyViewModel;
+        })(Spis = ViewModels.Spis || (ViewModels.Spis = {}));
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
+        var Spis;
+        (function (Spis) {
+            var VyberSpisuViewModel = (function () {
+                function VyberSpisuViewModel() {
+                }
+                return VyberSpisuViewModel;
+            })();
+            Spis.VyberSpisuViewModel = VyberSpisuViewModel;
         })(Spis = ViewModels.Spis || (ViewModels.Spis = {}));
     })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
 })(PraetorApp || (PraetorApp = {}));

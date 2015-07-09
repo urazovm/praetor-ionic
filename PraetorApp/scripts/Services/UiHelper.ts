@@ -32,7 +32,8 @@
          * Constant IDs for the dialogs. For use with the showDialog helper method.
          */
         public DialogIds = {
-            Cinnost: "CINNOST_DIALOG"
+            Cinnost: "CINNOST_DIALOG",
+            VyberSpisu: "VYBER_SPISU_DIALOG"
         };
 
         /**
@@ -41,7 +42,8 @@
          * The template's root element should have a controller that extends BaseDialogController.
          */
         private static dialogTemplateMap = {
-            "CINNOST_DIALOG": "templates/ekonomika/cinnost.html"
+            "CINNOST_DIALOG": "templates/ekonomika/cinnost.html",
+            "VYBER_SPISU_DIALOG": "templates/spis/vyber-spisu.html"
         };
 
         //#endregion

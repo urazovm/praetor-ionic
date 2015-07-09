@@ -5,7 +5,7 @@
         public static ID = "SpisController";
 
         public static get $inject(): string[]{
-            return ["$scope", "$location", "$http", "$stateParams", Services.Utilities.ID, Services.UiHelper.ID, Services.Preferences.ID, Services.PraetorService.ID, Services.FileUtilities.ID];
+            return ["$scope", "$location", "$http", "$state",  "$stateParams", Services.Utilities.ID, Services.UiHelper.ID, Services.Preferences.ID, Services.PraetorService.ID, Services.FileUtilities.ID];
         }
 
         private $location: ng.ILocationService;
@@ -15,9 +15,10 @@
         private Preferences: Services.Preferences;
         private $ionicHistory: any;
         private PraetorService: Services.PraetorService;
-        private FileService: Services.FileUtilities;
+        private FileService: Services.FileUtilities;        
+        private $state: ng.ui.IStateService;
 
-        constructor($scope: ng.IScope, $location: ng.ILocationService, $http: ng.IHttpService, $stateParams, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences, PraetorService: Services.PraetorService, FileService: Services.FileUtilities) {
+        constructor($scope: ng.IScope, $location: ng.ILocationService, $http: ng.IHttpService, $state: ng.ui.IStateService, $stateParams, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences, PraetorService: Services.PraetorService, FileService: Services.FileUtilities) {
             super($scope, ViewModels.SpisViewModel);
             
             this.$location = $location;
@@ -28,24 +29,29 @@
             this.PraetorService = PraetorService;
             this.FileService = FileService;
             this.viewModel.id_spis = $stateParams.id;
-            this.loadSpis();
-            this.loadDokumenty();       
+            this.$state = $state;          
+            
+            // načteme data
+            this.reloadData();      
         }
 
-        private loadSpis() {
+        private loadSpis() {   
+            this.onBeforeLoading();         
             var request = <PraetorServer.Service.WebServer.Messages.LoadSpisZakladniUdajeRequest>{};
             request.id_Spis = this.viewModel.id_spis;
             this.PraetorService.loadSpisZakladniUdaje(request).then((response) => {
                 this.viewModel.spis = response.spis;
-                this.viewModel.subjekty = response.subjekty;
+                this.onAftterLoading();
             });
         }
 
         loadDokumenty() {
+            this.onBeforeLoading();
             var request = <PraetorServer.Service.WebServer.Messages.LoadSpisDokumentyRequest>{};
             request.id_Spis = this.viewModel.id_spis;
             this.PraetorService.loadSpisDokumenty(request).then((response) => {
                 this.viewModel.dokumenty = response.dokumenty;
+                this.onAftterLoading();
             });
         }
 
@@ -72,6 +78,11 @@
                     this.UiHelper.alert("Činnost se nepodařilo uložit.");
                 }
                 );
+        }
+
+        reloadData() {
+            this.loadSpis();
+            this.loadDokumenty();
         }
     }
 }

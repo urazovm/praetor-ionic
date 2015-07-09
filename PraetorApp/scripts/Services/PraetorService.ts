@@ -39,17 +39,26 @@
 
             var data = { username: username, password: password };
 
+            var configure = <ng.IRequestShortcutConfig>{};
+            configure.timeout = 4000;
+            configure.headers = { 'Content-Type': 'application/json' };
+
             this.$http.post(
                 'http://' + server + '/praetorapi/login',
                 data,
-                {
-                    headers: { 'Content-Type': 'application/json' }
-                })
+                configure)
                 .then(function (response: ng.IHttpPromiseCallbackArg<PraetorServer.Service.WebServer.Messages.LoginResponse>) {
                 q.resolve(response.data);
             })
             ['catch'](function (e) {
-                q.resolve({ success: false, message: "Error " + e.status + "|" + e.message });
+
+                if (e.status == 0) {
+                    // Ukončeno timeoutem
+                    q.resolve({ success: false, message: "Nepodařilo se připojit k serveru: " + server });
+                }
+                else {
+                    q.resolve({ success: false, message: "Error " + e.status + "|" + e.message });
+                }
             });
 
             return q.promise;
@@ -60,7 +69,10 @@
             if (!options) {
                 options = new GetDataOptions();
                 options.ShowMessage = true;
-                options.ShowProgress = true;
+
+                // odstraníme jen dočasně metodu na načítání
+                // nyní je imlementována v točítku nahoře
+                options.ShowProgress = false;
             }
 
             if (options.ShowProgress) {
@@ -81,10 +93,14 @@
                 this.$location.replace();
             }
 
+            var configure = <ng.IRequestShortcutConfig>{};
+            configure.timeout = 10000;
+            configure.headers = { 'Content-Type': 'application/json' };
+
             var promise = this.$http.post<PraetorServer.Service.WebServer.Messages.Response>(
                 'http://' + server + '/praetorapi/' + action,
                 data,
-                { headers: { 'Content-Type': 'application/json' } })
+                configure)
                 .then(response => {
 
                 if (options.ShowProgress) {

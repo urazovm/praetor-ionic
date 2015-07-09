@@ -21,16 +21,18 @@
                 if (out.length >= 50)
                     return;
 
+                var rowData = "";
+
                 if (value.spisovaZnacka != undefined || value.spisovaZnacka != "")
-                    search += value.spisovaZnacka.toLowerCase()
+                    rowData += value.spisovaZnacka.toLowerCase() + "|#|";
 
                 if (value.predmet != undefined || value.predmet != "")
-                    search += value.predmet.toLowerCase()
+                    rowData += value.predmet.toLowerCase() + "|#|";
 
                 if (value.hlavniKlient != undefined || value.hlavniKlient != "")
-                    search += value.hlavniKlient.toLowerCase()
+                    rowData += value.hlavniKlient.toLowerCase() + "|#|";
 
-                if (search.indexOf(search.toLowerCase()) >= 0)
+                if (rowData.indexOf(search.toLowerCase()) >= 0)
                     out.push(value);
             });
 

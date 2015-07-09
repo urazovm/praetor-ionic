@@ -809,6 +809,27 @@ var PraetorApp;
 (function (PraetorApp) {
     var Controllers;
     (function (Controllers) {
+        var DateTools = (function () {
+            function DateTools() {
+            }
+            DateTools.GetDateInJsonFormat = function (date) {
+                return moment(date).format("YYYY-MM-DD");
+            };
+            DateTools.GetDateTimeInJsonFormat = function (date) {
+                return moment(date).format("YYYY-MM-DDTHH:mm:ss");
+            };
+            DateTools.GetDateTimeFromJsonFormat = function (date) {
+                return moment(date).toDate();
+            };
+            return DateTools;
+        })();
+        Controllers.DateTools = DateTools;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
         var HomeController = (function (_super) {
             __extends(HomeController, _super);
             function HomeController($scope, $location, $http, Utilities, UiHelper, Preferences, SpisyUtilities) {
@@ -1021,7 +1042,7 @@ var PraetorApp;
                     if (params.Date)
                         _this.viewModel.Datum = params.Date;
                     else
-                        _this.viewModel.Datum = new Date(response.cinnost.datum);
+                        _this.viewModel.Datum = Controllers.DateTools.GetDateTimeFromJsonFormat(response.cinnost.datum);
                     _this.viewModel.Aktivita = _.find(response.aktivity, function (x) { return x.id_Aktivita == response.cinnost.id_Aktivita; });
                     _this.AktivitaChanged();
                 }, function (ex) {
@@ -1031,7 +1052,7 @@ var PraetorApp;
             CinnostController.prototype.SaveData = function () {
                 var _this = this;
                 var request = {};
-                this.viewModel.Data.datum = this.viewModel.Datum.toJSON();
+                this.viewModel.Data.datum = Controllers.DateTools.GetDateInJsonFormat(this.viewModel.Datum);
                 this.viewModel.Data.id_Aktivita = this.viewModel.Aktivita.id_Aktivita;
                 request.cinnost = this.viewModel.Data;
                 this.PraetorService.SaveCinnost(request).then(function (response) {
@@ -1098,8 +1119,8 @@ var PraetorApp;
                 this.DateSince = this.AddDays(this.GetDate(now), 1);
                 this.DateUntil = this.DateSince;
                 var request = {};
-                request.cinnostiUntil = this.DateUntil.toJSON();
-                request.cinnostiSince = this.AddDays(this.DateSince, -1).toJSON();
+                request.cinnostiUntil = Controllers.DateTools.GetDateInJsonFormat(this.DateUntil);
+                request.cinnostiSince = Controllers.DateTools.GetDateInJsonFormat(this.AddDays(this.DateSince, -1));
                 this.viewModel.PrehledCinnosti = new PraetorApp.ViewModels.PrehledCinnostiViewModel();
                 this.Cinnosti = [];
                 this.LoadData(request);
@@ -1122,8 +1143,8 @@ var PraetorApp;
             };
             HomeCinnostiController.prototype.ReloadData = function () {
                 var request = {};
-                request.cinnostiUntil = this.DateUntil.toJSON();
-                request.cinnostiSince = this.DateSince.toJSON();
+                request.cinnostiUntil = Controllers.DateTools.GetDateInJsonFormat(this.DateUntil);
+                request.cinnostiSince = Controllers.DateTools.GetDateInJsonFormat(this.DateSince);
                 this.Cinnosti = [];
                 this.LoadData(request);
             };
@@ -1149,17 +1170,17 @@ var PraetorApp;
                     _this.Cinnosti = _this.Cinnosti.concat(_.map(response.cinnosti, function (x) {
                         var result = new PraetorApp.ViewModels.Ekonomika.CinnostPrehledEntry();
                         result.cas = x.cas;
-                        result.datum = new Date(x.datum);
+                        result.datum = Controllers.DateTools.GetDateTimeFromJsonFormat(x.datum);
                         result.id_TimeSheet = x.id_Cinnost;
                         result.popis = x.popis;
                         result.predmetSpisu = x.predmetSpisu;
                         result.spisovaZnacka = x.spisovaZnacka;
                         return result;
                     }));
-                    var requestSince = new Date(request.cinnostiSince);
+                    var requestSince = Controllers.DateTools.GetDateTimeFromJsonFormat(request.cinnostiSince);
                     if (requestSince < _this.DateSince)
                         _this.DateSince = requestSince;
-                    var requestUntil = new Date(request.cinnostiUntil);
+                    var requestUntil = Controllers.DateTools.GetDateTimeFromJsonFormat(request.cinnostiUntil);
                     if (requestUntil > _this.DateUntil)
                         _this.DateUntil = requestUntil;
                     _this.RebuildList();
@@ -1167,8 +1188,8 @@ var PraetorApp;
             };
             HomeCinnostiController.prototype.LoadPreviousDay = function () {
                 var request = {};
-                request.cinnostiUntil = this.DateSince.toJSON();
-                request.cinnostiSince = this.AddDays(this.DateSince, -1).toJSON();
+                request.cinnostiUntil = Controllers.DateTools.GetDateInJsonFormat(this.DateSince);
+                request.cinnostiSince = Controllers.DateTools.GetDateInJsonFormat(this.AddDays(this.DateSince, -1));
                 this.LoadData(request);
             };
             HomeCinnostiController.prototype.OpenCinnost = function (cinnost) {

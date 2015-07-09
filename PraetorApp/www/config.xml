@@ -3,6 +3,7 @@
   xmlns:cdv="http://cordova.apache.org/ns/1.0" 
   xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" 
   xmlns:gap="http://phonegap.com/ns/1.0" 
+  xmlns:android   = "http://schemas.android.com/apk/res/android"
   id="cz.praetor-systems.praetor2" 
   version="1.0.132"
   xmlns="http://www.w3.org/ns/widgets" 
@@ -17,7 +18,7 @@
   
    <gap:config-file platform="android" parent="/manifest">
       <application android:theme="@android:style/Theme.NoTitleBar"></application>
-    </gap:config-file>
+   </gap:config-file>
   
   <preference name="SplashScreen" value="splash" />  
   

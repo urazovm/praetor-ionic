@@ -170,7 +170,6 @@
     "config.xml",
     "www\\res\\android\\splash\\drawable-port-mdpi-screen.png",
     "www\\res\\wp8\\icon\\ApplicationIcon.png",
-    "www\\scripts\\appBundle.js",
     "www\\templates\\directives\\prehled-spisu.html",
     "www\\css\\nprogress-overrides.css",
     "www\\res\\drawable-hdpi\\icon.png",
@@ -231,16 +230,13 @@
     "www\\res\\drawable-land-mdpi\\splash.png",
     "www\\res\\drawable-xxxhdpi\\splash.png",
     "www\\res\\drawable-xxhdpi\\icon.png",
-    "www\\res\\android\\splash\\drawable-port-hdpi-screen.png"
+    "www\\res\\android\\splash\\drawable-port-hdpi-screen.png",
+    "www\\scripts\\appBundle.js"
   ],
-  "deletedFilesIos": [
-    "scripts\\Controllers\\Spis\\ZakladniUdajeController.ts",
-    "scripts\\Controllers\\Spis\\SpisDokumentyController.ts"
-  ],
+  "deletedFilesIos": [],
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
-    "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
     "plugins\\android.json",
     "www\\config.xml"

@@ -1017,6 +1017,7 @@ var PraetorApp;
                 request.id_Spis = this.viewModel.id_spis;
                 this.PraetorService.loadSpisZakladniUdaje(request).then(function (response) {
                     _this.viewModel.spis = response.spis;
+                    _this.viewModel.subjekty = response.subjekty;
                     _this.onAftterLoading();
                 });
             };

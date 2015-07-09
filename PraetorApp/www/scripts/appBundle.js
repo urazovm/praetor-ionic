@@ -1831,6 +1831,7 @@ var PraetorApp;
                 return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token + '.' + pripona);
             };
             FileUtilities.prototype.openUrl = function (path) {
+                console.log("opening: " + path);
                 var q = this.$q.defer();
                 window.handleDocumentWithURL(function () {
                     console.log('success');

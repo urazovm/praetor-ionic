@@ -24,6 +24,9 @@
 
         public openUrl(path: string): ng.IPromise<boolean> {
             console.log("opening: " + path);
+            
+            var q = this.$q.defer<boolean>();
+
             (<any>window).handleDocumentWithURL(
                 function () {
                     console.log('success');

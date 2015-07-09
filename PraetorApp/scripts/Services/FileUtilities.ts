@@ -18,8 +18,8 @@
             this.Preferences = Preferences;
         }       
 
-        public openFile(token: string): ng.IPromise<boolean> {
-            return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token);
+        public openFile(token: string, pripona: string): ng.IPromise<boolean> {
+            return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token + '#.' + pripona);
         }
 
         public openUrl(path: string): ng.IPromise<boolean> {

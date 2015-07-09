@@ -97,6 +97,12 @@ module PraetorApp.Application {
     }
 
     function onkeyboardshow() {
+        console.log("hiding tabs:" + new Date());
+        if (document.getElementById('style_hidetabs')) {
+            console.log('already hidden');
+            return;
+        }
+
         var style = document.createElement("style");
         style.appendChild(document.createTextNode("div.tabs.tab-nav {display: none !important } .has-tabs { bottom: 0 !important }"));
         style.id = 'style_hidetabs';
@@ -104,6 +110,7 @@ module PraetorApp.Application {
     }
 
     function onkeyboardhide() {
+        console.log("showing tabs:" + new Date());
         var el = document.getElementById('style_hidetabs');
         if(el) el.parentNode.removeChild(el);
     }
@@ -325,7 +332,7 @@ module PraetorApp.Application {
         // Subscribe to device events.
         document.addEventListener("pause", _.bind(device_pause, null, Preferences));
         document.addEventListener("resume", _.bind(device_resume, null, $location, $ionicViewService, Utilities, UiHelper, Preferences));
-        document.addEventListener("menubutton", _.bind(device_menuButton, null, $rootScope));
+       // document.addEventListener("menubutton", _.bind(device_menuButton, null, $rootScope));
 
         // Subscribe to Angular events.
         $rootScope.$on("$locationChangeStart", angular_locationChangeStart);

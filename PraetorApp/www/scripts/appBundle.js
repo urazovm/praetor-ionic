@@ -82,12 +82,18 @@ var PraetorApp;
         }
         Application.main = main;
         function onkeyboardshow() {
+            console.log("hiding tabs:" + new Date());
+            if (document.getElementById('style_hidetabs')) {
+                console.log('already hidden');
+                return;
+            }
             var style = document.createElement("style");
             style.appendChild(document.createTextNode("div.tabs.tab-nav {display: none !important } .has-tabs { bottom: 0 !important }"));
             style.id = 'style_hidetabs';
             document.head.appendChild(style);
         }
         function onkeyboardhide() {
+            console.log("showing tabs:" + new Date());
             var el = document.getElementById('style_hidetabs');
             if (el)
                 el.parentNode.removeChild(el);
@@ -281,7 +287,7 @@ var PraetorApp;
             // Subscribe to device events.
             document.addEventListener("pause", _.bind(device_pause, null, Preferences));
             document.addEventListener("resume", _.bind(device_resume, null, $location, $ionicViewService, Utilities, UiHelper, Preferences));
-            document.addEventListener("menubutton", _.bind(device_menuButton, null, $rootScope));
+            // document.addEventListener("menubutton", _.bind(device_menuButton, null, $rootScope));
             // Subscribe to Angular events.
             $rootScope.$on("$locationChangeStart", angular_locationChangeStart);
             // Now that the platform is ready, we'll delegate to the resume event.
@@ -987,7 +993,7 @@ var PraetorApp;
                 var request = {};
                 request.id_file = dokument.id;
                 this.PraetorService.getFileToken(request).then(function (response) {
-                    _this.FileService.openFile(response.token, dokument.pripona);
+                    _this.FileService.openFile(response.token, dokument.nazev + '.' + dokument.pripona);
                 });
             };
             SpisController.ID = "SpisController";
@@ -1360,14 +1366,6 @@ var PraetorApp;
                 request.id_Spis = this.viewModel.id_spis;
                 this.PraetorService.loadSpisDokumenty(request).then(function (response) {
                     _this.viewModel.dokumenty = response.dokumenty;
-                });
-            };
-            SpisDokumentyController.prototype.openDokument = function (dokument) {
-                var _this = this;
-                var request = {};
-                request.id_file = dokument.id;
-                this.PraetorService.getFileToken(request).then(function (response) {
-                    _this.FileService.openFile(response.token, dokument.pripona);
                 });
             };
             SpisDokumentyController.ID = "SpisDokumentyController";
@@ -1846,10 +1844,11 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
-            FileUtilities.prototype.openFile = function (token, pripona) {
-                return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token + '.' + pripona);
+            FileUtilities.prototype.openFile = function (token, name) {
+                return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token + '/' + name);
             };
             FileUtilities.prototype.openUrl = function (path) {
+                console.log("opening document: " + path);
                 var q = this.$q.defer();
                 window.handleDocumentWithURL(function () {
                     console.log('success');

@@ -44,14 +44,14 @@
             });
         }
 
-        openDokument(dokument: PraetorServer.Service.WebServer.Messages.Dto.DokumentNode) {
+        //openDokument(dokument: PraetorServer.Service.WebServer.Messages.Dto.DokumentNode) {
 
-            var request = <PraetorServer.Service.WebServer.Messages.GetFileTokenRequest>{};
-            request.id_file = dokument.id;
+        //    var request = <PraetorServer.Service.WebServer.Messages.GetFileTokenRequest>{};
+        //    request.id_file = dokument.id;
 
-            this.PraetorService.getFileToken(request).then((response) => {
-                this.FileService.openFile(<string>response.token, dokument.pripona);
-            });            
-        }
+        //    this.PraetorService.getFileToken(request).then((response) => {
+        //        this.FileService.openFile(<string>response.token, dokument.pripona);
+        //    });            
+        //}
     }
 }

@@ -217,7 +217,6 @@
     "www\\res\\android\\splash\\drawable-port-hdpi-screen.png",
     "scripts\\Controllers\\Dialogs\\Void.ts",
     "scripts\\Controllers\\Spis\\SpisDokumentyController.ts",
-    "www\\scripts\\appBundle.js",
     "scripts\\ViewModels\\Ekonomika\\CinnostViewModel.ts",
     "scripts\\Controllers\\Ekonomika\\CinnostResult.ts",
     "scripts\\Controllers\\Home\\CinnostiController.ts",
@@ -234,7 +233,8 @@
     "scripts\\ViewModels\\Spis\\VyberSpisuViewModel.ts",
     "scripts\\Controllers\\Spis\\VyberSpisuResult.ts",
     "www\\templates\\spis\\vyber-spisu.html",
-    "scripts\\Filters\\PrehledSpisuFilter.ts"
+    "scripts\\Filters\\PrehledSpisuFilter.ts",
+    "www\\scripts\\appBundle.js"
   ],
   "deletedFilesIos": [
     "www\\templates\\home.html.LOCAL.html",
@@ -256,14 +256,10 @@
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
-    "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json",
-    "www\\config.xml"
+    "plugins\\android.json"
   ],
-  "deletedFiles": [
-    "www\\lib\\angular-filter.min.js"
-  ],
+  "deletedFiles": [],
   "addedPlugins": [],
   "deletedPlugins": []
 }

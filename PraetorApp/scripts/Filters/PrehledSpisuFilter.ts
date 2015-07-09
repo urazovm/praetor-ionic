@@ -23,13 +23,13 @@
 
                 var rowData = "";
 
-                if (value.spisovaZnacka != undefined || value.spisovaZnacka != "")
+                if (value.spisovaZnacka)
                     rowData += value.spisovaZnacka.toLowerCase() + "|#|";
 
-                if (value.predmet != undefined || value.predmet != "")
+                if (value.predmet)
                     rowData += value.predmet.toLowerCase() + "|#|";
 
-                if (value.hlavniKlient != undefined || value.hlavniKlient != "")
+                if (value.hlavniKlient)
                     rowData += value.hlavniKlient.toLowerCase() + "|#|";
 
                 if (rowData.indexOf(search.toLowerCase()) >= 0)

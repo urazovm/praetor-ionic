@@ -19,10 +19,10 @@
             </div>
         </div>
     </div>
-    <div ng-show="searchText!=''">
+    <div ng-show="searchText != ''">
         <div class="list">
             <div class="item item-divider">Hledání: {{searchText}}</div>
-            <div ng-repeat="spis in viewModel.vsechnySpisy | PrehledSpisuFilter: searchText">
+            <div ng-repeat="spis in viewModel.vsechnySpisy | PrehledSpisuFilter : searchText">
                 <a class="item" ng-click="onSpisClick({spis:spis})">
                     <!--<h2 ng-bind-html="spis.spisovaZnacka + ' ' + spis.predmet | highlight:searchText"></h2>-->
                     <h2 ng-bind-html="spis.spisovaZnacka + ' ' + spis.predmet"></h2>

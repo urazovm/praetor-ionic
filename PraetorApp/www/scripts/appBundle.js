@@ -1628,19 +1628,17 @@ var PraetorApp;
                     return [];
                 }
                 var out = [];
-                _.each(input, function (row) {
-                    var jeTam = false;
-                    _.each(row, function (property, key) {
-                        if (key == "id_Spis")
-                            return;
-                        if (property.indexOf(search) != -1) {
-                            jeTam = true;
-                        }
-                    });
-                    if (jeTam)
-                        out.push(row);
+                input.filter(function (value, index, array) {
                     if (out.length >= 50)
                         return;
+                    if (value.spisovaZnacka != undefined || value.spisovaZnacka != "")
+                        search += value.spisovaZnacka.toLowerCase();
+                    if (value.predmet != undefined || value.predmet != "")
+                        search += value.predmet.toLowerCase();
+                    if (value.hlavniKlient != undefined || value.hlavniKlient != "")
+                        search += value.hlavniKlient.toLowerCase();
+                    if (search.indexOf(search.toLowerCase()) >= 0)
+                        out.push(value);
                 });
                 return out;
             };

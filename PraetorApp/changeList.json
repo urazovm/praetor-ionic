@@ -234,7 +234,6 @@
     "scripts\\ViewModels\\Spis\\VyberSpisuViewModel.ts",
     "scripts\\Controllers\\Spis\\VyberSpisuResult.ts",
     "www\\templates\\spis\\vyber-spisu.html",
-    "www\\lib\\angular-filter.min.js",
     "scripts\\Filters\\PrehledSpisuFilter.ts"
   ],
   "deletedFilesIos": [
@@ -251,16 +250,20 @@
     "scripts\\Controllers\\Home\\VykazovaniController.ts",
     "www\\templates\\home\\vykazovani.html",
     "www\\templates\\ekonomika\\timeSheet.html",
-    "scripts\\Filters\\ThousandsFilter - Copy.ts"
+    "scripts\\Filters\\ThousandsFilter - Copy.ts",
+    "www\\lib\\angular-filter.min.js"
   ],
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json"
+    "plugins\\android.json",
+    "www\\config.xml"
   ],
-  "deletedFiles": [],
+  "deletedFiles": [
+    "www\\lib\\angular-filter.min.js"
+  ],
   "addedPlugins": [],
   "deletedPlugins": []
 }

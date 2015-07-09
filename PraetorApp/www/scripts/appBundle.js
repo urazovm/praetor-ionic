@@ -962,7 +962,7 @@ var PraetorApp;
                 var request = {};
                 request.id_file = dokument.id;
                 this.PraetorService.getFileToken(request).then(function (response) {
-                    _this.FileService.openFile(response.token, dokument.pripona);
+                    _this.FileService.openFile(response.token);
                 });
             };
             SpisController.ID = "SpisController";
@@ -1329,11 +1329,10 @@ var PraetorApp;
             };
             SpisDokumentyController.prototype.openDokument = function (dokument) {
                 var _this = this;
-                debugger;
                 var request = {};
                 request.id_file = dokument.id;
                 this.PraetorService.getFileToken(request).then(function (response) {
-                    _this.FileService.openFile(response.token, dokument.pripona);
+                    _this.FileService.openFile(response.token);
                 });
             };
             SpisDokumentyController.ID = "SpisDokumentyController";
@@ -1810,8 +1809,8 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
-            FileUtilities.prototype.openFile = function (token, pripona) {
-                return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token + '#' + pripona);
+            FileUtilities.prototype.openFile = function (token) {
+                return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token);
             };
             FileUtilities.prototype.openUrl = function (path) {
                 var q = this.$q.defer();

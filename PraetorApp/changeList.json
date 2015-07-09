@@ -243,7 +243,6 @@
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
     "plugins\\android.json",
-    "config.xml",
     "www\\config.xml"
   ],
   "deletedFiles": [],

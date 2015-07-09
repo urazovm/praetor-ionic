@@ -15,6 +15,10 @@
   <access origin="*" />
   <vs:features />
   
+   <gap:config-file platform="android" parent="/manifest">
+      <application android:theme="@android:style/Theme.NoTitleBar"></application>
+    </gap:config-file>
+  
   <preference name="SplashScreen" value="splash" />  
   
   <preference name="webviewbounce" value="false" />

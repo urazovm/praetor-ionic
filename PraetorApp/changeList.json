@@ -244,13 +244,7 @@
     "www\\scripts\\BuildVars.js",
     "plugins\\android.json",
     "config.xml",
-    "www\\config.xml",
-    "www\\css\\style.css",
-    "www\\templates\\home.html",
-    "www\\templates\\home\\cinnosti.html",
-    "www\\templates\\home\\spisy.html",
-    "www\\templates\\settings\\login.html",
-    "www\\templates\\spis.html"
+    "www\\config.xml"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

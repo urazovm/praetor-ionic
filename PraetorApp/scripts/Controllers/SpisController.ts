@@ -37,6 +37,7 @@
             request.id_Spis = this.viewModel.id_spis;
             this.PraetorService.loadSpisZakladniUdaje(request).then((response) => {
                 this.viewModel.spis = response.spis;
+                this.viewModel.subjekty = response.subjekty;
             });
         }
 

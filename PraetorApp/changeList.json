@@ -212,7 +212,12 @@
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json"
+    "plugins\\android.json",
+    "www\\templates\\settings\\login.html",
+    "www\\templates\\spis.html",
+    "www\\templates\\spis\\dokumenty.html",
+    "www\\templates\\spis\\zakladniudaje.html",
+    "www\\css\\style.css"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

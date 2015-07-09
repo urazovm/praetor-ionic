@@ -1,44 +1,94 @@
-﻿<ion-view title="{{viewModel.spis.spisovaZnacka}}">
+﻿<ion-view title="Spis {{viewModel.spis.spisovaZnacka}}">
     <ion-content has-bouncing="false">
-        <h2>{{viewModel.spis.predmet}}</h2>
+        <div class="padding">
+            <h3 >{{viewModel.spis.predmet}}</h3>
+            <style>
+                table.keyvaluetable th { text-align: left; white-space: nowrap; font-weight: bold; padding-right: 3px }
+            </style>
+            <table class="keyvaluetable">
+                <tr>
+                    <th>Stav</th>
+                    <td>{{viewModel.spis.stav}}<span ng-show="viewModel.spis.procesniStav"> / {{viewModel.spis.procesniStav}}</span></td>
+                </tr>
+                <tr>
+                    <th ng-show="viewModel.spis.procesniStav">Procesní stav</th>
+                    <td>{{viewModel.spis.procesniStav}}</td>
+                </tr>
+                <tr ng-show="viewModel.spis.zpracovatel">
+                    <th>Zpracovatel</th>
+                    <td>{{viewModel.spis.zpracovatel}}</td>
+                </tr>
+                <!--<tr ng-show="viewModel.spis.odpovednyAdvokat">
+                    <th>Odpovědný advokát</th>
+                    <td>{{viewModel.spis.odpovednyAdvokat}}</td>
+                </tr>-->
+                <tr ng-show="viewModel.spis.poznamka">
+                    <th>Poznámka</th>
+                    <td>{{viewModel.spis.poznamka}}</td>
+                </tr>
+            </table>
 
-        <div class="list">
-            <label class="item item-input item-stacked-label"  ng-show="viewModel.spis.predmet != undefined">
-                <span class="input-label">Předmět</span>
-                <input type="text" placeholder="{{viewModel.spis.predmet}}" />
-            </label>
-            <label class="item item-input item-stacked-label"  ng-show="viewModel.spis.stav != undefined">
-                <span class="input-label">Stav</span>
-                <input type="text" placeholder="{{viewModel.spis.stav}}" />
-            </label>
-            <label class="item item-input item-stacked-label"  ng-show="viewModel.spis.pravniKategorie != undefined">
-                <span class="input-label">Právní kategorie</span>
-                <input type="text" placeholder="{{viewModel.spis.pravniKategorie}}" />
-            </label>
-            <label class="item item-input item-stacked-label"  ng-show="viewModel.spis.procesniStav != undefined">
-                <span class="input-label">Procesní stav</span>
-                <input type="text" placeholder="{{viewModel.spis.procesniStav}}" />
-            </label>
-            <label class="item item-input item-stacked-label"  ng-show="viewModel.spis.odpovednyAdvokat != undefined">
-                <span class="input-label">Odpovědný advokát</span>
-                <input type="text" placeholder="{{viewModel.spis.odpovednyAdvokat}}" />
-            </label>
-            <label class="item item-input item-stacked-label"  ng-show="viewModel.spis.klient != undefined">
-                <span class="input-label">Klient</span>
-                <input type="text" placeholder="{{viewModel.spis.klient}}" />
-            </label>
-            <label class="item item-input item-stacked-label"  ng-show="viewModel.spis.protislabelana != undefined">
-                <span class="input-label">Protislabelana</span>
-                <input type="text" placeholder="{{viewModel.spis.protislabelana}}" />
-            </label>
-            <label class="item item-input item-stacked-label"  ng-show="viewModel.spis.stitky != undefined">
-                <span class="input-label">Štítky</span>
-                <input type="text" placeholder="{{viewModel.spis.stitky}}" />
-            </label>
-            <label class="item item-input item-stacked-label"  ng-show="viewModel.spis.poznamka != undefined">
-                <span class="input-label">Poznámka</span>
-                <input type="text" placeholder="{{viewModel.spis.poznamka}}" />
-            </label>
+            <button class="button button-balanced icon-left ion-ios-clock-outline button-block">
+                Zapsat činnost
+            </button>
         </div>
-    </ion-content>
+        <div class="list">
+            <div class="item item-divider">Klienti</div>
+            <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Klient' }" ng-include="'subjekt_template.html'" ></div>
+            <div class="item item-divider">Protistrany</div>
+            <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Protistrana' }" ng-include="'subjekt_template.html'"></div>
+            <div class="item item-divider">Rozhodující orgány</div>
+            <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Rozhodující orgán' }" ng-include="'subjekt_template.html'"></div>
+            <div class="item item-divider">Zúčastněné subjekty</div>
+            <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Zúčastněný subjekt' }" ng-include="'subjekt_template.html'"></div>
+
+        </div>
+
+            <!--<div class="list">
+                <label class="item item-input item-stacked-label" ng-show="viewModel.spis.predmet != undefined">
+                    <span class="input-label">Předmět</span>
+                    <input type="text" placeholder="{{viewModel.spis.predmet}}" />
+                </label>
+                <label class="item item-input item-stacked-label" ng-show="viewModel.spis.stav != undefined">
+                    <span class="input-label">Stav</span>
+                    <input type="text" placeholder="{{viewModel.spis.stav}}" />
+                </label>
+                <label class="item item-input item-stacked-label" ng-show="viewModel.spis.pravniKategorie != undefined">
+                    <span class="input-label">Právní kategorie</span>
+                    <input type="text" placeholder="{{viewModel.spis.pravniKategorie}}" />
+                </label>
+                <label class="item item-input item-stacked-label" ng-show="viewModel.spis.procesniStav != undefined">
+                    <span class="input-label">Procesní stav</span>
+                    <input type="text" placeholder="{{viewModel.spis.procesniStav}}" />
+                </label>
+                <label class="item item-input item-stacked-label" ng-show="viewModel.spis.odpovednyAdvokat != undefined">
+                    <span class="input-label">Odpovědný advokát</span>
+                    <input type="text" placeholder="{{viewModel.spis.odpovednyAdvokat}}" />
+                </label>
+                <label class="item item-input item-stacked-label" ng-show="viewModel.spis.klient != undefined">
+                    <span class="input-label">Klient</span>
+                    <input type="text" placeholder="{{viewModel.spis.klient}}" />
+                </label>
+                <label class="item item-input item-stacked-label" ng-show="viewModel.spis.protislabelana != undefined">
+                    <span class="input-label">Protislabelana</span>
+                    <input type="text" placeholder="{{viewModel.spis.protislabelana}}" />
+                </label>
+                <label class="item item-input item-stacked-label" ng-show="viewModel.spis.stitky != undefined">
+                    <span class="input-label">Štítky</span>
+                    <input type="text" placeholder="{{viewModel.spis.stitky}}" />
+                </label>
+                <label class="item item-input item-stacked-label" ng-show="viewModel.spis.poznamka != undefined">
+                    <span class="input-label">Poznámka</span>
+                    <input type="text" placeholder="{{viewModel.spis.poznamka}}" />
+                </label>
+            </div>-->
+</ion-content>
 </ion-view>
+
+<script type="text/ng-template" id="subjekt_template.html">
+    <button style="float:right" class="button button-clear" ng-href="tel:{{subjekt.primarniTelefon}}" ng-show="subjekt.primarniTelefon"><i class="icon ion-ios-telephone"></i></button>
+    <button style="float:right" class="button button-clear" ng-href="mailto:{{subjekt.primarniEmail}}" ng-show="subjekt.primarniEmail"><i class="icon ion-ios-email"></i></button>
+
+    <h2>{{subjekt.oznaceni}} </h2>
+    <p>{{subjekt.procesniRole}} {{subjekt.hmotnepravniRole}}</p>
+</script>

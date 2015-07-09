@@ -116,15 +116,17 @@ declare module PraetorServer.Service.WebServer.Messages.Dto {
 		procesniStav: string;
 		poznamka: string;
 		odpovednyAdvokat: string;
+		zpracovatel: string;
 	}
 	interface SpisSubjekt {
-		idRole: number;
-		idProcesniRole: number;
+		role: string;
+		procesniRole: string;
+		hmotnepravniRole: string;
 		jeHlavniKlient: boolean;
-		jeHlavniPlatce: boolean;
-		identifikace: string;
 		oznaceni: string;
 		stitky: string;
+		primarniTelefon: string;
+		primarniEmail: string;
 		spojeni: PraetorServer.Service.WebServer.Messages.Dto.Spojeni[];
 	}
 	interface Spojeni {

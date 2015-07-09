@@ -39,6 +39,30 @@
     min-height: 24px;
 }
 
+.dir .item-icon-left {
+    padding-left: 60px;
+}
+
+.dir .item-icon-left .icon {
+    left: 20px;
+}
+
+.dir .dir .item-icon-left {
+    padding-left: 70px;
+}
+
+.dir .dir .item-icon-left .icon {
+    left: 30px;
+}
+
+.dir .dir .dir .item-icon-left {
+    padding-left: 80px;
+}
+
+.dir .dir .dir .item-icon-left .icon {
+    left: 40px;
+}
+
 .right-float-overlay {
     float: right;
     position: absolute;

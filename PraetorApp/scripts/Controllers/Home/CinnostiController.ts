@@ -27,8 +27,8 @@
             this.DateUntil = this.DateSince;
 
             var request = <PraetorServer.Service.WebServer.Messages.LoadCinnostiRequest>{};
-            request.cinnostiUntil = <any>this.DateUntil.toJSON();
-            request.cinnostiSince = <any>this.AddDays(this.DateSince, -1).toJSON();
+            request.cinnostiUntil = DateTools.GetDateInJsonFormat(this.DateUntil);
+            request.cinnostiSince = DateTools.GetDateInJsonFormat(this.AddDays(this.DateSince, -1));
             this.viewModel.PrehledCinnosti = new PraetorApp.ViewModels.PrehledCinnostiViewModel();
             this.Cinnosti = [];
 
@@ -49,8 +49,8 @@
 
         public ReloadData() {
             var request = <PraetorServer.Service.WebServer.Messages.LoadCinnostiRequest>{};
-            request.cinnostiUntil = <any>this.DateUntil.toJSON();
-            request.cinnostiSince = <any>this.DateSince.toJSON();
+            request.cinnostiUntil = DateTools.GetDateInJsonFormat(this.DateUntil);
+            request.cinnostiSince = DateTools.GetDateInJsonFormat(this.DateSince);
 
             this.Cinnosti = [];
 
@@ -82,7 +82,7 @@
                     this.Cinnosti = this.Cinnosti.concat(_.map(response.cinnosti, x => {
                         var result = new PraetorApp.ViewModels.Ekonomika.CinnostPrehledEntry();
                         result.cas = <any>x.cas;
-                        result.datum = new Date(<any>x.datum);
+                        result.datum = DateTools.GetDateTimeFromJsonFormat(x.datum);
                         result.id_TimeSheet = x.id_Cinnost;
                         result.popis = x.popis;
                         result.predmetSpisu = x.predmetSpisu;
@@ -90,10 +90,10 @@
                         return result;
                     }));
 
-                    var requestSince = new Date(<any>request.cinnostiSince);
+                    var requestSince = DateTools.GetDateTimeFromJsonFormat(request.cinnostiSince);
                     if (requestSince < this.DateSince)
                         this.DateSince = requestSince;
-                    var requestUntil = new Date(<any>request.cinnostiUntil);
+                    var requestUntil = DateTools.GetDateTimeFromJsonFormat(request.cinnostiUntil);
                     if (requestUntil > this.DateUntil)
                         this.DateUntil = requestUntil;
 
@@ -104,8 +104,8 @@
 
         public LoadPreviousDay() {
             var request = <PraetorServer.Service.WebServer.Messages.LoadCinnostiRequest>{};
-            request.cinnostiUntil = <any>this.DateSince.toJSON();
-            request.cinnostiSince = <any>this.AddDays(this.DateSince, - 1).toJSON();
+            request.cinnostiUntil = DateTools.GetDateInJsonFormat(this.DateSince);
+            request.cinnostiSince = DateTools.GetDateInJsonFormat(this.AddDays(this.DateSince, - 1));
 
             this.LoadData(request);
         }

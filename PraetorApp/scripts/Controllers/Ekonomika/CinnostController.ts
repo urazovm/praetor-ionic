@@ -35,7 +35,7 @@
                     if (params.Date)
                         this.viewModel.Datum = params.Date;
                     else
-                        this.viewModel.Datum = new Date(<any>response.cinnost.datum);
+                        this.viewModel.Datum = DateTools.GetDateTimeFromJsonFormat(response.cinnost.datum);
                     this.viewModel.Aktivita = _.find(response.aktivity, x => x.id_Aktivita == response.cinnost.id_Aktivita);
                     this.AktivitaChanged();
                 },
@@ -47,7 +47,7 @@
 
         public SaveData() {
             var request = <PraetorServer.Service.WebServer.Messages.SaveCinnostRequest>{};
-            this.viewModel.Data.datum = <any>this.viewModel.Datum.toJSON();
+            this.viewModel.Data.datum = DateTools.GetDateInJsonFormat(this.viewModel.Datum);
             this.viewModel.Data.id_Aktivita = this.viewModel.Aktivita.id_Aktivita;
             request.cinnost = this.viewModel.Data;
 

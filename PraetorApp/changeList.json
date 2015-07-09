@@ -156,7 +156,8 @@
     "scripts\\Controllers\\Spis\\VyberSpisuController.ts",
     "scripts\\ViewModels\\Spis\\VyberSpisuViewModel.ts",
     "www\\templates\\spis\\vyber-spisu.html",
-    "scripts\\Filters\\PrehledSpisuFilter.ts"
+    "scripts\\Filters\\PrehledSpisuFilter.ts",
+    "scripts\\Controllers\\DateTools.ts"
   ],
   "deletedFilesIos": [
     "scripts\\Application.ts.BASE.ts",

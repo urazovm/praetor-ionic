@@ -252,15 +252,7 @@
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json",
-    "config.xml",
-    "www\\config.xml",
-    "www\\templates\\ekonomika\\cinnost.html",
-    "www\\templates\\home\\spisy.html",
-    "scripts\\Controllers\\Spis\\VyberSpisuController.ts",
-    "scripts\\ViewModels\\Spis\\VyberSpisuViewModel.ts",
-    "scripts\\Controllers\\Spis\\VyberSpisuResult.ts",
-    "www\\templates\\spis\\vyber-spisu.html"
+    "plugins\\android.json"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

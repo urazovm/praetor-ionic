@@ -19,9 +19,11 @@
         }       
 
         public openFile(token: string): ng.IPromise<boolean> {
-            var q = this.$q.defer<boolean>();
+            return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token);
+        }
 
-            var path = 'http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token;
+        public openUrl(path: string): ng.IPromise<boolean> {
+            var q = this.$q.defer<boolean>();
 
             (<any>window).handleDocumentWithURL(
                 function () {
@@ -36,7 +38,7 @@
                     q.resolve(false);
                 },
                 path
-                );           
+                );
 
             return q.promise;
         }

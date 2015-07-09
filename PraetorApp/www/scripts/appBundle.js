@@ -1104,13 +1104,13 @@ var PraetorApp;
             }
             Object.defineProperty(HomeCinnostiController, "$inject", {
                 get: function () {
-                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.PraetorService.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.FileUtilities.ID];
+                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.PraetorService.ID, PraetorApp.Services.FileUtilities.ID, PraetorApp.Services.UiHelper.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
             HomeCinnostiController.prototype.test = function (url) {
-                this.FileUtilities.openFile(url);
+                this.FileUtilities.openUrl(url);
             };
             HomeCinnostiController.prototype.AddDays = function (date, number) {
                 return new Date(date.getFullYear(), date.getMonth(), date.getDate() + number, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
@@ -1770,8 +1770,10 @@ var PraetorApp;
                 configurable: true
             });
             FileUtilities.prototype.openFile = function (token) {
+                return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token);
+            };
+            FileUtilities.prototype.openUrl = function (path) {
                 var q = this.$q.defer();
-                var path = 'http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token;
                 window.handleDocumentWithURL(function () {
                     console.log('success');
                     q.resolve(true);

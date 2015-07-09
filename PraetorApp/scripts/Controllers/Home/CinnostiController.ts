@@ -5,7 +5,7 @@
         public static ID = "HomeCinnostiController";
 
         public static get $inject(): string[] {
-            return ["$scope", Services.PraetorService.ID, Services.PraetorService.ID, Services.UiHelper.ID, Services.FileUtilities.ID];
+            return ["$scope", Services.PraetorService.ID, Services.PraetorService.ID, Services.FileUtilities.ID, Services.UiHelper.ID];
         }
 
         private PraetorService: Services.PraetorService;
@@ -36,7 +36,7 @@
         }
 
         public test(url) {
-            this.FileUtilities.openFile(url);
+            this.FileUtilities.openUrl(url);
         }
 
         private AddDays(date: Date, number: number): Date {

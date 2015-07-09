@@ -219,7 +219,9 @@ var PraetorApp;
                 instance.render();
             };
             // Finally, return a function that returns this Angular directive descriptor object.
-            return function () { return descriptor; };
+            return function () {
+                return descriptor;
+            };
         }
         /**
          * Used to create an array of injection property names followed by a function that will be
@@ -252,7 +254,9 @@ var PraetorApp;
          * @param fn The function that will provide the filter's logic.
          */
         function getFilterFactoryFunction(fn) {
-            return function () { return fn; };
+            return function () {
+                return fn;
+            };
         }
         //#endregion
         //#region Platform Configuration
@@ -930,13 +934,13 @@ var PraetorApp;
             LoginController.prototype.http_unauthorized = function () {
                 // Unauthorized should mean that a token wasn't sent, but we'll null these out anyways.
                 this.Preferences.username = null;
-                this.Preferences.token = null;
+                this.Preferences.sessionId = null;
                 this.UiHelper.toast.showLongBottom("You do not have a token (401); please login.");
             };
             LoginController.prototype.http_forbidden = function () {
                 // A token was sent, but was no longer valid. Null out the invalid token.
                 this.Preferences.username = null;
-                this.Preferences.token = null;
+                this.Preferences.sessionId = null;
                 this.UiHelper.toast.showLongBottom("Your token has expired (403); please login again.");
             };
             LoginController.prototype.http_notFound = function () {
@@ -966,6 +970,7 @@ var PraetorApp;
                         _this.Preferences.serverUrl = _this.viewModel.server;
                         _this.Preferences.username = _this.viewModel.username;
                         _this.Preferences.password = _this.Hash.md5(_this.viewModel.password);
+                        _this.Preferences.sessionId = data.sessionId;
                         _this.$location.path("/app/home");
                         _this.$location.replace();
                     }
@@ -1492,9 +1497,15 @@ var PraetorApp;
                 // Grab a reference to the root div element.
                 this._rootElement = this.element[0];
                 // Watch for the changing of the value attributes.
-                this.scope.$watch(function () { return _this.scope.icon; }, _.bind(this.icon_listener, this));
-                this.scope.$watch(function () { return _this.scope.iconSize; }, _.bind(this.iconSize_listener, this));
-                this.scope.$watch(function () { return _this.scope.text; }, _.bind(this.text_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.icon;
+                }, _.bind(this.icon_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.iconSize;
+                }, _.bind(this.iconSize_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.text;
+                }, _.bind(this.text_listener, this));
                 // Fire a created event sending along this directive instance.
                 // Parent scopes can listen for this so they can obtain a reference
                 // to the instance so they can call getters/setters etc.
@@ -1949,8 +1960,8 @@ var PraetorApp;
                     config.headers["Content-Type"] = "application/json";
                     config.headers["Accept"] = "application/json";
                     // If we currently have a user ID and token, then include it in the authorization header.
-                    if (this.Preferences.username && this.Preferences.token) {
-                        config.headers["Authorization"] = this.getAuthorizationHeader(this.Preferences.username, this.Preferences.token);
+                    if (this.Preferences.username && this.Preferences.sessionId) {
+                        config.headers["Authorization"] = this.getAuthorizationHeader(this.Preferences.username, this.Preferences.sessionId);
                     }
                     /* tslint:enable:no-string-literal */
                     if (this.Preferences.apiUrl && this.Preferences.apiUrl) {
@@ -2216,7 +2227,6 @@ var PraetorApp;
                         };
                         return $delegate.call(this, method, url, data, interceptor, headers);
                     };
-                    /* tslint:disable:forin */
                     for (var key in $delegate) {
                         proxy[key] = $delegate[key];
                     }
@@ -2623,16 +2633,15 @@ var PraetorApp;
                 var configure = {};
                 configure.timeout = 4000;
                 configure.headers = { 'Content-Type': 'application/json' };
-                this.$http.post('http://' + server + '/praetorapi/login', data, configure)
-                    .then(function (response) {
+                this.$http.post('http://' + server + '/praetorapi/login', data, configure).then(function (response) {
                     q.resolve(response.data);
                 })['catch'](function (e) {
                     if (e.status == 0) {
                         // Ukončeno timeoutem
-                        q.resolve({ success: false, message: "Nepodařilo se připojit k serveru: " + server });
+                        q.resolve({ success: false, message: "Nepodařilo se připojit k serveru: " + server, sessionId: "" });
                     }
                     else {
-                        q.resolve({ success: false, message: "Error " + e.status + "|" + e.message });
+                        q.resolve({ success: false, message: "Error " + e.status + "|" + e.message, sessionId: "" });
                     }
                 });
                 return q.promise;
@@ -2655,6 +2664,7 @@ var PraetorApp;
                 var server = this.Preferences.serverUrl;
                 data.username = this.Preferences.username;
                 data.password = this.Preferences.password;
+                data.sessionId = this.Preferences.sessionId;
                 if (data.username == undefined || data.password == undefined || server == undefined) {
                     // Přepneme se na login obrazovku
                     this.$location.path("/app/login");
@@ -2663,8 +2673,7 @@ var PraetorApp;
                 var configure = {};
                 configure.timeout = 10000;
                 configure.headers = { 'Content-Type': 'application/json' };
-                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, configure)
-                    .then(function (response) {
+                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, configure).then(function (response) {
                     if (options.ShowProgress) {
                         _this.$ionicLoading.hide();
                     }
@@ -2844,7 +2853,7 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
-            Object.defineProperty(Preferences.prototype, "token", {
+            Object.defineProperty(Preferences.prototype, "sessionId", {
                 get: function () {
                     return localStorage.getItem(Preferences.SESSION_ID);
                 },
@@ -3457,7 +3466,9 @@ var PraetorApp;
                     return "";
                 }
                 // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-                return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+                return str.replace(/\w\S*/g, function (txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                });
             };
             /**
              * Used to format a string by replacing values with the given arguments.
@@ -3508,7 +3519,6 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
-                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3544,7 +3554,6 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
-                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3653,7 +3662,6 @@ var PraetorApp;
                 j;
                 // Start out with an empty string.
                 guid = "";
-                // Now loop 35 times to generate 35 characters.
                 for (j = 0; j < 32; j++) {
                     // Characters at these indexes are always hyphens.
                     if (j === 8 || j === 12 || j === 16 || j === 20) {

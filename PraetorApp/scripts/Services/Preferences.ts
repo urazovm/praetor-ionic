@@ -117,11 +117,11 @@
             }
         }
 
-        get token(): string {
+        get sessionId(): string {
             return localStorage.getItem(Preferences.SESSION_ID);
         }
 
-        set token(value: string) {
+        set sessionId(value: string) {
             if (value == null) {
                 localStorage.removeItem(Preferences.SESSION_ID);
             }

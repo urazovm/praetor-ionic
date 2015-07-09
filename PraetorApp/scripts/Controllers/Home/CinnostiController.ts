@@ -115,7 +115,7 @@
         public CreateDatedCinnost(date: Date) {
             this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, new Models.DialogOptions()).then(
                 (result: VyberSpisuResult) => {
-                    if (!result.Success)
+                    if (!result || !result.Success)
                         return;
 
                     var id_Spis = result.Id_Spis;
@@ -123,8 +123,12 @@
                     var options = new Models.DialogOptions(params);
                     this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(
                         (result: CinnostResult) => {
-                            if (result.Success)
+                            if (result && result.Success)
+                                this.UiHelper.toast.show("Činnost byla uložena.", "short", "center");
                                 this.ReloadData();
+                        },
+                        (ex) => {
+                            this.UiHelper.alert("Činnost se nepodařilo uložit.");
                         }
                         );
                 }
@@ -134,7 +138,7 @@
         public CreateCinnost() {
             this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, new Models.DialogOptions()).then(
                 (result: VyberSpisuResult) => {
-                    if (!result.Success)
+                    if (!result || !result.Success)
                         return;
 
                     var id_Spis = result.Id_Spis;
@@ -142,8 +146,12 @@
                     var options = new Models.DialogOptions(params);
                     this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(
                         (result: CinnostResult) => {
-                            if (result.Success)
+                            if (result && result.Success)
+                                this.UiHelper.toast.show("Činnost byla uložena.", "short", "center");
                                 this.ReloadData();
+                        },
+                        (ex) => {
+                            this.UiHelper.alert("Činnost se nepodařilo uložit.");
                         }
                         );
                 }

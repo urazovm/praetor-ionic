@@ -58,5 +58,20 @@
                 this.FileService.openFile(<string>response.token, dokument.nazev + '.' + dokument.pripona);
             });
         }
+
+        public CreateCinnost() {
+            var id_Spis = this.viewModel.id_spis;
+            var params = new CinnostParams(id_Spis);
+            var options = new Models.DialogOptions(params);
+            this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(
+                (result: CinnostResult) => {
+                    if (result && result.Success)
+                        this.UiHelper.toast.show("Činnost byla uložena.", "short", "center");
+                },
+                (ex) => {
+                    this.UiHelper.alert("Činnost se nepodařilo uložit.");
+                }
+                );
+        }
     }
 }

@@ -1005,6 +1005,18 @@ var PraetorApp;
                     _this.FileService.openFile(response.token, dokument.nazev + '.' + dokument.pripona);
                 });
             };
+            SpisController.prototype.CreateCinnost = function () {
+                var _this = this;
+                var id_Spis = this.viewModel.id_spis;
+                var params = new Controllers.CinnostParams(id_Spis);
+                var options = new PraetorApp.Models.DialogOptions(params);
+                this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(function (result) {
+                    if (result && result.Success)
+                        _this.UiHelper.toast.show("Činnost byla uložena.", "short", "center");
+                }, function (ex) {
+                    _this.UiHelper.alert("Činnost se nepodařilo uložit.");
+                });
+            };
             SpisController.ID = "SpisController";
             return SpisController;
         })(Controllers.BaseController);
@@ -1209,28 +1221,34 @@ var PraetorApp;
             HomeCinnostiController.prototype.CreateDatedCinnost = function (date) {
                 var _this = this;
                 this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, new PraetorApp.Models.DialogOptions()).then(function (result) {
-                    if (!result.Success)
+                    if (!result || !result.Success)
                         return;
                     var id_Spis = result.Id_Spis;
                     var params = new Controllers.CinnostParams(id_Spis, date);
                     var options = new PraetorApp.Models.DialogOptions(params);
                     _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, options).then(function (result) {
-                        if (result.Success)
-                            _this.ReloadData();
+                        if (result && result.Success)
+                            _this.UiHelper.toast.show("Činnost byla uložena.", "short", "center");
+                        _this.ReloadData();
+                    }, function (ex) {
+                        _this.UiHelper.alert("Činnost se nepodařilo uložit.");
                     });
                 });
             };
             HomeCinnostiController.prototype.CreateCinnost = function () {
                 var _this = this;
                 this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, new PraetorApp.Models.DialogOptions()).then(function (result) {
-                    if (!result.Success)
+                    if (!result || !result.Success)
                         return;
                     var id_Spis = result.Id_Spis;
                     var params = new Controllers.CinnostParams(id_Spis);
                     var options = new PraetorApp.Models.DialogOptions(params);
                     _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, options).then(function (result) {
-                        if (result.Success)
-                            _this.ReloadData();
+                        if (result && result.Success)
+                            _this.UiHelper.toast.show("Činnost byla uložena.", "short", "center");
+                        _this.ReloadData();
+                    }, function (ex) {
+                        _this.UiHelper.alert("Činnost se nepodařilo uložit.");
                     });
                 });
             };

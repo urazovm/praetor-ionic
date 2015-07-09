@@ -1365,47 +1365,6 @@ var PraetorApp;
 (function (PraetorApp) {
     var Controllers;
     (function (Controllers) {
-        var SpisDokumentyController = (function (_super) {
-            __extends(SpisDokumentyController, _super);
-            function SpisDokumentyController($scope, $location, $http, $state, $stateParams, Utilities, UiHelper, Preferences, FileService, PraetorService) {
-                _super.call(this, $scope, PraetorApp.ViewModels.Spis.DokumentyViewModel);
-                this.$location = $location;
-                this.$http = $http;
-                this.Utilities = Utilities;
-                this.UiHelper = UiHelper;
-                this.Preferences = Preferences;
-                this.$state = $state;
-                this.$stateParams = $stateParams;
-                this.viewModel.id_spis = this.$stateParams.id;
-                this.FileService = FileService;
-                this.PraetorService = PraetorService;
-                this.loadDokumenty();
-            }
-            Object.defineProperty(SpisDokumentyController, "$inject", {
-                get: function () {
-                    return ["$scope", "$location", "$http", "$state", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.FileUtilities.ID, PraetorApp.Services.PraetorService.ID];
-                },
-                enumerable: true,
-                configurable: true
-            });
-            SpisDokumentyController.prototype.loadDokumenty = function () {
-                var _this = this;
-                var request = {};
-                request.id_Spis = this.viewModel.id_spis;
-                this.PraetorService.loadSpisDokumenty(request).then(function (response) {
-                    _this.viewModel.dokumenty = response.dokumenty;
-                });
-            };
-            SpisDokumentyController.ID = "SpisDokumentyController";
-            return SpisDokumentyController;
-        })(Controllers.BaseController);
-        Controllers.SpisDokumentyController = SpisDokumentyController;
-    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var Controllers;
-    (function (Controllers) {
         var VyberSpisuController = (function (_super) {
             __extends(VyberSpisuController, _super);
             function VyberSpisuController($scope, PraetorService, Utilities, Preferences, UiHelper, SpisyUtilities) {
@@ -1467,47 +1426,6 @@ var PraetorApp;
             return VyberSpisuResult;
         })();
         Controllers.VyberSpisuResult = VyberSpisuResult;
-    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var Controllers;
-    (function (Controllers) {
-        var SpisZakladniUdajeController = (function (_super) {
-            __extends(SpisZakladniUdajeController, _super);
-            function SpisZakladniUdajeController($scope, $location, $http, $state, $stateParams, Utilities, UiHelper, Preferences, PraetorService) {
-                _super.call(this, $scope, PraetorApp.ViewModels.Spis.ZakladniUdajeViewModel);
-                this.$location = $location;
-                this.$http = $http;
-                this.Utilities = Utilities;
-                this.UiHelper = UiHelper;
-                this.Preferences = Preferences;
-                this.$state = $state;
-                this.$stateParams = $stateParams;
-                this.viewModel.id_spis = this.$stateParams.id;
-                this.PraetorService = PraetorService;
-                this.loadSpis();
-            }
-            Object.defineProperty(SpisZakladniUdajeController, "$inject", {
-                get: function () {
-                    return ["$scope", "$location", "$http", "$state", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.PraetorService.ID];
-                },
-                enumerable: true,
-                configurable: true
-            });
-            SpisZakladniUdajeController.prototype.loadSpis = function () {
-                var _this = this;
-                var request = {};
-                request.id_Spis = this.viewModel.id_spis;
-                this.PraetorService.loadSpisZakladniUdaje(request).then(function (response) {
-                    _this.viewModel.spis = response.spis;
-                    _this.viewModel.subjekty = response.subjekty;
-                });
-            };
-            SpisZakladniUdajeController.ID = "SpisZakladniUdajeController";
-            return SpisZakladniUdajeController;
-        })(Controllers.BaseController);
-        Controllers.SpisZakladniUdajeController = SpisZakladniUdajeController;
     })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;

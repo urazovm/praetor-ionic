@@ -63,7 +63,6 @@
     "scripts\\Filters\\ThousandsFilter.ts",
     "scripts\\ViewModels\\Home\\SpisyViewModel.ts",
     "scripts\\typings\\cordova\\plugins\\Dialogs.d.ts",
-    "scripts\\Controllers\\Spis\\ZakladniUdajeController.ts",
     "scripts\\ViewModels\\Ekonomika\\CinnostViewModel.ts",
     "scripts\\Models\\Settings\\LogEntry.ts",
     "scripts\\typings\\cordova\\plugins\\Push.d.ts",
@@ -89,7 +88,6 @@
     "scripts\\Application.ts",
     "scripts\\ViewModels\\Ekonomika\\CinnostDateGroup.ts",
     "scripts\\typings\\cordova\\plugins\\FileSystem.d.ts",
-    "scripts\\Controllers\\Spis\\SpisDokumentyController.ts",
     "scripts\\Filters\\PrehledSpisuFilter.ts",
     "scripts\\Controllers\\LoginController.ts",
     "scripts\\typings\\angularjs\\angular-cookies.d.ts",
@@ -235,13 +233,17 @@
     "www\\res\\drawable-xxhdpi\\icon.png",
     "www\\res\\android\\splash\\drawable-port-hdpi-screen.png"
   ],
-  "deletedFilesIos": [],
+  "deletedFilesIos": [
+    "scripts\\Controllers\\Spis\\ZakladniUdajeController.ts",
+    "scripts\\Controllers\\Spis\\SpisDokumentyController.ts"
+  ],
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json"
+    "plugins\\android.json",
+    "www\\templates\\spis\\zakladniudaje.html"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

@@ -1100,7 +1100,7 @@ var PraetorApp;
             }
             Object.defineProperty(HomeCinnostiController, "$inject", {
                 get: function () {
-                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.PraetorService.ID, PraetorApp.Services.UiHelper.ID];
+                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.PraetorService.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.FileUtilities.ID];
                 },
                 enumerable: true,
                 configurable: true
@@ -1612,6 +1612,56 @@ var PraetorApp;
         })();
         Directives.OnLoadDirective = OnLoadDirective;
     })(Directives = PraetorApp.Directives || (PraetorApp.Directives = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Filters;
+    (function (Filters) {
+        /**
+         * Formats numbers greater than one thousand to include the K suffix.
+         *
+         * Numbers greater than 10,000 will not show decimal places, while numbers
+         * between 1,000 and 9,999 will show decimal places unless the number is
+         * a multiple of one thousand.
+         *
+         * For example:
+         *      200   -> 200
+         *      2000  -> 2K
+         *      1321  -> 1.3K
+         *      10700 -> 10K
+         */
+        var PrehledSpisuFilter = (function () {
+            function PrehledSpisuFilter() {
+            }
+            PrehledSpisuFilter.filter = function (input, search) {
+                if (input == null) {
+                    return [];
+                }
+                if (search == null || search == "") {
+                    return [];
+                }
+                var out = [];
+                _.each(input, function (row) {
+                    var jeTam = false;
+                    _.each(row, function (property, key) {
+                        if (key == "id_Spis")
+                            return;
+                        if (property.indexOf(search) != -1) {
+                            jeTam = true;
+                        }
+                    });
+                    if (jeTam)
+                        out.push(row);
+                    if (out.length >= 20)
+                        return;
+                });
+                return out;
+            };
+            PrehledSpisuFilter.ID = "PrehledSpisuFilter";
+            return PrehledSpisuFilter;
+        })();
+        Filters.PrehledSpisuFilter = PrehledSpisuFilter;
+    })(Filters = PraetorApp.Filters || (PraetorApp.Filters = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
 (function (PraetorApp) {

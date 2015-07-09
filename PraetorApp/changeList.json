@@ -233,7 +233,9 @@
     "scripts\\Controllers\\Spis\\VyberSpisuController.ts",
     "scripts\\ViewModels\\Spis\\VyberSpisuViewModel.ts",
     "scripts\\Controllers\\Spis\\VyberSpisuResult.ts",
-    "www\\templates\\spis\\vyber-spisu.html"
+    "www\\templates\\spis\\vyber-spisu.html",
+    "www\\lib\\angular-filter.min.js",
+    "scripts\\Filters\\PrehledSpisuFilter.ts"
   ],
   "deletedFilesIos": [
     "www\\templates\\home.html.LOCAL.html",
@@ -248,25 +250,15 @@
     "scripts\\Controllers\\Ekonomika\\TimeSheetParams.ts",
     "scripts\\Controllers\\Home\\VykazovaniController.ts",
     "www\\templates\\home\\vykazovani.html",
-    "www\\templates\\ekonomika\\timeSheet.html"
+    "www\\templates\\ekonomika\\timeSheet.html",
+    "scripts\\Filters\\ThousandsFilter - Copy.ts"
   ],
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json",
-    "www\\config.xml",
-    "config.xml",
-    "www\\templates\\home\\cinnosti.html",
-    "www\\templates\\home\\spisy.html",
-    "www\\templates\\ekonomika\\cinnost.html",
-    "scripts\\Controllers\\Spis\\VyberSpisuController.ts",
-    "scripts\\ViewModels\\Spis\\VyberSpisuViewModel.ts",
-    "scripts\\Controllers\\Spis\\VyberSpisuResult.ts",
-    "www\\templates\\spis\\vyber-spisu.html",
-    "www\\templates\\settings\\login.html",
-    "www\\templates\\spis.html"
+    "plugins\\android.json"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

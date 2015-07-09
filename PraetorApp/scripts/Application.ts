@@ -97,6 +97,7 @@ module PraetorApp.Application {
     }
 
     function onkeyboardshow() {
+        console.log("hiding tabs:" + new Date());
         var style = document.createElement("style");
         style.appendChild(document.createTextNode("div.tabs.tab-nav {display: none !important } .has-tabs { bottom: 0 !important }"));
         style.id = 'style_hidetabs';
@@ -104,6 +105,7 @@ module PraetorApp.Application {
     }
 
     function onkeyboardhide() {
+        console.log("showing tabs:" + new Date());
         var el = document.getElementById('style_hidetabs');
         if(el) el.parentNode.removeChild(el);
     }

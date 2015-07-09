@@ -25512,7 +25512,7 @@ function $FilterProvider($provide) {
 function filterFilter() {
   return function(array, expression, comparator) {
     if (!isArray(array)) return array;
-
+    
     var predicateFn;
     var matchAgainstAnyProp;
 

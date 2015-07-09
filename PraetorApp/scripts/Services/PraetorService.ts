@@ -65,7 +65,7 @@
 
             if (options.ShowProgress) {
                 this.$ionicLoading.show({
-                    template: '<i class="icon ion-loading-c"></i>'
+                    template: '<i class="icon ion-load-c"></i>'
                 });
             }
 

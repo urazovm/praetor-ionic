@@ -1,5 +1,5 @@
 ﻿<ion-pane>
-    <ion-nav-bar class="bar-positive nav-title-slide-ios pr-black" align-title="center">        
+    <ion-nav-bar class="bar-positive nav-title-slide-ios pr-black" align-title="center">
         <!--<ion-nav-buttons side="right">
             <button class="button">
                 Refresh!
@@ -9,19 +9,8 @@
 
     <ion-tabs class="tabs-positive tabs-icon-top pr-black">
 
-        <div ui-sref="app.home.spisy" style="
-    background-color: #d9534f;
-    width: 40px;
-    position: absolute;
-    left: 0;
-    height: 100%;
-    top: 0;
-">
-            <i class="icon ion-ios-arrow-back" style="
-    font-size: 25px;
-    margin: 0 auto;
-    padding-left: 13px;
-"></i>
+        <div ui-sref="app.home.spisy" class="praetor-back-button">
+            <i class="icon ion-ios-arrow-back"></i>
         </div>
 
         <ion-tab title="Základní údaje" icon-on="ion-ios-filing" icon-off="ion-ios-filing-outline" ui-sref="app.spis.zakladniudaje">
@@ -33,5 +22,4 @@
         </ion-tab>
 
     </ion-tabs>
-
 </ion-pane>

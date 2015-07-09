@@ -50,7 +50,7 @@
             request.id_file = dokument.id;
 
             this.PraetorService.getFileToken(request).then((response) => {
-                this.FileService.openFile(<string>response.token);
+                this.FileService.openFile(<string>response.token, dokument.pripona);
             });            
         }
     }

@@ -207,7 +207,10 @@
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json"
+    "plugins\\android.json",
+    "config.xml",
+    "www\\config.xml",
+    "www\\index.html"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

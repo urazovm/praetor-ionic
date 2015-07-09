@@ -1760,7 +1760,7 @@ var PraetorApp;
                 configurable: true
             });
             FileUtilities.prototype.openFile = function (token, name) {
-                return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token + '/' + name);
+                return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token + '/' + encodeURIComponent(name));
             };
             FileUtilities.prototype.openUrl = function (path) {
                 console.log("opening document: " + path);

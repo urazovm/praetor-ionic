@@ -1807,7 +1807,7 @@ var PraetorApp;
                 configurable: true
             });
             FileUtilities.prototype.openFile = function (token, pripona) {
-                return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token + '#.' + pripona);
+                return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token + '.' + pripona);
             };
             FileUtilities.prototype.openUrl = function (path) {
                 var q = this.$q.defer();

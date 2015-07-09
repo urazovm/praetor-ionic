@@ -23,7 +23,7 @@
         }
 
         public openUrl(path: string): ng.IPromise<boolean> {
-            console.log("opening: " + path);
+            console.log("opening document: " + path);
             
             var q = this.$q.defer<boolean>();
 

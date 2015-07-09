@@ -208,9 +208,7 @@
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
     "plugins\\android.json",
-    "config.xml",
-    "www\\config.xml",
-    "www\\index.html"
+    "www\\templates\\ekonomika\\cinnost.html"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

@@ -15,7 +15,7 @@
                 <input type="date" ng-model="viewModel.Datum">
             </label>
 
-            <div class="item range range-positive" style="padding-left:16px">
+            <div class="item range range-dark" style="padding-left:16px">
                 Čas
                 <input type="range" name="volume" min="0" max="240" step="15" ng-model="viewModel.Data.cas">
                 {{viewModel.Data.cas}} min
@@ -35,7 +35,7 @@
 
             <div class="row">
                 <div class="col">
-                    <input type="submit" class="button button-block button-positive" ng-click="controller.SaveData()" value="Uložit">
+                    <input type="submit" class="button button-block button-dark" ng-click="controller.SaveData()" value="Uložit">
                 </div>
             </div>
         </form>

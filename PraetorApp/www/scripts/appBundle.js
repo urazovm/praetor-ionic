@@ -1114,10 +1114,9 @@ var PraetorApp;
     (function (Controllers) {
         var HomeCinnostiController = (function (_super) {
             __extends(HomeCinnostiController, _super);
-            function HomeCinnostiController($scope, praetorService, fileService, uiHelper) {
+            function HomeCinnostiController($scope, praetorService, uiHelper) {
                 _super.call(this, $scope, PraetorApp.ViewModels.Home.CinnostiViewModel);
                 this.PraetorService = praetorService;
-                this.FileUtilities = fileService;
                 this.UiHelper = uiHelper;
                 var now = new Date();
                 this.DateSince = this.AddDays(this.GetDate(now), 1);
@@ -1131,14 +1130,11 @@ var PraetorApp;
             }
             Object.defineProperty(HomeCinnostiController, "$inject", {
                 get: function () {
-                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.FileUtilities.ID, PraetorApp.Services.UiHelper.ID];
+                    return ["$scope", PraetorApp.Services.PraetorService.ID, PraetorApp.Services.UiHelper.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
-            HomeCinnostiController.prototype.test = function (url) {
-                this.FileUtilities.openUrl(url);
-            };
             HomeCinnostiController.prototype.AddDays = function (date, number) {
                 return new Date(date.getFullYear(), date.getMonth(), date.getDate() + number, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
             };

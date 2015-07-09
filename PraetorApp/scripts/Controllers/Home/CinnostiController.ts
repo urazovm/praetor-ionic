@@ -5,21 +5,19 @@
         public static ID = "HomeCinnostiController";
 
         public static get $inject(): string[] {
-            return ["$scope", Services.PraetorService.ID, Services.FileUtilities.ID, Services.UiHelper.ID];
+            return ["$scope", Services.PraetorService.ID, Services.UiHelper.ID];
         }
 
         private PraetorService: Services.PraetorService;
-        private FileUtilities: Services.FileUtilities;
         private UiHelper: Services.UiHelper;
         private DateSince: Date;
         private DateUntil: Date;
         private Cinnosti: PraetorApp.ViewModels.Ekonomika.CinnostPrehledEntry[];
 
-        constructor($scope: ng.IScope, praetorService: Services.PraetorService, fileService: Services.FileUtilities, uiHelper: Services.UiHelper) {
+        constructor($scope: ng.IScope, praetorService: Services.PraetorService, uiHelper: Services.UiHelper) {
             super($scope, ViewModels.Home.CinnostiViewModel);
 
             this.PraetorService = praetorService;
-            this.FileUtilities = fileService;
             this.UiHelper = uiHelper;
 
             var now = new Date();
@@ -33,10 +31,6 @@
             this.Cinnosti = [];
 
             this.LoadData(request);
-        }
-
-        public test(url) {
-            this.FileUtilities.openUrl(url);
         }
 
         private AddDays(date: Date, number: number): Date {

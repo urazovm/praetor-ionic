@@ -1,11 +1,5 @@
 ﻿<ion-view title="Praetor">
     <ion-content has-bouncing="false">
-        <button class="button button-balanced" ng-click="controller.test('http://jasnet.pl/static/ads/ogloszenia/1a7453de.docx')">docx</button>
-        <button class="button button-balanced" ng-click="controller.test('http://www.urartuuniversity.com/content_images/pdf-sample.pdf')">pdf</button>
-
-
-         <button class="button button-block button-positive" ng-click="controller.CreateCinnost()">Vytvořit činnost</button>
-
         <prehled-cinnosti on-cinnost-click="controller.OpenCinnost(cinnost)"
                           on-add-click="controller.CreateDatedCinnost(date)"
                           on-load-previous-click="controller.LoadPreviousDay()"

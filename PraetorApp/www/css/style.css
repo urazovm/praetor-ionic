@@ -24,3 +24,10 @@
 .spis-detail-table .header {
     margin-left:5px;
 }
+
+.item-divider .button {
+    top: 6px;
+    padding: 0 7px;
+    min-width: 24px;
+    min-height: 24px;
+}

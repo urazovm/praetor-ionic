@@ -143,10 +143,7 @@
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json",
-    "www\\templates\\directives\\prehled-spisu.html",
-    "www\\templates\\spis\\vyber-spisu.html",
-    "www\\templates\\home\\spisy.html"
+    "plugins\\android.json"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

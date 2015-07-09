@@ -327,7 +327,7 @@ module PraetorApp.Application {
         // Subscribe to device events.
         document.addEventListener("pause", _.bind(device_pause, null, Preferences));
         document.addEventListener("resume", _.bind(device_resume, null, $location, $ionicViewService, Utilities, UiHelper, Preferences));
-        document.addEventListener("menubutton", _.bind(device_menuButton, null, $rootScope));
+       // document.addEventListener("menubutton", _.bind(device_menuButton, null, $rootScope));
 
         // Subscribe to Angular events.
         $rootScope.$on("$locationChangeStart", angular_locationChangeStart);

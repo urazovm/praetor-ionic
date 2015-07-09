@@ -82,12 +82,18 @@ var PraetorApp;
         }
         Application.main = main;
         function onkeyboardshow() {
+            console.log("hiding tabs:" + new Date());
+            if (document.getElementById('style_hidetabs')) {
+                console.log('already hidden');
+                return;
+            }
             var style = document.createElement("style");
             style.appendChild(document.createTextNode("div.tabs.tab-nav {display: none !important } .has-tabs { bottom: 0 !important }"));
             style.id = 'style_hidetabs';
             document.head.appendChild(style);
         }
         function onkeyboardhide() {
+            console.log("showing tabs:" + new Date());
             var el = document.getElementById('style_hidetabs');
             if (el)
                 el.parentNode.removeChild(el);
@@ -277,7 +283,7 @@ var PraetorApp;
             // Subscribe to device events.
             document.addEventListener("pause", _.bind(device_pause, null, Preferences));
             document.addEventListener("resume", _.bind(device_resume, null, $location, $ionicViewService, Utilities, UiHelper, Preferences));
-            document.addEventListener("menubutton", _.bind(device_menuButton, null, $rootScope));
+            // document.addEventListener("menubutton", _.bind(device_menuButton, null, $rootScope));
             // Subscribe to Angular events.
             $rootScope.$on("$locationChangeStart", angular_locationChangeStart);
             // Now that the platform is ready, we'll delegate to the resume event.
@@ -962,7 +968,7 @@ var PraetorApp;
                 var request = {};
                 request.id_file = dokument.id;
                 this.PraetorService.getFileToken(request).then(function (response) {
-                    _this.FileService.openFile(response.token);
+                    _this.FileService.openFile(response.token, dokument.nazev + '.' + dokument.pripona);
                 });
             };
             SpisController.ID = "SpisController";
@@ -1205,7 +1211,7 @@ var PraetorApp;
     (function (Controllers) {
         var HomeSpisyController = (function (_super) {
             __extends(HomeSpisyController, _super);
-            function HomeSpisyController($scope, $location, $http, $state, Utilities, UiHelper, Preferences, SpisyUtilities) {
+            function HomeSpisyController($scope, $location, $http, $state, Utilities, UiHelper, Preferences, SpisyUtilities, PraetorService) {
                 _super.call(this, $scope, PraetorApp.ViewModels.Home.SpisyViewModel);
                 this.$location = $location;
                 this.$http = $http;
@@ -1215,16 +1221,26 @@ var PraetorApp;
                 this.$state = $state;
                 this.SpisyUtilities = SpisyUtilities;
                 this.SpisyUtilities.register(this);
+                this.PraetorService = PraetorService;
                 this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
-                this.viewModel.PrehledSpisu.posledniSpisy = this.SpisyUtilities.Spisy;
+                this.LoadPosledniSpisy();
+                this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
             }
             Object.defineProperty(HomeSpisyController, "$inject", {
                 get: function () {
-                    return ["$scope", "$location", "$http", "$state", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.SpisyUtilities.ID];
+                    return ["$scope", "$location", "$http", "$state", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.SpisyUtilities.ID, PraetorApp.Services.PraetorService.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
+            HomeSpisyController.prototype.LoadPosledniSpisy = function () {
+                var _this = this;
+                var request = {};
+                request.pocet = 20;
+                this.PraetorService.LoadPosledniSpisy(request).then(function (response) {
+                    _this.viewModel.PrehledSpisu.posledniSpisy = response.posledniSpisy;
+                });
+            };
             HomeSpisyController.prototype.openSpis = function (spis) {
                 var _this = this;
                 // Otevřeme detail spisu            
@@ -1327,14 +1343,6 @@ var PraetorApp;
                     _this.viewModel.dokumenty = response.dokumenty;
                 });
             };
-            SpisDokumentyController.prototype.openDokument = function (dokument) {
-                var _this = this;
-                var request = {};
-                request.id_file = dokument.id;
-                this.PraetorService.getFileToken(request).then(function (response) {
-                    _this.FileService.openFile(response.token);
-                });
-            };
             SpisDokumentyController.ID = "SpisDokumentyController";
             return SpisDokumentyController;
         })(Controllers.BaseController);
@@ -1357,7 +1365,8 @@ var PraetorApp;
                 this.SpisyUtilities = SpisyUtilities;
                 this.SpisyUtilities.register(this);
                 this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
-                this.viewModel.PrehledSpisu.posledniSpisy = this.SpisyUtilities.Spisy;
+                this.LoadPosledniSpisy();
+                this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
             }
             Object.defineProperty(VyberSpisuController, "$inject", {
                 get: function () {
@@ -1366,6 +1375,14 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
+            VyberSpisuController.prototype.LoadPosledniSpisy = function () {
+                var _this = this;
+                var request = {};
+                request.pocet = 20;
+                this.PraetorService.LoadPosledniSpisy(request).then(function (response) {
+                    _this.viewModel.PrehledSpisu.posledniSpisy = response.posledniSpisy;
+                });
+            };
             VyberSpisuController.prototype.SelectSpis = function (spis) {
                 this.close(new Controllers.VyberSpisuResult(true, spis.id_Spis));
             };
@@ -1794,10 +1811,11 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
-            FileUtilities.prototype.openFile = function (token) {
-                return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token);
+            FileUtilities.prototype.openFile = function (token, name) {
+                return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token + '/' + name);
             };
             FileUtilities.prototype.openUrl = function (path) {
+                console.log("opening document: " + path);
                 var q = this.$q.defer();
                 window.handleDocumentWithURL(function () {
                     console.log('success');
@@ -2632,7 +2650,7 @@ var PraetorApp;
                 }
                 if (options.ShowProgress) {
                     this.$ionicLoading.show({
-                        template: '<i class="icon ion-loading-c"></i>'
+                        template: '<i class="icon ion-load-c"></i>'
                     });
                 }
                 var q = this.$q.defer();
@@ -2679,6 +2697,9 @@ var PraetorApp;
             };
             PraetorService.prototype.SaveCinnost = function (request) {
                 return this.getData("SaveCinnost", request);
+            };
+            PraetorService.prototype.LoadPosledniSpisy = function (request) {
+                return this.getData("LoadPosledniSpisy", request);
             };
             PraetorService.prototype.getFileToken = function (request) {
                 return this.getData("getfiletoken", request);

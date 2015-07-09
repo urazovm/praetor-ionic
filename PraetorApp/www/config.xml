@@ -4,7 +4,7 @@
   xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" 
   xmlns:gap="http://phonegap.com/ns/1.0" 
   id="cz.praetor-systems.praetor2" 
-  version="1.0.130"
+  version="1.0.132"
   xmlns="http://www.w3.org/ns/widgets" 
   defaultlocale="cs-CZ">
   
@@ -15,6 +15,10 @@
   <access origin="*" />
   <vs:features />
   
+   <gap:config-file platform="android" parent="/manifest">
+      <application android:theme="@android:style/Theme.NoTitleBar"></application>
+    </gap:config-file>
+  
   <preference name="SplashScreen" value="splash" />  
   
   <preference name="webviewbounce" value="false" />
@@ -24,10 +28,12 @@
    <preference name="EnableViewportScale" value="false"/>
    <preference name="KeyboardShrinksView" value="false" />
    
-  <!--<preference name="permissions" value="none"/>-->
+  <preference name="permissions" value="none"/>
   <preference name="windows-target-version" value="8.1" />
   <preference name="windows-phone-target-version" value="8.1" />
   <preference name="phonegap-version" value="3.7.0" />
+  <preference name="android-targetSdkVersion" value="14" />
+  
   <preference name="KeepRunning" value="True" />
   <preference name="ShowTitle" value="False" />
   <preference name="InAppBrowserStorageEnabled" value="False" />

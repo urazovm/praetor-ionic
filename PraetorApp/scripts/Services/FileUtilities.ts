@@ -18,11 +18,13 @@
             this.Preferences = Preferences;
         }       
 
-        public openFile(token: string): ng.IPromise<boolean> {
-            return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token);
+        public openFile(token: string, name: string): ng.IPromise<boolean> {
+            return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token + '/' + name);
         }
 
         public openUrl(path: string): ng.IPromise<boolean> {
+            console.log("opening document: " + path);
+            
             var q = this.$q.defer<boolean>();
 
             (<any>window).handleDocumentWithURL(

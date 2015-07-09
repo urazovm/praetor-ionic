@@ -7,7 +7,7 @@
         public static ID = "HomeSpisyController";
 
         public static get $inject(): string[] {
-            return ["$scope", "$location", "$http", "$state", Services.Utilities.ID, Services.UiHelper.ID, Services.Preferences.ID, Services.SpisyUtilities.ID];
+            return ["$scope", "$location", "$http", "$state", Services.Utilities.ID, Services.UiHelper.ID, Services.Preferences.ID, Services.SpisyUtilities.ID, Services.PraetorService.ID];
         }
 
         private $location: ng.ILocationService;
@@ -18,8 +18,9 @@
         private $state: ng.ui.IStateService;
         private SpisyUtilities: Services.SpisyUtilities;
         public PrehledSpisu: PraetorApp.ViewModels.PrehledSpisuViewModel;
+        private PraetorService: Services.PraetorService;
 
-        constructor($scope: ng.IScope, $location: ng.ILocationService, $http: ng.IHttpService, $state: ng.ui.IStateService, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences, SpisyUtilities: Services.SpisyUtilities) {
+        constructor($scope: ng.IScope, $location: ng.ILocationService, $http: ng.IHttpService, $state: ng.ui.IStateService, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences, SpisyUtilities: Services.SpisyUtilities, PraetorService: Services.PraetorService) {
             super($scope, ViewModels.Home.SpisyViewModel);
 
             this.$location = $location;
@@ -30,9 +31,24 @@
             this.$state = $state;
             this.SpisyUtilities = SpisyUtilities;
             this.SpisyUtilities.register(this);
-            this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
-            this.viewModel.PrehledSpisu.posledniSpisy = this.SpisyUtilities.Spisy;
+            this.PraetorService = PraetorService;
 
+            this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
+
+            this.LoadPosledniSpisy();
+
+            this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
+        }
+
+        private LoadPosledniSpisy() {
+            var request = <PraetorServer.Service.WebServer.Messages.LoadPosledniSpisyRequest>{};
+            request.pocet = 20;
+
+            this.PraetorService.LoadPosledniSpisy(request).then(
+                response => {
+                    this.viewModel.PrehledSpisu.posledniSpisy = response.posledniSpisy;
+                }
+                );
         }
 
         openSpis(spis: PraetorServer.Service.WebServer.Messages.Dto.Spis) {

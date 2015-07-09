@@ -3,5 +3,7 @@
         <button class="button button-icon icon ion-ios-arrow-back" ng-click="controller.Cancel()"></button>
         <h1 class="title">Vyberte spis</h1>
     </ion-header-bar>
-    <prehled-spisu on-spis-click="controller.SelectSpis(spis)" view-model="viewModel.PrehledSpisu"></prehled-spisu>
+    <ion-content has-bouncing="false">
+        <prehled-spisu on-spis-click="controller.SelectSpis(spis)" view-model="viewModel.PrehledSpisu"></prehled-spisu>
+    </ion-content>
 </ion-modal-view>

@@ -155,7 +155,8 @@
     "scripts\\Controllers\\Spis\\VyberSpisuResult.ts",
     "scripts\\Controllers\\Spis\\VyberSpisuController.ts",
     "scripts\\ViewModels\\Spis\\VyberSpisuViewModel.ts",
-    "www\\templates\\spis\\vyber-spisu.html"
+    "www\\templates\\spis\\vyber-spisu.html",
+    "scripts\\Filters\\PrehledSpisuFilter.ts"
   ],
   "deletedFilesIos": [
     "scripts\\Application.ts.BASE.ts",
@@ -195,14 +196,18 @@
     "www\\templates\\spis\\cinnost.html",
     "www\\templates\\home\\spisy.html.LOCAL.html",
     "www\\templates\\home\\spisy.html.BASE.html",
-    "www\\templates\\home\\spisy.html.REMOTE.html"
+    "www\\templates\\home\\spisy.html.REMOTE.html",
+    "www\\templates\\directives\\prehled-spisu.html.LOCAL.html",
+    "www\\templates\\directives\\prehled-spisu.html.REMOTE.html",
+    "www\\templates\\directives\\prehled-spisu.html.BASE.html"
   ],
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json"
+    "plugins\\android.json",
+    "www\\templates\\directives\\prehled-spisu.html"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

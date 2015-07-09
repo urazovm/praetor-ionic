@@ -66,8 +66,6 @@
         //#region Controller Methods
 
         protected login() {
-            var self = this;
-
             if (!this.viewModel.server) {
                 this.UiHelper.alert("Zadejte adresu serveru");
                 return;
@@ -81,28 +79,28 @@
             if (!this.viewModel.password) {
                 this.UiHelper.alert("Zadejte heslo");
                 return;
-            }
+            }            
 
             this.UiHelper.progressIndicator.showSimple(true);            
 
-            this.Praetor.login(this.viewModel.server, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then(function (data) {
-                // Odstraníme 
-                self.UiHelper.progressIndicator.hide();                
+            this.Praetor.login(this.viewModel.server, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then((data) => {                
+                this.UiHelper.progressIndicator.hide();
+                
                 if (data.success) {
-                    self.Preferences.serverUrl = self.viewModel.server;
-                    self.Preferences.username = self.viewModel.username;
-                    self.Preferences.password = self.Hash.md5(self.viewModel.password);
+                    this.Preferences.serverUrl = this.viewModel.server;
+                    this.Preferences.username = this.viewModel.username;
+                    this.Preferences.password = this.Hash.md5(this.viewModel.password);
 
-                    self.$location.path("/app/home");
-                    self.$location.replace();
+                    this.$location.path("/app/home");
+                    this.$location.replace();
                 }
                 else {
-                    self.UiHelper.alert(data.message);
+                    this.UiHelper.alert(data.message);
                 }
 
             })['finally'](function () {
                 // Zavřeme progress indigator                
-                self.UiHelper.progressIndicator.hide();
+                this.UiHelper.progressIndicator.hide();
             });
         }
 

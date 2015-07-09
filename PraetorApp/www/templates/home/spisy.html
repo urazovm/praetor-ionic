@@ -1,4 +1,12 @@
 ﻿<ion-view title="Praetor">
+    <ion-nav-bar class="bar-positive nav-title-slide-ios pr-black" align-title="center">
+        <ion-nav-buttons side="right">
+            <button class="button" ng-click="controller.reloadData()" ng-show="showLoadingButton">
+                <i class="icon ion-ios-loop" ng-class="{'animated-icon': isLoading}"></i>
+            </button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+
     <ion-content has-bouncing="false">
         <prehled-spisu on-spis-click="controller.openSpis(spis)" view-model="viewModel.PrehledSpisu"></prehled-spisu>
     </ion-content>

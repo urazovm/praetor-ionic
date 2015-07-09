@@ -41,7 +41,7 @@
             return new Date(date.getFullYear(), date.getMonth(), date.getDate());
         }
 
-        public ReloadData() {
+        public reloadData() {
             var request = <PraetorServer.Service.WebServer.Messages.LoadCinnostiRequest>{};
             request.cinnostiUntil = DateTools.GetDateInJsonFormat(this.DateUntil);
             request.cinnostiSince = DateTools.GetDateInJsonFormat(this.DateSince);
@@ -74,8 +74,12 @@
         }
 
         public LoadData(request: PraetorServer.Service.WebServer.Messages.LoadCinnostiRequest) {
+
+            this.onBeforeLoading();
+
             this.PraetorService.loadCinnosti(request).then(
                 response => {
+                    
                     this.Cinnosti = this.Cinnosti.concat(_.map(response.cinnosti, x => {
                         var result = new PraetorApp.ViewModels.Ekonomika.CinnostPrehledEntry();
                         result.cas = x.cas;
@@ -97,6 +101,8 @@
                         this.DateUntil = requestUntil;
 
                     this.RebuildList();
+
+                    this.onAftterLoading();
                 }
                 );
         }
@@ -125,7 +131,7 @@
                         (result: CinnostResult) => {
                             if (result && result.Success)
                                 this.UiHelper.toast.show("Činnost byla uložena.", "short", "center");
-                                this.ReloadData();
+                                this.reloadData();
                         },
                         (ex) => {
                             this.UiHelper.alert("Činnost se nepodařilo uložit.");
@@ -148,7 +154,7 @@
                         (result: CinnostResult) => {
                             if (result && result.Success)
                                 this.UiHelper.toast.show("Činnost byla uložena.", "short", "center");
-                                this.ReloadData();
+                                this.reloadData();
                         },
                         (ex) => {
                             this.UiHelper.alert("Činnost se nepodařilo uložit.");

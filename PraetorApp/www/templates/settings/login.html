@@ -1,34 +1,25 @@
 ﻿
 <ion-view>
-    <ion-content has-bouncing="false" style="background:#2794D6;" class="padding">
-        
+    <ion-content has-bouncing="false">
         <div class="spacer" style="height: 100px;">
             {{message}}
         </div>
-        <div  class="padding" >
-            <form>
-                <div class="list list-inset">
-                    <label class="item item-input">
-                        <input type="text" placeholder="Server" ng-model="viewModel.server">
-                    </label>
-                </div>
-
-                <div class="list list-inset">
-                    <label class="item item-input">
-                        <input type="text" placeholder="Uživatelské jméno" ng-model="viewModel.username">
-                    </label>
-                </div>
-
-                <div class="list list-inset">
-                    <label class="item item-input">
-                        <input type="password" placeholder="Heslo" ng-model="viewModel.password">
-                    </label>
-                </div>
-                
-                    <input type="submit" class="button button-block button-outline button-light" ng-click="controller.login()" value="Přihlásit" />
-              
-        </div>
+        <form class="list list-inset">
+            <label class="item item-input">
+                <input type="text" placeholder="Server" ng-model="viewModel.server">
+            </label>
+            <div class="spacer" style="height: 10px;"></div>
+            <label class="item item-input">
+                <input type="text" placeholder="Uživatelské jméno" ng-model="viewModel.username">
+            </label>
+            <div class="spacer" style="height: 10px;"></div>
+            <label class="item item-input">
+                <input type="password" placeholder="Heslo" ng-model="viewModel.password">
+            </label>
+            <div class="spacer" style="height: 20px;"></div>
+            <div class="padding">
+                <input type="submit" loading-id="loading" class="button button-block button-positive" ng-click="controller.login()" value="Přihlásit" />
+            </div>
         </form>
-        </div>
     </ion-content>
 </ion-view>

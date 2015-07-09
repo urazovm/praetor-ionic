@@ -12,8 +12,10 @@
     export class BaseController<T> {
         public scope: ng.IScope;
         public viewModel: T;
+        private loadingCallCounter: number;
 
         constructor(scope: ng.IScope, ModelType: { new (): T; }) {
+            
             // Save a reference to Angular's scope object.
             this.scope = scope;
 
@@ -21,6 +23,10 @@
             this.viewModel = new ModelType();
 
             /* tslint:disable:no-string-literal */
+
+            this.loadingCallCounter = 0;
+            this.scope["isLoading"] = false;
+            this.scope["showLoadingButton"] = true;
 
             // Push the view model onto the scope so it can be
             // referenced from the template/views.
@@ -50,6 +56,19 @@
                 this.initialize();
                 this.scope.$apply();
             });
+        }
+
+        public onBeforeLoading() {
+            this.scope["isLoading"] = true;
+            this.loadingCallCounter++;
+        }
+
+        public onAftterLoading() {            
+            this.loadingCallCounter--;
+            if (this.loadingCallCounter <= 0) {
+                this.loadingCallCounter = 0;
+                this.scope["isLoading"] = false;
+            }
         }
 
         /**

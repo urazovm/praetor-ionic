@@ -1,10 +1,10 @@
 ﻿<ion-pane>
     <ion-nav-bar class="bar-positive nav-title-slide-ios pr-black" align-title="center">
-        <!--<ion-nav-buttons side="right">
-            <button class="button">
-                Refresh!
+        <ion-nav-buttons side="right">
+            <button class="button" ng-click="controller.reloadData()" ng-show="showLoadingButton">
+                <i class="icon ion-ios-loop" ng-class="{'animated-icon': isLoading}"></i>
             </button>
-        </ion-nav-buttons>-->
+        </ion-nav-buttons>
     </ion-nav-bar>
 
     <ion-tabs class="tabs-positive tabs-icon-top pr-black">

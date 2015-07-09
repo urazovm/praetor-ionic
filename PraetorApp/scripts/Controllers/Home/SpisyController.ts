@@ -41,12 +41,16 @@
         }
 
         private LoadPosledniSpisy() {
+
+            this.onBeforeLoading();
+
             var request = <PraetorServer.Service.WebServer.Messages.LoadPosledniSpisyRequest>{};
             request.pocet = 20;
 
             this.PraetorService.LoadPosledniSpisy(request).then(
                 response => {
                     this.viewModel.PrehledSpisu.posledniSpisy = response.posledniSpisy;
+                    this.onAftterLoading();
                 }
                 );
         }
@@ -63,6 +67,12 @@
             // Došlo k změně u registrované komponenty
             // aktualizujeme seznam spisů
             this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
+            this.onAftterLoading();
+        }
+
+        reloadData() {
+            this.onBeforeLoading();
+            this.SpisyUtilities.Synchronize();
         }
     }
 }

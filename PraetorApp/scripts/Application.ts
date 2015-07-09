@@ -69,7 +69,7 @@ module PraetorApp.Application {
                 scope: {
                     viewModel: '=',
                     onSpisClick: '&'
-                },                
+                },
                 templateUrl: 'templates/directives/prehled-spisu.html'
             };
         });
@@ -112,7 +112,7 @@ module PraetorApp.Application {
     function onkeyboardhide() {
         console.log("showing tabs:" + new Date());
         var el = document.getElementById('style_hidetabs');
-        if(el) el.parentNode.removeChild(el);
+        if (el) el.parentNode.removeChild(el);
     }
 
     //#region Helpers
@@ -304,16 +304,16 @@ module PraetorApp.Application {
     /**
      * The main initialize/run function for Angular; fired once the AngularJs framework is done loading.
      */
-    function angular_initialize($rootScope: ng.IScope, $location: ng.ILocationService, $ionicViewService: any, $ionicPlatform: Ionic.IPlatform, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences, MockHttpApis: Services.MockHttpApis): void {
+    function angular_initialize($rootScope: ng.IScope, $location: ng.ILocationService, $ionicViewService: any, $ionicPlatform: Ionic.IPlatform, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences, MockHttpApis: Services.MockHttpApis, $state: ng.ui.IStateService): void {
 
         // Once AngularJs has loaded we'll wait for the Ionic platform's ready event.
         // This event will be fired once the device ready event fires via Cordova.
         $ionicPlatform.ready(function () {
-            ionicPlatform_ready($rootScope, $location, $ionicViewService, $ionicPlatform, UiHelper, Utilities, Preferences);
+            ionicPlatform_ready($rootScope, $location, $ionicViewService, $ionicPlatform, UiHelper, Utilities, Preferences, $state);
         });   
         
         // Mock up or allow HTTP responses.
-        MockHttpApis.mockHttpCalls(Preferences.enableMockHttpCalls);      
+        MockHttpApis.mockHttpCalls(Preferences.enableMockHttpCalls);
     };
 
     /**
@@ -322,17 +322,41 @@ module PraetorApp.Application {
      * Note that this will not fire in the Ripple emulator because it relies
      * on the Codrova device ready event.
      */
-    function ionicPlatform_ready($rootScope: ng.IScope, $location: ng.ILocationService, $ionicViewService: any, $ionicPlatform: Ionic.IPlatform, UiHelper: Services.UiHelper, Utilities: Services.Utilities, Preferences: Services.Preferences): void {
+    function ionicPlatform_ready($rootScope: ng.IScope, $location: ng.ILocationService, $ionicViewService: any, $ionicPlatform: Ionic.IPlatform, UiHelper: Services.UiHelper, Utilities: Services.Utilities, Preferences: Services.Preferences, $state: ng.ui.IStateService): void {
+
         if (navigator.splashscreen)
             navigator.splashscreen.hide();
 
         if (window.StatusBar)
             window.StatusBar.overlaysWebView(false);
 
+        var deregister = (<any>$ionicPlatform).registerBackButtonAction(() => {
+            var nameRoute = $state.current.name;            
+            if (nameRoute.indexOf("app.spis.") === 0) {
+                $state.go('app.home');
+            }
+            else if (nameRoute.indexOf("app.home.cinnosti") === 0) {
+                $state.go('app.home.spisy');
+            }            
+            else if (nameRoute.indexOf("app.home.spisy") === 0) {
+
+                var nav = <any>navigator;
+                if (nav.app) {
+                    nav.app.exitApp();
+                } else if (nav.device) {
+                    nav.device.exitApp();
+                }
+            }
+
+        }, 501);
+
+        $rootScope.$on('$destroy', deregister);
+
         // Subscribe to device events.
         document.addEventListener("pause", _.bind(device_pause, null, Preferences));
         document.addEventListener("resume", _.bind(device_resume, null, $location, $ionicViewService, Utilities, UiHelper, Preferences));
-       // document.addEventListener("menubutton", _.bind(device_menuButton, null, $rootScope));
+        //document.addEventListener("backbutton", _.bind(device_back_button, null, $location));
+        //document.addEventListener("menubutton", _.bind(device_menuButton, null, $rootScope));
 
         // Subscribe to Angular events.
         $rootScope.$on("$locationChangeStart", angular_locationChangeStart);
@@ -350,7 +374,7 @@ module PraetorApp.Application {
 
         $ionicConfigProvider.tabs.position("bottom");
         $ionicConfigProvider.tabs.style("standard");
-        //$ionicConfigProvider.views.maxCache(0);
+        $ionicConfigProvider.views.maxCache(0);
 
         // Intercept the default Angular exception handler.
         $provide.decorator("$exceptionHandler", function ($delegate: ng.IExceptionHandlerService) {
@@ -378,7 +402,7 @@ module PraetorApp.Application {
         // network latency so we can see the spinners and loading bars. Useful for demo purposes.
         if (localStorage.getItem("ENABLE_MOCK_HTTP_CALLS") === "true") {
             Services.MockHttpApis.setupMockHttpDelay($provide);
-        } 
+        }
     };
 
     //#endregion
@@ -420,7 +444,7 @@ module PraetorApp.Application {
     /**
      * Fired when Angular's route/location (eg URL hash) is changing.
      */
-    function angular_locationChangeStart(event: ng.IAngularEvent, newRoute: string, oldRoute: string): void {
+    function angular_locationChangeStart(event: ng.IAngularEvent, newRoute: string, oldRoute: string, $route: any): void {
         console.log("Location change, old Route: " + oldRoute);
         console.log("Location change, new Route: " + newRoute);
     };
@@ -429,11 +453,11 @@ module PraetorApp.Application {
      * Fired when an unhandled JavaScript exception occurs outside of Angular.
      */
     function window_onerror(message: any, uri: string, lineNumber: number, columnNumber?: number): void {
-        var UiHelper: Services.UiHelper;        
+        var UiHelper: Services.UiHelper;
         console.error("Unhandled JS Exception", message, uri, lineNumber, columnNumber);
 
-        window['lastError'] = message;        
-        try {            
+        window['lastError'] = message;
+        try {
             UiHelper = angular.element(document.body).injector().get(Services.UiHelper.ID);
             UiHelper.toast.showLongBottom("Error0: " + message);
             UiHelper.progressIndicator.hide();
@@ -450,7 +474,7 @@ module PraetorApp.Application {
      * This includes uncaught exceptions in ng-click methods for example.
      */
     function angular_exceptionHandler(exception: Error, cause: string): void {
-        var message = exception.message,            
+        var message = exception.message,
             UiHelper: Services.UiHelper;
 
         if (!cause) {

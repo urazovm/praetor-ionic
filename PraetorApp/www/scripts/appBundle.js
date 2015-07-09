@@ -219,9 +219,7 @@ var PraetorApp;
                 instance.render();
             };
             // Finally, return a function that returns this Angular directive descriptor object.
-            return function () {
-                return descriptor;
-            };
+            return function () { return descriptor; };
         }
         /**
          * Used to create an array of injection property names followed by a function that will be
@@ -254,20 +252,18 @@ var PraetorApp;
          * @param fn The function that will provide the filter's logic.
          */
         function getFilterFactoryFunction(fn) {
-            return function () {
-                return fn;
-            };
+            return function () { return fn; };
         }
         //#endregion
         //#region Platform Configuration
         /**
          * The main initialize/run function for Angular; fired once the AngularJs framework is done loading.
          */
-        function angular_initialize($rootScope, $location, $ionicViewService, $ionicPlatform, Utilities, UiHelper, Preferences, MockHttpApis) {
+        function angular_initialize($rootScope, $location, $ionicViewService, $ionicPlatform, Utilities, UiHelper, Preferences, MockHttpApis, $state) {
             // Once AngularJs has loaded we'll wait for the Ionic platform's ready event.
             // This event will be fired once the device ready event fires via Cordova.
             $ionicPlatform.ready(function () {
-                ionicPlatform_ready($rootScope, $location, $ionicViewService, $ionicPlatform, UiHelper, Utilities, Preferences);
+                ionicPlatform_ready($rootScope, $location, $ionicViewService, $ionicPlatform, UiHelper, Utilities, Preferences, $state);
             });
             // Mock up or allow HTTP responses.
             MockHttpApis.mockHttpCalls(Preferences.enableMockHttpCalls);
@@ -279,15 +275,35 @@ var PraetorApp;
          * Note that this will not fire in the Ripple emulator because it relies
          * on the Codrova device ready event.
          */
-        function ionicPlatform_ready($rootScope, $location, $ionicViewService, $ionicPlatform, UiHelper, Utilities, Preferences) {
+        function ionicPlatform_ready($rootScope, $location, $ionicViewService, $ionicPlatform, UiHelper, Utilities, Preferences, $state) {
             if (navigator.splashscreen)
                 navigator.splashscreen.hide();
             if (window.StatusBar)
                 window.StatusBar.overlaysWebView(false);
+            var deregister = $ionicPlatform.registerBackButtonAction(function () {
+                var nameRoute = $state.current.name;
+                if (nameRoute.indexOf("app.spis.") === 0) {
+                    $state.go('app.home');
+                }
+                else if (nameRoute.indexOf("app.home.cinnosti") === 0) {
+                    $state.go('app.home.spisy');
+                }
+                else if (nameRoute.indexOf("app.home.spisy") === 0) {
+                    var nav = navigator;
+                    if (nav.app) {
+                        nav.app.exitApp();
+                    }
+                    else if (nav.device) {
+                        nav.device.exitApp();
+                    }
+                }
+            }, 501);
+            $rootScope.$on('$destroy', deregister);
             // Subscribe to device events.
             document.addEventListener("pause", _.bind(device_pause, null, Preferences));
             document.addEventListener("resume", _.bind(device_resume, null, $location, $ionicViewService, Utilities, UiHelper, Preferences));
-            // document.addEventListener("menubutton", _.bind(device_menuButton, null, $rootScope));
+            //document.addEventListener("backbutton", _.bind(device_back_button, null, $location));
+            //document.addEventListener("menubutton", _.bind(device_menuButton, null, $rootScope));
             // Subscribe to Angular events.
             $rootScope.$on("$locationChangeStart", angular_locationChangeStart);
             // Now that the platform is ready, we'll delegate to the resume event.
@@ -301,7 +317,7 @@ var PraetorApp;
         function angular_configure($stateProvider, $urlRouterProvider, $provide, $httpProvider, $compileProvider, $ionicConfigProvider) {
             $ionicConfigProvider.tabs.position("bottom");
             $ionicConfigProvider.tabs.style("standard");
-            //$ionicConfigProvider.views.maxCache(0);
+            $ionicConfigProvider.views.maxCache(0);
             // Intercept the default Angular exception handler.
             $provide.decorator("$exceptionHandler", function ($delegate) {
                 return function (exception, cause) {
@@ -359,7 +375,7 @@ var PraetorApp;
         /**
          * Fired when Angular's route/location (eg URL hash) is changing.
          */
-        function angular_locationChangeStart(event, newRoute, oldRoute) {
+        function angular_locationChangeStart(event, newRoute, oldRoute, $route) {
             console.log("Location change, old Route: " + oldRoute);
             console.log("Location change, new Route: " + newRoute);
         }
@@ -523,6 +539,9 @@ var PraetorApp;
                 // Create the view model.
                 this.viewModel = new ModelType();
                 /* tslint:disable:no-string-literal */
+                this.loadingCallCounter = 0;
+                this.scope["isLoading"] = false;
+                this.scope["showLoadingButton"] = true;
                 // Push the view model onto the scope so it can be
                 // referenced from the template/views.
                 this.scope["viewModel"] = this.viewModel;
@@ -548,6 +567,17 @@ var PraetorApp;
                     _this.scope.$apply();
                 });
             }
+            BaseController.prototype.onBeforeLoading = function () {
+                this.scope["isLoading"] = true;
+                this.loadingCallCounter++;
+            };
+            BaseController.prototype.onAftterLoading = function () {
+                this.loadingCallCounter--;
+                if (this.loadingCallCounter <= 0) {
+                    this.loadingCallCounter = 0;
+                    this.scope["isLoading"] = false;
+                }
+            };
             /**
              * Fired after the constructor has completed. Used to setup the controller.
              *
@@ -916,7 +946,7 @@ var PraetorApp;
             //#endregion
             //#region Controller Methods
             LoginController.prototype.login = function () {
-                var self = this;
+                var _this = this;
                 if (!this.viewModel.server) {
                     this.UiHelper.alert("Zadejte adresu serveru");
                     return;
@@ -931,21 +961,20 @@ var PraetorApp;
                 }
                 this.UiHelper.progressIndicator.showSimple(true);
                 this.Praetor.login(this.viewModel.server, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then(function (data) {
-                    // Odstraníme 
-                    self.UiHelper.progressIndicator.hide();
+                    _this.UiHelper.progressIndicator.hide();
                     if (data.success) {
-                        self.Preferences.serverUrl = self.viewModel.server;
-                        self.Preferences.username = self.viewModel.username;
-                        self.Preferences.password = self.Hash.md5(self.viewModel.password);
-                        self.$location.path("/app/home");
-                        self.$location.replace();
+                        _this.Preferences.serverUrl = _this.viewModel.server;
+                        _this.Preferences.username = _this.viewModel.username;
+                        _this.Preferences.password = _this.Hash.md5(_this.viewModel.password);
+                        _this.$location.path("/app/home");
+                        _this.$location.replace();
                     }
                     else {
-                        self.UiHelper.alert(data.message);
+                        _this.UiHelper.alert(data.message);
                     }
                 })['finally'](function () {
                     // Zavřeme progress indigator                
-                    self.UiHelper.progressIndicator.hide();
+                    this.UiHelper.progressIndicator.hide();
                 });
             };
             LoginController.ID = "LoginController";
@@ -960,7 +989,7 @@ var PraetorApp;
     (function (Controllers) {
         var SpisController = (function (_super) {
             __extends(SpisController, _super);
-            function SpisController($scope, $location, $http, $stateParams, Utilities, UiHelper, Preferences, PraetorService, FileService) {
+            function SpisController($scope, $location, $http, $state, $stateParams, Utilities, UiHelper, Preferences, PraetorService, FileService) {
                 _super.call(this, $scope, PraetorApp.ViewModels.SpisViewModel);
                 this.$location = $location;
                 this.$http = $http;
@@ -970,31 +999,35 @@ var PraetorApp;
                 this.PraetorService = PraetorService;
                 this.FileService = FileService;
                 this.viewModel.id_spis = $stateParams.id;
-                this.loadSpis();
-                this.loadDokumenty();
+                this.$state = $state;
+                // načteme data
+                this.reloadData();
             }
             Object.defineProperty(SpisController, "$inject", {
                 get: function () {
-                    return ["$scope", "$location", "$http", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.PraetorService.ID, PraetorApp.Services.FileUtilities.ID];
+                    return ["$scope", "$location", "$http", "$state", "$stateParams", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.PraetorService.ID, PraetorApp.Services.FileUtilities.ID];
                 },
                 enumerable: true,
                 configurable: true
             });
             SpisController.prototype.loadSpis = function () {
                 var _this = this;
+                this.onBeforeLoading();
                 var request = {};
                 request.id_Spis = this.viewModel.id_spis;
                 this.PraetorService.loadSpisZakladniUdaje(request).then(function (response) {
                     _this.viewModel.spis = response.spis;
-                    _this.viewModel.subjekty = response.subjekty;
+                    _this.onAftterLoading();
                 });
             };
             SpisController.prototype.loadDokumenty = function () {
                 var _this = this;
+                this.onBeforeLoading();
                 var request = {};
                 request.id_Spis = this.viewModel.id_spis;
                 this.PraetorService.loadSpisDokumenty(request).then(function (response) {
                     _this.viewModel.dokumenty = response.dokumenty;
+                    _this.onAftterLoading();
                 });
             };
             SpisController.prototype.openDokument = function (dokument) {
@@ -1016,6 +1049,10 @@ var PraetorApp;
                 }, function (ex) {
                     _this.UiHelper.alert("Činnost se nepodařilo uložit.");
                 });
+            };
+            SpisController.prototype.reloadData = function () {
+                this.loadSpis();
+                this.loadDokumenty();
             };
             SpisController.ID = "SpisController";
             return SpisController;
@@ -1162,7 +1199,7 @@ var PraetorApp;
             HomeCinnostiController.prototype.GetDate = function (date) {
                 return new Date(date.getFullYear(), date.getMonth(), date.getDate());
             };
-            HomeCinnostiController.prototype.ReloadData = function () {
+            HomeCinnostiController.prototype.reloadData = function () {
                 var request = {};
                 request.cinnostiUntil = Controllers.DateTools.GetDateInJsonFormat(this.DateUntil);
                 request.cinnostiSince = Controllers.DateTools.GetDateInJsonFormat(this.DateSince);
@@ -1188,6 +1225,7 @@ var PraetorApp;
             };
             HomeCinnostiController.prototype.LoadData = function (request) {
                 var _this = this;
+                this.onBeforeLoading();
                 this.PraetorService.loadCinnosti(request).then(function (response) {
                     _this.Cinnosti = _this.Cinnosti.concat(_.map(response.cinnosti, function (x) {
                         var result = new PraetorApp.ViewModels.Ekonomika.CinnostPrehledEntry();
@@ -1208,6 +1246,7 @@ var PraetorApp;
                     if (requestUntil > _this.DateUntil)
                         _this.DateUntil = requestUntil;
                     _this.RebuildList();
+                    _this.onAftterLoading();
                 });
             };
             HomeCinnostiController.prototype.LoadPreviousDay = function () {
@@ -1229,7 +1268,7 @@ var PraetorApp;
                     _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, options).then(function (result) {
                         if (result && result.Success)
                             _this.UiHelper.toast.show("Činnost byla uložena.", "short", "center");
-                        _this.ReloadData();
+                        _this.reloadData();
                     }, function (ex) {
                         _this.UiHelper.alert("Činnost se nepodařilo uložit.");
                     });
@@ -1246,7 +1285,7 @@ var PraetorApp;
                     _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, options).then(function (result) {
                         if (result && result.Success)
                             _this.UiHelper.toast.show("Činnost byla uložena.", "short", "center");
-                        _this.ReloadData();
+                        _this.reloadData();
                     }, function (ex) {
                         _this.UiHelper.alert("Činnost se nepodařilo uložit.");
                     });
@@ -1288,10 +1327,12 @@ var PraetorApp;
             });
             HomeSpisyController.prototype.LoadPosledniSpisy = function () {
                 var _this = this;
+                this.onBeforeLoading();
                 var request = {};
                 request.pocet = 20;
                 this.PraetorService.LoadPosledniSpisy(request).then(function (response) {
                     _this.viewModel.PrehledSpisu.posledniSpisy = response.posledniSpisy;
+                    _this.onAftterLoading();
                 });
             };
             HomeSpisyController.prototype.openSpis = function (spis) {
@@ -1306,6 +1347,11 @@ var PraetorApp;
                 // Došlo k změně u registrované komponenty
                 // aktualizujeme seznam spisů
                 this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
+                this.onAftterLoading();
+            };
+            HomeSpisyController.prototype.reloadData = function () {
+                this.onBeforeLoading();
+                this.SpisyUtilities.Synchronize();
             };
             HomeSpisyController.ID = "HomeSpisyController";
             return HomeSpisyController;
@@ -1446,15 +1492,9 @@ var PraetorApp;
                 // Grab a reference to the root div element.
                 this._rootElement = this.element[0];
                 // Watch for the changing of the value attributes.
-                this.scope.$watch(function () {
-                    return _this.scope.icon;
-                }, _.bind(this.icon_listener, this));
-                this.scope.$watch(function () {
-                    return _this.scope.iconSize;
-                }, _.bind(this.iconSize_listener, this));
-                this.scope.$watch(function () {
-                    return _this.scope.text;
-                }, _.bind(this.text_listener, this));
+                this.scope.$watch(function () { return _this.scope.icon; }, _.bind(this.icon_listener, this));
+                this.scope.$watch(function () { return _this.scope.iconSize; }, _.bind(this.iconSize_listener, this));
+                this.scope.$watch(function () { return _this.scope.text; }, _.bind(this.text_listener, this));
                 // Fire a created event sending along this directive instance.
                 // Parent scopes can listen for this so they can obtain a reference
                 // to the instance so they can call getters/setters etc.
@@ -1626,13 +1666,14 @@ var PraetorApp;
                 input.filter(function (value, index, array) {
                     if (out.length >= 50)
                         return;
+                    var rowData = "";
                     if (value.spisovaZnacka != undefined || value.spisovaZnacka != "")
-                        search += value.spisovaZnacka.toLowerCase();
+                        rowData += value.spisovaZnacka.toLowerCase() + "|#|";
                     if (value.predmet != undefined || value.predmet != "")
-                        search += value.predmet.toLowerCase();
+                        rowData += value.predmet.toLowerCase() + "|#|";
                     if (value.hlavniKlient != undefined || value.hlavniKlient != "")
-                        search += value.hlavniKlient.toLowerCase();
-                    if (search.indexOf(search.toLowerCase()) >= 0)
+                        rowData += value.hlavniKlient.toLowerCase() + "|#|";
+                    if (rowData.indexOf(search.toLowerCase()) >= 0)
                         out.push(value);
                 });
                 return out;
@@ -2175,6 +2216,7 @@ var PraetorApp;
                         };
                         return $delegate.call(this, method, url, data, interceptor, headers);
                     };
+                    /* tslint:disable:forin */
                     for (var key in $delegate) {
                         proxy[key] = $delegate[key];
                     }
@@ -2578,12 +2620,20 @@ var PraetorApp;
             PraetorService.prototype.login = function (server, username, password) {
                 var q = this.$q.defer();
                 var data = { username: username, password: password };
-                this.$http.post('http://' + server + '/praetorapi/login', data, {
-                    headers: { 'Content-Type': 'application/json' }
-                }).then(function (response) {
+                var configure = {};
+                configure.timeout = 4000;
+                configure.headers = { 'Content-Type': 'application/json' };
+                this.$http.post('http://' + server + '/praetorapi/login', data, configure)
+                    .then(function (response) {
                     q.resolve(response.data);
                 })['catch'](function (e) {
-                    q.resolve({ success: false, message: "Error " + e.status + "|" + e.message });
+                    if (e.status == 0) {
+                        // Ukončeno timeoutem
+                        q.resolve({ success: false, message: "Nepodařilo se připojit k serveru: " + server });
+                    }
+                    else {
+                        q.resolve({ success: false, message: "Error " + e.status + "|" + e.message });
+                    }
                 });
                 return q.promise;
             };
@@ -2608,7 +2658,11 @@ var PraetorApp;
                     this.$location.path("/app/login");
                     this.$location.replace();
                 }
-                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, { headers: { 'Content-Type': 'application/json' } }).then(function (response) {
+                var configure = {};
+                configure.timeout = 10000;
+                configure.headers = { 'Content-Type': 'application/json' };
+                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, configure)
+                    .then(function (response) {
                     if (options.ShowProgress) {
                         _this.$ionicLoading.hide();
                     }
@@ -3401,9 +3455,7 @@ var PraetorApp;
                     return "";
                 }
                 // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-                return str.replace(/\w\S*/g, function (txt) {
-                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-                });
+                return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
             };
             /**
              * Used to format a string by replacing values with the given arguments.
@@ -3454,6 +3506,7 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
+                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3489,6 +3542,7 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
+                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3597,6 +3651,7 @@ var PraetorApp;
                 j;
                 // Start out with an empty string.
                 guid = "";
+                // Now loop 35 times to generate 35 characters.
                 for (j = 0; j < 32; j++) {
                     // Characters at these indexes are always hyphens.
                     if (j === 8 || j === 12 || j === 16 || j === 20) {

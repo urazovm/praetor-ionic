@@ -1206,7 +1206,7 @@ var PraetorApp;
                 this.DateUntil = this.DateSince;
                 var request = {};
                 request.cinnostiUntil = Controllers.DateTools.GetDateInJsonFormat(this.DateUntil);
-                request.cinnostiSince = Controllers.DateTools.GetDateInJsonFormat(this.AddDays(this.DateSince, -1));
+                request.cinnostiSince = Controllers.DateTools.GetDateInJsonFormat(this.AddDays(this.DateSince, -7));
                 this.viewModel.PrehledCinnosti = new PraetorApp.ViewModels.PrehledCinnostiViewModel();
                 this.Cinnosti = [];
                 this.LoadData(request);
@@ -1274,10 +1274,10 @@ var PraetorApp;
                     _this.onAftterLoading();
                 });
             };
-            HomeCinnostiController.prototype.LoadPreviousDay = function () {
+            HomeCinnostiController.prototype.LoadPreviousWeek = function () {
                 var request = {};
                 request.cinnostiUntil = Controllers.DateTools.GetDateInJsonFormat(this.DateSince);
-                request.cinnostiSince = Controllers.DateTools.GetDateInJsonFormat(this.AddDays(this.DateSince, -1));
+                request.cinnostiSince = Controllers.DateTools.GetDateInJsonFormat(this.AddDays(this.DateSince, -7));
                 this.LoadData(request);
             };
             HomeCinnostiController.prototype.OpenCinnost = function (cinnost) {

@@ -157,7 +157,8 @@
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
     "plugins\\android.json",
-    "www\\templates\\home.html"
+    "www\\templates\\home\\cinnosti.html",
+    "www\\templates\\directives\\prehled-cinnosti.html"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

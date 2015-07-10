@@ -2691,7 +2691,7 @@ var PraetorApp;
                     q.resolve(response.data);
                 })['catch'](function (e) {
                     // Zavřeme dialogové okno
-                    this.$ionicLoading.hide();
+                    _this.$ionicLoading.hide();
                     if (e.status == 0) {
                         // Ukončeno timeoutem
                         q.resolve({ success: false, message: "Nepodařilo se připojit k serveru: " + server, sessionId: "" });

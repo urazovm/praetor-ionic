@@ -57,7 +57,7 @@
                 q.resolve(response.data);
 
             })
-            ['catch'](function (e) {
+            ['catch'](e => {
 
                 // Zavřeme dialogové okno
                 this.$ionicLoading.hide();

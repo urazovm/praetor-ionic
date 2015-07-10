@@ -114,8 +114,8 @@
                 config.headers["Accept"] = "application/json";
 
                 // If we currently have a user ID and token, then include it in the authorization header.
-                if (this.Preferences.username && this.Preferences.token) {
-                    config.headers["Authorization"] = this.getAuthorizationHeader(this.Preferences.username, this.Preferences.token);
+                if (this.Preferences.username && this.Preferences.sessionId) {
+                    config.headers["Authorization"] = this.getAuthorizationHeader(this.Preferences.username, this.Preferences.sessionId);
                 }
 
                 /* tslint:enable:no-string-literal */

@@ -42,7 +42,7 @@
 
             // Unauthorized should mean that a token wasn't sent, but we'll null these out anyways.
             this.Preferences.username = null;
-            this.Preferences.token = null;
+            this.Preferences.sessionId = null;
 
             this.UiHelper.toast.showLongBottom("You do not have a token (401); please login.");
         }
@@ -51,7 +51,7 @@
 
             // A token was sent, but was no longer valid. Null out the invalid token.
             this.Preferences.username = null;
-            this.Preferences.token = null;
+            this.Preferences.sessionId = null;
 
             this.UiHelper.toast.showLongBottom("Your token has expired (403); please login again.");
         }
@@ -87,6 +87,7 @@
                     this.Preferences.serverUrl = this.viewModel.server;
                     this.Preferences.username = this.viewModel.username;
                     this.Preferences.password = this.Hash.md5(this.viewModel.password);
+                    this.Preferences.sessionId = <any>data.sessionId;
 
                     this.$location.path("/app/home");
                     this.$location.replace();

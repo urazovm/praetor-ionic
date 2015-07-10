@@ -10,7 +10,7 @@ declare module PraetorServer.Service.WebServer.Messages {
 	interface Request {
 		username: string;
 		password: string;
-		sessionid: System.Guid;
+		sessionId: System.Guid;
 	}
 	interface GetFileTokenRequest extends PraetorServer.Service.WebServer.Messages.Request {
 		id_file: System.Guid;
@@ -81,6 +81,7 @@ declare module PraetorServer.Service.WebServer.Messages {
 	interface LoginRequest extends PraetorServer.Service.WebServer.Messages.Request {
 	}
 	interface LoginResponse extends PraetorServer.Service.WebServer.Messages.Response {
+		sessionId: System.Guid;
 	}
 }
 declare module System {

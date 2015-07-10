@@ -5,7 +5,7 @@
   xmlns:gap="http://phonegap.com/ns/1.0" 
   xmlns:android   = "http://schemas.android.com/apk/res/android"
   id="cz.praetor-systems.praetor2" 
-  version="1.0.138"
+  version="1.0.140"
   xmlns="http://www.w3.org/ns/widgets" 
   defaultlocale="cs-CZ">
   
@@ -14,6 +14,8 @@
   <author href="http://praetor-systems.cz" email="info@praetor-systems.cz">Praetor Systems s. r. o.</author>
   <content src="index.html" />
   <access origin="*" />
+  <access origin="tel:*" launch-external="yes" />
+  <access origin="mailto:*" launch-external="yes" />
   <vs:features />
   
    <gap:config-file platform="android" parent="/manifest">

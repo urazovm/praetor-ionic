@@ -219,7 +219,9 @@ var PraetorApp;
                 instance.render();
             };
             // Finally, return a function that returns this Angular directive descriptor object.
-            return function () { return descriptor; };
+            return function () {
+                return descriptor;
+            };
         }
         /**
          * Used to create an array of injection property names followed by a function that will be
@@ -252,7 +254,9 @@ var PraetorApp;
          * @param fn The function that will provide the filter's logic.
          */
         function getFilterFactoryFunction(fn) {
-            return function () { return fn; };
+            return function () {
+                return fn;
+            };
         }
         //#endregion
         //#region Platform Configuration
@@ -286,9 +290,6 @@ var PraetorApp;
                     $state.go('app.home');
                 }
                 else if (nameRoute.indexOf("app.home.cinnosti") === 0) {
-                    $state.go('app.home.spisy');
-                }
-                else if (nameRoute.indexOf("app.home.nastaveni") === 0) {
                     $state.go('app.home.spisy');
                 }
                 else if (nameRoute.indexOf("app.home.spisy") === 0) {
@@ -332,7 +333,7 @@ var PraetorApp;
             });
             // Whitelist several URI schemes to prevent Angular from marking them as un-safe.
             // http://stackoverflow.com/questions/19590818/angularjs-and-windows-8-route-error
-            $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|ghttps?|ms-appx|x-wmapp0|chrome-extension):/);
+            $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|tel|mailto|file|ghttps?|ms-appx|x-wmapp0|chrome-extension):/);
             $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|ms-appx|x-wmapp0):|data:image\//);
             // Register our custom interceptor with the HTTP provider so we can hook into AJAX request events.
             //$httpProvider.interceptors.push(Services.HttpInterceptor.ID);
@@ -478,15 +479,6 @@ var PraetorApp;
                     }
                 }
             });
-            $stateProvider.state('app.home.nastaveni', {
-                url: "/nastaveni",
-                views: {
-                    'tab-nastaveni': {
-                        templateUrl: "templates/home/nastaveni.html",
-                        controller: PraetorApp.Controllers.HomeNastaveniController.ID
-                    }
-                }
-            });
             $stateProvider.state("app.spis", {
                 url: "/spis/{id}",
                 views: {
@@ -514,6 +506,15 @@ var PraetorApp;
                     }
                 }
             });
+            $stateProvider.state('app.spis.subjekty', {
+                cache: true,
+                url: "/subjekty",
+                views: {
+                    'tab-subjekty': {
+                        templateUrl: "templates/spis/subjekty.html",
+                    }
+                }
+            });
             $stateProvider.state("app.about", {
                 url: "/settings/about",
                 views: {
@@ -523,10 +524,8 @@ var PraetorApp;
                     }
                 }
             });
-            if (!localStorage.getItem("PASSWORD"))
-                $urlRouterProvider.otherwise('/app/login');
-            else
-                $urlRouterProvider.otherwise('/app/home');
+            // If none of the above states are matched, use the blank route.
+            $urlRouterProvider.otherwise('/app/login');
         };
         return RouteConfig;
     })();
@@ -944,13 +943,13 @@ var PraetorApp;
             LoginController.prototype.http_unauthorized = function () {
                 // Unauthorized should mean that a token wasn't sent, but we'll null these out anyways.
                 this.Preferences.username = null;
-                this.Preferences.token = null;
+                this.Preferences.sessionId = null;
                 this.UiHelper.toast.showLongBottom("You do not have a token (401); please login.");
             };
             LoginController.prototype.http_forbidden = function () {
                 // A token was sent, but was no longer valid. Null out the invalid token.
                 this.Preferences.username = null;
-                this.Preferences.token = null;
+                this.Preferences.sessionId = null;
                 this.UiHelper.toast.showLongBottom("Your token has expired (403); please login again.");
             };
             LoginController.prototype.http_notFound = function () {
@@ -973,11 +972,14 @@ var PraetorApp;
                     this.UiHelper.alert("Zadejte heslo");
                     return;
                 }
+                this.UiHelper.progressIndicator.showSimple(true);
                 this.Praetor.login(this.viewModel.server, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then(function (data) {
+                    _this.UiHelper.progressIndicator.hide();
                     if (data.success) {
                         _this.Preferences.serverUrl = _this.viewModel.server;
                         _this.Preferences.username = _this.viewModel.username;
                         _this.Preferences.password = _this.Hash.md5(_this.viewModel.password);
+                        _this.Preferences.sessionId = data.sessionId;
                         _this.$location.path("/app/home");
                         _this.$location.replace();
                     }
@@ -985,6 +987,8 @@ var PraetorApp;
                         _this.UiHelper.alert(data.message);
                     }
                 })['finally'](function () {
+                    // Zavřeme progress indigator                
+                    this.UiHelper.progressIndicator.hide();
                 });
             };
             LoginController.ID = "LoginController";
@@ -1312,34 +1316,6 @@ var PraetorApp;
 (function (PraetorApp) {
     var Controllers;
     (function (Controllers) {
-        var HomeNastaveniController = (function (_super) {
-            __extends(HomeNastaveniController, _super);
-            function HomeNastaveniController($scope, $state, Preferences) {
-                _super.call(this, $scope, PraetorApp.ViewModels.Home.NastaveniViewModel);
-                this.$state = $state;
-                this.Preferences = Preferences;
-            }
-            Object.defineProperty(HomeNastaveniController, "$inject", {
-                get: function () {
-                    return ["$scope", "$state", PraetorApp.Services.Preferences.ID];
-                },
-                enumerable: true,
-                configurable: true
-            });
-            HomeNastaveniController.prototype.logout = function () {
-                this.Preferences.password = null;
-                this.$state.go("app.login");
-            };
-            HomeNastaveniController.ID = "HomeNastaveniController";
-            return HomeNastaveniController;
-        })(Controllers.BaseController);
-        Controllers.HomeNastaveniController = HomeNastaveniController;
-    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var Controllers;
-    (function (Controllers) {
         var HomeSpisyController = (function (_super) {
             __extends(HomeSpisyController, _super);
             function HomeSpisyController($scope, $location, $http, $state, Utilities, UiHelper, Preferences, SpisyUtilities, PraetorService) {
@@ -1531,9 +1507,15 @@ var PraetorApp;
                 // Grab a reference to the root div element.
                 this._rootElement = this.element[0];
                 // Watch for the changing of the value attributes.
-                this.scope.$watch(function () { return _this.scope.icon; }, _.bind(this.icon_listener, this));
-                this.scope.$watch(function () { return _this.scope.iconSize; }, _.bind(this.iconSize_listener, this));
-                this.scope.$watch(function () { return _this.scope.text; }, _.bind(this.text_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.icon;
+                }, _.bind(this.icon_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.iconSize;
+                }, _.bind(this.iconSize_listener, this));
+                this.scope.$watch(function () {
+                    return _this.scope.text;
+                }, _.bind(this.text_listener, this));
                 // Fire a created event sending along this directive instance.
                 // Parent scopes can listen for this so they can obtain a reference
                 // to the instance so they can call getters/setters etc.
@@ -1988,8 +1970,8 @@ var PraetorApp;
                     config.headers["Content-Type"] = "application/json";
                     config.headers["Accept"] = "application/json";
                     // If we currently have a user ID and token, then include it in the authorization header.
-                    if (this.Preferences.username && this.Preferences.token) {
-                        config.headers["Authorization"] = this.getAuthorizationHeader(this.Preferences.username, this.Preferences.token);
+                    if (this.Preferences.username && this.Preferences.sessionId) {
+                        config.headers["Authorization"] = this.getAuthorizationHeader(this.Preferences.username, this.Preferences.sessionId);
                     }
                     /* tslint:enable:no-string-literal */
                     if (this.Preferences.apiUrl && this.Preferences.apiUrl) {
@@ -2255,7 +2237,6 @@ var PraetorApp;
                         };
                         return $delegate.call(this, method, url, data, interceptor, headers);
                     };
-                    /* tslint:disable:forin */
                     for (var key in $delegate) {
                         proxy[key] = $delegate[key];
                     }
@@ -2657,29 +2638,20 @@ var PraetorApp;
                 return q.promise;
             };
             PraetorService.prototype.login = function (server, username, password) {
-                var _this = this;
                 var q = this.$q.defer();
                 var data = { username: username, password: password };
                 var configure = {};
                 configure.timeout = 4000;
                 configure.headers = { 'Content-Type': 'application/json' };
-                this.$ionicLoading.show({
-                    template: '<i class="icon ion-load-c"></i>'
-                });
-                this.$http.post('http://' + server + '/praetorapi/login', data, configure)
-                    .then(function (response) {
-                    // Zavřeme dialogové okno
-                    _this.$ionicLoading.hide();
+                this.$http.post('http://' + server + '/praetorapi/login', data, configure).then(function (response) {
                     q.resolve(response.data);
                 })['catch'](function (e) {
-                    // Zavřeme dialogové okno
-                    this.$ionicLoading.hide();
                     if (e.status == 0) {
                         // Ukončeno timeoutem
-                        q.resolve({ success: false, message: "Nepodařilo se připojit k serveru: " + server });
+                        q.resolve({ success: false, message: "Nepodařilo se připojit k serveru: " + server, sessionId: "" });
                     }
                     else {
-                        q.resolve({ success: false, message: "Error " + e.status + "|" + e.message });
+                        q.resolve({ success: false, message: "Error " + e.status + "|" + e.message, sessionId: "" });
                     }
                 });
                 return q.promise;
@@ -2702,6 +2674,7 @@ var PraetorApp;
                 var server = this.Preferences.serverUrl;
                 data.username = this.Preferences.username;
                 data.password = this.Preferences.password;
+                data.sessionId = this.Preferences.sessionId;
                 if (data.username == undefined || data.password == undefined || server == undefined) {
                     // Přepneme se na login obrazovku
                     this.$location.path("/app/login");
@@ -2710,8 +2683,7 @@ var PraetorApp;
                 var configure = {};
                 configure.timeout = 10000;
                 configure.headers = { 'Content-Type': 'application/json' };
-                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, configure)
-                    .then(function (response) {
+                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, configure).then(function (response) {
                     if (options.ShowProgress) {
                         _this.$ionicLoading.hide();
                     }
@@ -2891,7 +2863,7 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
-            Object.defineProperty(Preferences.prototype, "token", {
+            Object.defineProperty(Preferences.prototype, "sessionId", {
                 get: function () {
                     return localStorage.getItem(Preferences.SESSION_ID);
                 },
@@ -3504,7 +3476,9 @@ var PraetorApp;
                     return "";
                 }
                 // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-                return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+                return str.replace(/\w\S*/g, function (txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                });
             };
             /**
              * Used to format a string by replacing values with the given arguments.
@@ -3555,7 +3529,6 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
-                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3591,7 +3564,6 @@ var PraetorApp;
                 }
                 // Break the property string down into individual properties.
                 properties = propertyString.split(".");
-                // Dig down into the object hierarchy using the properties.
                 for (i = 0; i < properties.length; i += 1) {
                     // Grab the property for this index.
                     property = properties[i];
@@ -3700,7 +3672,6 @@ var PraetorApp;
                 j;
                 // Start out with an empty string.
                 guid = "";
-                // Now loop 35 times to generate 35 characters.
                 for (j = 0; j < 32; j++) {
                     // Characters at these indexes are always hyphens.
                     if (j === 8 || j === 12 || j === 16 || j === 20) {
@@ -3865,21 +3836,6 @@ var PraetorApp;
                 return CinnostiViewModel;
             })();
             Home.CinnostiViewModel = CinnostiViewModel;
-        })(Home = ViewModels.Home || (ViewModels.Home = {}));
-    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
-})(PraetorApp || (PraetorApp = {}));
-var PraetorApp;
-(function (PraetorApp) {
-    var ViewModels;
-    (function (ViewModels) {
-        var Home;
-        (function (Home) {
-            var NastaveniViewModel = (function () {
-                function NastaveniViewModel() {
-                }
-                return NastaveniViewModel;
-            })();
-            Home.NastaveniViewModel = NastaveniViewModel;
         })(Home = ViewModels.Home || (ViewModels.Home = {}));
     })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
 })(PraetorApp || (PraetorApp = {}));

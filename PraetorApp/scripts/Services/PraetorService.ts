@@ -64,10 +64,10 @@
 
                 if (e.status == 0) {
                     // Ukončeno timeoutem
-                    q.resolve({ success: false, message: "Nepodařilo se připojit k serveru: " + server });
+                    q.resolve({ success: false, message: "Nepodařilo se připojit k serveru: " + server, sessionId: "" });
                 }
                 else {
-                    q.resolve({ success: false, message: "Error " + e.status + "|" + e.message });
+                    q.resolve({ success: false, message: "Error " + e.status + "|" + e.message, sessionId: "" });
                 }
             });
 
@@ -96,6 +96,7 @@
             var server = this.Preferences.serverUrl;
             data.username = this.Preferences.username;
             data.password = this.Preferences.password;
+            data.sessionId = this.Preferences.sessionId;
 
             if (data.username == undefined || data.password == undefined || server == undefined) {
                 // Přepneme se na login obrazovku

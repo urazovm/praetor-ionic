@@ -2,8 +2,6 @@
 
     <ion-content has-bouncing="false">
 
-        <p><a href="tel:603811797">TEST CALL</a></p>
-
         <div class="list">
             <div class="item item-divider" ng-show="(viewModel.subjekty | filter: { role : 'Klient' }).length">Klient</div>
             <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Klient' }" ng-include="'subjekt_template.html'" ></div>
@@ -18,9 +16,18 @@
 </ion-content>
 </ion-view>
 
+<style>
+    .button-list-flow-right
+    {
+        float:right;
+        margin: -10px 0
+    }
+
+</style>
+
 <script type="text/ng-template" id="subjekt_template.html">
-    <a style="float:right" class="button button-clear" ng-href="tel:{{subjekt.primarniTelefon}}" ng-show="subjekt.primarniTelefon"><i class="icon ion-ios-telephone"></i></a>
-    <a style="float:right" class="button button-clear" ng-href="mailto:{{subjekt.primarniEmail}}" ng-show="subjekt.primarniEmail"><i class="icon ion-ios-email"></i></a>
+    <a class="button button-clear button-list-flow-right" ng-href="tel:{{subjekt.primarniTelefon}}" ng-show="subjekt.primarniTelefon"><i class="icon ion-ios-telephone"></i></a>
+    <a class="button button-clear button-list-flow-right" ng-href="mailto:{{subjekt.primarniEmail}}" ng-show="subjekt.primarniEmail"><i class="icon ion-ios-email"></i></a>
 
     <!--<button style="float:right" class="button button-clear" ng-href="mailto:{{subjekt.primarniEmail}}" ng-show="subjekt.primarniEmail"><i class="icon ion-ios-email"></i></button>-->
 

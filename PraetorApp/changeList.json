@@ -150,23 +150,9 @@
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
     "plugins\\android.json",
-    "www\\templates\\spis\\zakladniudaje.html",
-    "www\\config.xml",
-    "config.xml",
-    "www\\css\\style.css",
-    "www\\templates\\home.html",
-    "www\\templates\\spis.html",
-    "www\\templates\\settings\\login.html",
-    "www\\templates\\home\\cinnosti.html",
-    "www\\templates\\home\\spisy.html",
     "www\\templates\\spis\\subjekty.html"
   ],
-  "deletedFiles": [
-    "scripts\\Controllers\\Spis\\SpisDokumentyController.ts",
-    "scripts\\Controllers\\Spis\\ZakladniUdajeController.ts",
-    "www\\templates\\spis\\zakladniudaje.html~RF10e28c9d.TMP",
-    "www\\templates\\spis\\zakladniudaje - Copy.html"
-  ],
+  "deletedFiles": [],
   "addedPlugins": [],
   "deletedPlugins": []
 }

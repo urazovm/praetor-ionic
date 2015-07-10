@@ -6,9 +6,10 @@
         </div>
     </ion-content>
 </ion-view>
+
 <script type="text/ng-template" id="file_template.html">
     <div ng-switch="node.mime || 'dir'">
-        <div ng-switch-when="dir">
+        <div ng-switch-when="dir">            
             <a class="item item-icon-left" onclick="this.nextElementSibling.style.display = (this.nextElementSibling.style.display == 'block') ? 'none' : 'block';"><i class="icon ion-folder"></i>{{node.nazev}}</a>
             <ul style='display:none' class="dir">
                 <li ng-repeat="node in node.nodes" ng-include="'file_template.html'"></li>

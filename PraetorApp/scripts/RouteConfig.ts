@@ -86,7 +86,17 @@ module PraetorApp {
                 views: {
                     'tab-dokumenty': {
                         templateUrl: "templates/spis/dokumenty.html",
-                        //controller: Controllers.SpisDokumentyController.ID
+                    }
+                }
+            });
+
+
+            $stateProvider.state('app.spis.subjekty', {
+                cache: true,
+                url: "/subjekty",
+                views: {
+                    'tab-subjekty': {
+                        templateUrl: "templates/spis/subjekty.html",
                     }
                 }
             });

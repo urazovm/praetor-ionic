@@ -1,0 +1,25 @@
+﻿<ion-view title="Spis {{viewModel.spis.spisovaZnacka}}">
+    <ion-content has-bouncing="false">
+
+        <div class="list">
+            <div class="item item-divider" ng-show="(viewModel.subjekty | filter: { role : 'Klient' }).length">Klient</div>
+            <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Klient' }" ng-include="'subjekt_template.html'" ></div>
+            <div class="item item-divider"  ng-show="(viewModel.subjekty | filter: { role : 'Protistrana' }).length">Protistrana</div>
+            <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Protistrana' }" ng-include="'subjekt_template.html'"></div>
+            <div class="item item-divider"  ng-show="(viewModel.subjekty | filter: { role : 'Rozhodující orgán' }).length">Rozhodující orgán</div>
+            <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Rozhodující orgán' }" ng-include="'subjekt_template.html'"></div>
+            <div class="item item-divider" ng-show="(viewModel.subjekty | filter: { role : 'Zúčastněný subjekt' }).length">Zúčastněný subjekt</div>
+            <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Zúčastněný subjekt' }" ng-include="'subjekt_template.html'"></div>
+        </div>
+
+</ion-content>
+</ion-view>
+
+<script type="text/ng-template" id="subjekt_template.html">
+    <a style="float:right" class="button button-clear" href="tel:{{subjekt.primarniTelefon}}" ng-show="subjekt.primarniTelefon"><i class="icon ion-ios-telephone"></i></a>
+    <button style="float:right" class="button button-clear" ng-href="tel:{{subjekt.primarniTelefon}}" ng-show="subjekt.primarniTelefon"><i class="icon ion-ios-telephone"></i></button>
+    <button style="float:right" class="button button-clear" ng-href="mailto:{{subjekt.primarniEmail}}" ng-show="subjekt.primarniEmail"><i class="icon ion-ios-email"></i></button>
+
+    <h2>{{subjekt.oznaceni}} </h2>
+    <p>{{subjekt.procesniRole}} {{subjekt.hmotnepravniRole}}</p>
+</script>

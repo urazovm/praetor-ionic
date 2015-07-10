@@ -1,5 +1,11 @@
 ﻿<ion-pane>
     <ion-nav-bar class="bar-positive nav-title-slide-ios pr-black" align-title="center">
+        <ion-nav-buttons side="left">
+            <button class="button" ui-sref="app.home.spisy">
+                <i class="icon ion-ios-arrow-back"></i>
+            </button>
+        </ion-nav-buttons>
+
         <ion-nav-buttons side="right">
             <button class="button" ng-click="controller.reloadData()" ng-show="showLoadingButton">
                 <i class="icon ion-ios-loop" ng-class="{'animated-icon': isLoading}"></i>
@@ -8,10 +14,6 @@
     </ion-nav-bar>
 
     <ion-tabs class="tabs-positive tabs-icon-top pr-black">
-
-        <div ui-sref="app.home.spisy" class="praetor-back-button">
-            <i class="icon ion-ios-arrow-back"></i>
-        </div>
 
         <ion-tab title="Základní údaje" icon-on="ion-ios-information" icon-off="ion-ios-information-outline" ui-sref="app.spis.zakladniudaje">
             <ion-nav-view name="tab-zakladni-udaje"></ion-nav-view>

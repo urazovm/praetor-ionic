@@ -59,6 +59,16 @@ module PraetorApp {
                 }
             });
 
+            $stateProvider.state('app.home.nastaveni', {
+                url: "/nastaveni",
+                views: {
+                    'tab-nastaveni': {
+                        templateUrl: "templates/home/nastaveni.html",
+                        controller: Controllers.HomeNastaveniController.ID
+                    }
+                }
+            });
+
             $stateProvider.state("app.spis", {                
                 url: "/spis/{id}",
                 views: {
@@ -101,8 +111,10 @@ module PraetorApp {
                 }
             });
 
-            // If none of the above states are matched, use the blank route.
-            $urlRouterProvider.otherwise('/app/login');
+            if(!localStorage.getItem("PASSWORD"))
+                $urlRouterProvider.otherwise('/app/login');
+            else
+                $urlRouterProvider.otherwise('/app/home');
         }
     }
 }

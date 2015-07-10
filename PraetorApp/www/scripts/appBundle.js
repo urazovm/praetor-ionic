@@ -288,6 +288,9 @@ var PraetorApp;
                 else if (nameRoute.indexOf("app.home.cinnosti") === 0) {
                     $state.go('app.home.spisy');
                 }
+                else if (nameRoute.indexOf("app.home.nastaveni") === 0) {
+                    $state.go('app.home.spisy');
+                }
                 else if (nameRoute.indexOf("app.home.spisy") === 0) {
                     var nav = navigator;
                     if (nav.app) {
@@ -475,6 +478,15 @@ var PraetorApp;
                     }
                 }
             });
+            $stateProvider.state('app.home.nastaveni', {
+                url: "/nastaveni",
+                views: {
+                    'tab-nastaveni': {
+                        templateUrl: "templates/home/nastaveni.html",
+                        controller: PraetorApp.Controllers.HomeNastaveniController.ID
+                    }
+                }
+            });
             $stateProvider.state("app.spis", {
                 url: "/spis/{id}",
                 views: {
@@ -511,8 +523,10 @@ var PraetorApp;
                     }
                 }
             });
-            // If none of the above states are matched, use the blank route.
-            $urlRouterProvider.otherwise('/app/login');
+            if (!localStorage.getItem("PASSWORD"))
+                $urlRouterProvider.otherwise('/app/login');
+            else
+                $urlRouterProvider.otherwise('/app/home');
         };
         return RouteConfig;
     })();
@@ -959,9 +973,7 @@ var PraetorApp;
                     this.UiHelper.alert("Zadejte heslo");
                     return;
                 }
-                this.UiHelper.progressIndicator.showSimple(true);
                 this.Praetor.login(this.viewModel.server, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then(function (data) {
-                    _this.UiHelper.progressIndicator.hide();
                     if (data.success) {
                         _this.Preferences.serverUrl = _this.viewModel.server;
                         _this.Preferences.username = _this.viewModel.username;
@@ -973,8 +985,6 @@ var PraetorApp;
                         _this.UiHelper.alert(data.message);
                     }
                 })['finally'](function () {
-                    // Zavřeme progress indigator                
-                    this.UiHelper.progressIndicator.hide();
                 });
             };
             LoginController.ID = "LoginController";
@@ -1296,6 +1306,34 @@ var PraetorApp;
             return HomeCinnostiController;
         })(Controllers.BaseController);
         Controllers.HomeCinnostiController = HomeCinnostiController;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
+        var HomeNastaveniController = (function (_super) {
+            __extends(HomeNastaveniController, _super);
+            function HomeNastaveniController($scope, $state, Preferences) {
+                _super.call(this, $scope, PraetorApp.ViewModels.Home.NastaveniViewModel);
+                this.$state = $state;
+                this.Preferences = Preferences;
+            }
+            Object.defineProperty(HomeNastaveniController, "$inject", {
+                get: function () {
+                    return ["$scope", "$state", PraetorApp.Services.Preferences.ID];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            HomeNastaveniController.prototype.logout = function () {
+                this.Preferences.password = null;
+                this.$state.go("app.login");
+            };
+            HomeNastaveniController.ID = "HomeNastaveniController";
+            return HomeNastaveniController;
+        })(Controllers.BaseController);
+        Controllers.HomeNastaveniController = HomeNastaveniController;
     })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
@@ -2619,15 +2657,23 @@ var PraetorApp;
                 return q.promise;
             };
             PraetorService.prototype.login = function (server, username, password) {
+                var _this = this;
                 var q = this.$q.defer();
                 var data = { username: username, password: password };
                 var configure = {};
                 configure.timeout = 4000;
                 configure.headers = { 'Content-Type': 'application/json' };
+                this.$ionicLoading.show({
+                    template: '<i class="icon ion-load-c"></i>'
+                });
                 this.$http.post('http://' + server + '/praetorapi/login', data, configure)
                     .then(function (response) {
+                    // Zavřeme dialogové okno
+                    _this.$ionicLoading.hide();
                     q.resolve(response.data);
                 })['catch'](function (e) {
+                    // Zavřeme dialogové okno
+                    this.$ionicLoading.hide();
                     if (e.status == 0) {
                         // Ukončeno timeoutem
                         q.resolve({ success: false, message: "Nepodařilo se připojit k serveru: " + server });
@@ -3819,6 +3865,21 @@ var PraetorApp;
                 return CinnostiViewModel;
             })();
             Home.CinnostiViewModel = CinnostiViewModel;
+        })(Home = ViewModels.Home || (ViewModels.Home = {}));
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
+        var Home;
+        (function (Home) {
+            var NastaveniViewModel = (function () {
+                function NastaveniViewModel() {
+                }
+                return NastaveniViewModel;
+            })();
+            Home.NastaveniViewModel = NastaveniViewModel;
         })(Home = ViewModels.Home || (ViewModels.Home = {}));
     })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
 })(PraetorApp || (PraetorApp = {}));

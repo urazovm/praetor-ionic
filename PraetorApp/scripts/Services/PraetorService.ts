@@ -29,7 +29,6 @@
         public loadHome(request: any): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoadHomeResponse> {
 
             var q = this.$q.defer<PraetorServer.Service.WebServer.Messages.LoadHomeResponse>();
-
             return q.promise;
         }
 
@@ -43,14 +42,25 @@
             configure.timeout = 4000;
             configure.headers = { 'Content-Type': 'application/json' };
 
-            this.$http.post(
+            this.$ionicLoading.show({
+                template: '<i class="icon ion-load-c"></i>'
+            });
+
+            this.$http.post<PraetorServer.Service.WebServer.Messages.LoginResponse>(
                 'http://' + server + '/praetorapi/login',
                 data,
                 configure)
-                .then(function (response: ng.IHttpPromiseCallbackArg<PraetorServer.Service.WebServer.Messages.LoginResponse>) {
+                .then(response => {
+
+                // Zavřeme dialogové okno
+                this.$ionicLoading.hide();
                 q.resolve(response.data);
+
             })
             ['catch'](function (e) {
+
+                // Zavřeme dialogové okno
+                this.$ionicLoading.hide();
 
                 if (e.status == 0) {
                     // Ukončeno timeoutem

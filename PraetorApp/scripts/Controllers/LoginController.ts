@@ -80,11 +80,8 @@
                 this.UiHelper.alert("Zadejte heslo");
                 return;
             }            
-
-            this.UiHelper.progressIndicator.showSimple(true);            
-
-            this.Praetor.login(this.viewModel.server, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then((data) => {                
-                this.UiHelper.progressIndicator.hide();
+                       
+            this.Praetor.login(this.viewModel.server, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then((data) => {                                
                 
                 if (data.success) {
                     this.Preferences.serverUrl = this.viewModel.server;
@@ -99,8 +96,7 @@
                 }
 
             })['finally'](function () {
-                // Zavřeme progress indigator                
-                this.UiHelper.progressIndicator.hide();
+                                
             });
         }
 

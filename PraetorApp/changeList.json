@@ -231,15 +231,21 @@
     "www\\res\\drawable-xxxhdpi\\splash.png",
     "www\\res\\drawable-xxhdpi\\icon.png",
     "www\\res\\android\\splash\\drawable-port-hdpi-screen.png",
+    "scripts\\Controllers\\Home\\NastaveniController.ts",
+    "scripts\\ViewModels\\Home\\NastaveniViewModel.ts",
+    "www\\templates\\home\\nastaveni.html",
     "www\\scripts\\appBundle.js"
   ],
-  "deletedFilesIos": [],
+  "deletedFilesIos": [
+    "scripts\\Controllers\\Home\\SpisyController - Copy.ts",
+    "scripts\\ViewModels\\Home\\SpisyViewModel - Copy.ts",
+    "www\\templates\\home\\spisy - Copy.html"
+  ],
   "addedPluginsIos": [],
   "deletedPluginsIos": [],
   "changedFiles": [
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json",
-    "www\\config.xml"
+    "plugins\\android.json"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

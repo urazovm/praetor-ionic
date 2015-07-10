@@ -338,6 +338,9 @@ module PraetorApp.Application {
             else if (nameRoute.indexOf("app.home.cinnosti") === 0) {
                 $state.go('app.home.spisy');
             }            
+            else if (nameRoute.indexOf("app.home.nastaveni") === 0) {
+                $state.go('app.home.spisy');
+            }
             else if (nameRoute.indexOf("app.home.spisy") === 0) {
 
                 var nav = <any>navigator;

@@ -70,7 +70,7 @@ var PraetorApp;
                                     tempFilterText = val;
                                     filterTextTimeout = $timeout(function () {
                                         scope.filterText = tempFilterText;
-                                    }, 250); // delay 250 ms
+                                    }, 1000); // delay 250 ms
                                 });
                             }
                         }, true);

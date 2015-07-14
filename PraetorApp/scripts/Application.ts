@@ -63,14 +63,35 @@ module PraetorApp.Application {
 
 
 
-        ngModule.directive("prehledSpisu", function () {
+        ngModule.directive("prehledSpisu", function ($timeout) {
             return {
                 restrict: 'E',
                 scope: {
                     viewModel: '=',
                     onSpisClick: '&'
                 },
-                templateUrl: 'templates/directives/prehled-spisu.html'
+                templateUrl: 'templates/directives/prehled-spisu.html',
+                link: function (scope, element, attrs) {
+                    scope.$watch('searchText', (newValue, oldValue) => {
+                        if (newValue) {
+
+                            var tempFilterText = '', filterTextTimeout;
+
+                            scope.$watch('searchText', (val) => {
+
+                                if (filterTextTimeout)
+                                    $timeout.cancel(filterTextTimeout);
+
+                                tempFilterText = val;
+
+                                filterTextTimeout = $timeout(() => {
+                                    (<any>scope).filterText = tempFilterText;
+                                }, 250); // delay 250 ms
+                            })
+
+                        }
+                    }, true);
+                },
             };
         });
 
@@ -83,7 +104,7 @@ module PraetorApp.Application {
                     onAddClick: '&',
                     onLoadPreviousClick: '&'
                 },
-                templateUrl: 'templates/directives/prehled-cinnosti.html'
+                templateUrl: 'templates/directives/prehled-cinnosti.html',
             };
         });
 
@@ -331,13 +352,13 @@ module PraetorApp.Application {
             window.StatusBar.overlaysWebView(false);
 
         var deregister = (<any>$ionicPlatform).registerBackButtonAction(() => {
-            var nameRoute = $state.current.name;            
+            var nameRoute = $state.current.name;
             if (nameRoute.indexOf("app.spis.") === 0) {
                 $state.go('app.home');
             }
             else if (nameRoute.indexOf("app.home.cinnosti") === 0) {
                 $state.go('app.home.spisy');
-            }            
+            }
             else if (nameRoute.indexOf("app.home.nastaveni") === 0) {
                 $state.go('app.home.spisy');
             }

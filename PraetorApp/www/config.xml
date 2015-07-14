@@ -5,7 +5,7 @@
   xmlns:gap="http://phonegap.com/ns/1.0" 
   xmlns:android   = "http://schemas.android.com/apk/res/android"
   id="cz.praetorsystems.praetor" 
-  version="1.1.1"
+  version="1.1.2"
   xmlns="http://www.w3.org/ns/widgets" 
   defaultlocale="cs-CZ">
   
@@ -34,7 +34,7 @@
   <preference name="permissions" value="none"/>
   <preference name="windows-target-version" value="8.1" />
   <preference name="windows-phone-target-version" value="8.1" />
-  <preference name="phonegap-version" value="3.8.0" />
+  <preference name="phonegap-version" value="3.7.0" />
   <preference name="android-targetSdkVersion" value="14" />
   
   <preference name="KeepRunning" value="True" />
@@ -69,12 +69,6 @@
 <preference name="StatusBarStyle" value="lightcontent" />
 <gap:plugin name="org.apache.cordova.statusbar" version="0.1.4" />-->
 
- <gap:platform name="ios" />
-    <gap:platform name="android" />
-    <gap:platform name="webos" />
-    <gap:platform name="symbian" />
-    <gap:platform name="blackberry" />
-    <gap:platform name="winphone" />
 
   <icon src="icon.png" />
   <gap:splash src="splash.png" />

@@ -2779,14 +2779,14 @@ var PraetorApp;
                             _this.UiHelper.alert(responseData.message);
                         q.reject(responseData);
                     }
-                })['catch'](function (e) {
+                }, function (e) {
                     // TODO: Sjednotit typ objektu v reject?
                     if (options.ShowProgress)
                         _this.$ionicLoading.hide();
                     window.lastError = e;
                     var qReturn = _this.$q.when();
                     if (options.ShowMessage)
-                        qReturn = _this.UiHelper.alert(e.status + " " + e.message, "Chyba");
+                        qReturn = _this.UiHelper.alert(e.status + " " + e.statusText, "Chyba");
                     qReturn.then(function () {
                         q.reject(e);
                     });

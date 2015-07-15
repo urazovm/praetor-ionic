@@ -128,8 +128,7 @@
                     q.reject(responseData);
                 }
             }
-                )
-            ['catch'](e => {
+                , e => {
                 // TODO: Sjednotit typ objektu v reject?
                 if (options.ShowProgress)
                     this.$ionicLoading.hide();
@@ -138,7 +137,7 @@
                 var qReturn = this.$q.when();
 
                 if (options.ShowMessage)
-                    qReturn = this.UiHelper.alert(e.status + " " + e.message, "Chyba");
+                    qReturn = this.UiHelper.alert(e.status + " " + e.statusText, "Chyba");
 
                 qReturn.then(() => {
                     q.reject(e);

@@ -2783,6 +2783,7 @@ var PraetorApp;
                     // TODO: Sjednotit typ objektu v reject?
                     if (options.ShowProgress)
                         _this.$ionicLoading.hide();
+                    window.lastError = e;
                     var qReturn = _this.$q.when();
                     if (options.ShowMessage)
                         qReturn = _this.UiHelper.alert(e.status + " " + e.message, "Chyba");

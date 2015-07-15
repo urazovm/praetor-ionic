@@ -134,6 +134,7 @@
                 if (options.ShowProgress)
                     this.$ionicLoading.hide();
 
+                (<any>window).lastError = e;
                 var qReturn = this.$q.when();
 
                 if (options.ShowMessage)

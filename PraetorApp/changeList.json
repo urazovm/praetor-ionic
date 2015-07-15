@@ -249,13 +249,7 @@
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json",
-    "www\\templates\\spis\\zakladniudaje.html",
-    "www\\config.xml",
-    "www\\css\\style.css",
-    "www\\templates\\directives\\prehled-spisu.html",
-    "scripts\\Filters\\HightLightsFilter.ts",
-    "plugins\\wp8.json"
+    "plugins\\android.json"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

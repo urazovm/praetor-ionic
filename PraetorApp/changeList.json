@@ -239,7 +239,9 @@
     "www\\res\\drawable-xxxhdpi\\splash.png",
     "www\\res\\drawable-xxhdpi\\icon.png",
     "www\\res\\android\\splash\\drawable-port-hdpi-screen.png",
-    "plugins\\.pgbomit"
+    "plugins\\.pgbomit",
+    "scripts\\Filters\\HightLightsFilter.ts",
+    "plugins\\wp8.json"
   ],
   "deletedFilesIos": [],
   "addedPluginsIos": [],
@@ -247,7 +249,13 @@
   "changedFiles": [
     "www\\scripts\\appBundle.js",
     "www\\scripts\\BuildVars.js",
-    "plugins\\android.json"
+    "plugins\\android.json",
+    "www\\templates\\spis\\zakladniudaje.html",
+    "www\\config.xml",
+    "www\\css\\style.css",
+    "www\\templates\\directives\\prehled-spisu.html",
+    "scripts\\Filters\\HightLightsFilter.ts",
+    "plugins\\wp8.json"
   ],
   "deletedFiles": [],
   "addedPlugins": [],

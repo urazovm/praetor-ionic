@@ -28,7 +28,7 @@
             this.Preferences = Preferences;
             this.PraetorService = PraetorService;
             this.FileService = FileService;
-            this.viewModel.id_spis = $stateParams.id;
+            this.viewModel.id_spis = $stateParams.id;            
             this.$state = $state;          
             
             // načteme data

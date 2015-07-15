@@ -52,14 +52,29 @@ var PraetorApp;
             registerDirectives(ngModule);
             registerFilters(ngModule);
             registerControllers(ngModule);
-            ngModule.directive("prehledSpisu", function () {
+            ngModule.directive("prehledSpisu", function ($timeout) {
                 return {
                     restrict: 'E',
                     scope: {
                         viewModel: '=',
                         onSpisClick: '&'
                     },
-                    templateUrl: 'templates/directives/prehled-spisu.html'
+                    templateUrl: 'templates/directives/prehled-spisu.html',
+                    link: function (scope, element, attrs) {
+                        scope.$watch('searchText', function (newValue, oldValue) {
+                            if (newValue) {
+                                var tempFilterText = '', filterTextTimeout;
+                                scope.$watch('searchText', function (val) {
+                                    if (filterTextTimeout)
+                                        $timeout.cancel(filterTextTimeout);
+                                    tempFilterText = val;
+                                    filterTextTimeout = $timeout(function () {
+                                        scope.filterText = tempFilterText;
+                                    }, 1000); // delay 250 ms
+                                });
+                            }
+                        }, true);
+                    },
                 };
             });
             ngModule.directive("prehledCinnosti", function () {
@@ -71,7 +86,7 @@ var PraetorApp;
                         onAddClick: '&',
                         onLoadPreviousClick: '&'
                     },
-                    templateUrl: 'templates/directives/prehled-cinnosti.html'
+                    templateUrl: 'templates/directives/prehled-cinnosti.html',
                 };
             });
             window.addEventListener('native.showkeyboard', onkeyboardshow);
@@ -1356,7 +1371,7 @@ var PraetorApp;
     (function (Controllers) {
         var HomeSpisyController = (function (_super) {
             __extends(HomeSpisyController, _super);
-            function HomeSpisyController($scope, $location, $http, $state, Utilities, UiHelper, Preferences, SpisyUtilities, PraetorService) {
+            function HomeSpisyController($scope, $location, $http, $state, $timeout, Utilities, UiHelper, Preferences, SpisyUtilities, PraetorService) {
                 _super.call(this, $scope, PraetorApp.ViewModels.Home.SpisyViewModel);
                 this.$location = $location;
                 this.$http = $http;
@@ -1373,7 +1388,7 @@ var PraetorApp;
             }
             Object.defineProperty(HomeSpisyController, "$inject", {
                 get: function () {
-                    return ["$scope", "$location", "$http", "$state", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.SpisyUtilities.ID, PraetorApp.Services.PraetorService.ID];
+                    return ["$scope", "$location", "$http", "$state", "$timeout", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.SpisyUtilities.ID, PraetorApp.Services.PraetorService.ID];
                 },
                 enumerable: true,
                 configurable: true
@@ -1706,6 +1721,28 @@ var PraetorApp;
         })();
         Directives.OnLoadDirective = OnLoadDirective;
     })(Directives = PraetorApp.Directives || (PraetorApp.Directives = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Filters;
+    (function (Filters) {
+        var HighLightFilter = (function () {
+            function HighLightFilter() {
+            }
+            HighLightFilter.filter = function (input, termsToHighlight) {
+                if (!input)
+                    return input;
+                var reg = new RegExp(termsToHighlight, 'gi');
+                var ret = input.replace(reg, function (str) {
+                    return '<span class="highlight">' + str + '</span>';
+                });
+                return ret;
+            };
+            HighLightFilter.ID = "HighLightFilter";
+            return HighLightFilter;
+        })();
+        Filters.HighLightFilter = HighLightFilter;
+    })(Filters = PraetorApp.Filters || (PraetorApp.Filters = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
 (function (PraetorApp) {

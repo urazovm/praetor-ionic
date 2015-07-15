@@ -7,7 +7,7 @@
         public static ID = "HomeSpisyController";
 
         public static get $inject(): string[] {
-            return ["$scope", "$location", "$http", "$state", Services.Utilities.ID, Services.UiHelper.ID, Services.Preferences.ID, Services.SpisyUtilities.ID, Services.PraetorService.ID];
+            return ["$scope", "$location", "$http", "$state", "$timeout", Services.Utilities.ID, Services.UiHelper.ID, Services.Preferences.ID, Services.SpisyUtilities.ID, Services.PraetorService.ID];
         }
 
         private $location: ng.ILocationService;
@@ -20,7 +20,7 @@
         public PrehledSpisu: PraetorApp.ViewModels.PrehledSpisuViewModel;
         private PraetorService: Services.PraetorService;
 
-        constructor($scope: ng.IScope, $location: ng.ILocationService, $http: ng.IHttpService, $state: ng.ui.IStateService, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences, SpisyUtilities: Services.SpisyUtilities, PraetorService: Services.PraetorService) {
+        constructor($scope: ng.IScope, $location: ng.ILocationService, $http: ng.IHttpService, $state: ng.ui.IStateService, $timeout: ng.ITimeoutService, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences, SpisyUtilities: Services.SpisyUtilities, PraetorService: Services.PraetorService) {
             super($scope, ViewModels.Home.SpisyViewModel);
 
             this.$location = $location;
@@ -35,9 +35,10 @@
 
             this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
 
+
             this.LoadPosledniSpisy();
 
-            this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
+            this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;            
         }
 
         private LoadPosledniSpisy() {

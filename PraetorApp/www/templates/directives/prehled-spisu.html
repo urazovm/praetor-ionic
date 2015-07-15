@@ -21,15 +21,15 @@
     </div>
     <div ng-show="searchText != ''">
         <div class="list">
-            <div class="item item-divider">Hledání: {{searchText}}</div>
-            <div ng-repeat="spis in viewModel.vsechnySpisy | PrehledSpisuFilter : searchText">
+            <div class="item item-divider">Hledání: {{filterText}}</div>
+            <div ng-repeat="spis in viewModel.vsechnySpisy | PrehledSpisuFilter : filterText">
                 <a class="item" ng-click="onSpisClick({spis:spis})">
-                    <!--<h2 ng-bind-html="spis.spisovaZnacka + ' ' + spis.predmet | highlight:searchText"></h2>-->
-                    <h2 ng-bind-html="spis.spisovaZnacka + ' ' + spis.predmet"></h2>
+                    <h2 ng-bind-html="spis.spisovaZnacka + ' ' + spis.predmet | HighLightFilter:searchText"></h2>
+                    <!--<h2 ng-bind-html="spis.spisovaZnacka + ' ' + spis.predmet"></h2>-->
                     <div ng-switch="spis.loading">
                         <p ng-switch-when="true">Loading...</p>
-                        <p ng-switch-default ng-bind-html="spis.hlavniKlient"></p>
-                        <!--<p ng-switch-default ng-bind-html="spis.hlavniKlient | highlight:searchText"></p>-->
+                        <!--<p ng-switch-default ng-bind-html="spis.hlavniKlient"></p>-->
+                        <p ng-switch-default ng-bind-html="spis.hlavniKlient | HighLightFilter:searchText"></p>
                     </div>
                 </a>
             </div>

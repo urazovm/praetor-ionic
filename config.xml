@@ -4,8 +4,8 @@
   xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" 
   xmlns:gap="http://phonegap.com/ns/1.0" 
   xmlns:android   = "http://schemas.android.com/apk/res/android"
-  id="cz.praetorsystems.praetor" 
-  version="1.1.3"
+  id="cz.praetor-systems.praetor2" 
+  version="1.0.140"
   xmlns="http://www.w3.org/ns/widgets" 
   defaultlocale="cs-CZ">
   
@@ -68,7 +68,6 @@
 <preference name="StatusBarBackgroundColor" value="#000000" />
 <preference name="StatusBarStyle" value="lightcontent" />
 <gap:plugin name="org.apache.cordova.statusbar" version="0.1.4" />-->
-
 
   <icon src="icon.png" />
   <gap:splash src="splash.png" />

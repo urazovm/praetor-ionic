@@ -137,7 +137,7 @@
                 var qReturn = this.$q.when();
 
                 if (options.ShowMessage)
-                    qReturn = this.UiHelper.alert("Error " + e.status);
+                    qReturn = this.UiHelper.alert(e.status + " " + e.message, "Chyba");
 
                 qReturn.then(() => {
                     q.reject(e);

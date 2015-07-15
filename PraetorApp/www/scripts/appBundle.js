@@ -2748,7 +2748,7 @@ var PraetorApp;
                         _this.$ionicLoading.hide();
                     var qReturn = _this.$q.when();
                     if (options.ShowMessage)
-                        qReturn = _this.UiHelper.alert("Error " + e.status);
+                        qReturn = _this.UiHelper.alert(e.status + " " + e.message, "Chyba");
                     qReturn.then(function () {
                         q.reject(e);
                     });

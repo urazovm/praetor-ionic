@@ -125,6 +125,7 @@
                 else {
                     if (options.ShowMessage)
                         this.UiHelper.alert(responseData.message);
+
                     q.reject(responseData);
                 }
             }
@@ -136,8 +137,9 @@
                 (<any>window).lastError = e;
                 var qReturn = this.$q.when();
 
-                if (options.ShowMessage)
-                    qReturn = this.UiHelper.alert(e.status + " " + e.statusText, "Chyba");
+                //if (options.ShowMessage)
+                //    qReturn = this.UiHelper.alert(e.status + " " + e.statusText, "Chyba");
+                console.log(e.status + " " + e.statusText);
 
                 qReturn.then(() => {
                     q.reject(e);

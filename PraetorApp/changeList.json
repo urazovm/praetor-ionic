@@ -76,6 +76,7 @@
     "scripts\\Services\\HttpInterceptor.ts",
     "scripts\\ViewModels\\Home\\NastaveniViewModel.ts",
     "scripts\\Models\\Dialogs\\DialogOptions.ts",
+    "scripts\\Filters\\HightLightsFilter.ts",
     "scripts\\ViewModels\\Spis\\ZakladniUdajeViewModel.ts",
     "scripts\\Directives\\IconPanelDirective.ts",
     "scripts\\ViewModels\\AppViewModel.ts",
@@ -113,6 +114,7 @@
     "www\\templates\\spis\\vyber-spisu.html",
     "www\\res\\android\\splash\\drawable-land-xxxhdpi-screen.png",
     "chrome-manifest.json",
+    "plugins\\wp8.json",
     "www\\res\\android\\icon\\drawable-hdpi-icon.png",
     "www\\css\\ionic-overrides.css",
     "www\\res\\ios\\icon\\icon-small@3x.png",
@@ -240,8 +242,7 @@
     "www\\res\\drawable-xxhdpi\\icon.png",
     "www\\res\\android\\splash\\drawable-port-hdpi-screen.png",
     "plugins\\.pgbomit",
-    "scripts\\Filters\\HightLightsFilter.ts",
-    "plugins\\wp8.json"
+    "scripts\\Services\\PraetorService.ts~RF12a39389.TMP"
   ],
   "deletedFilesIos": [],
   "addedPluginsIos": [],

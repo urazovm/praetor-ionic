@@ -2785,8 +2785,9 @@ var PraetorApp;
                         _this.$ionicLoading.hide();
                     window.lastError = e;
                     var qReturn = _this.$q.when();
-                    if (options.ShowMessage)
-                        qReturn = _this.UiHelper.alert(e.status + " " + e.statusText, "Chyba");
+                    //if (options.ShowMessage)
+                    //    qReturn = this.UiHelper.alert(e.status + " " + e.statusText, "Chyba");
+                    console.log(e.status + " " + e.statusText);
                     qReturn.then(function () {
                         q.reject(e);
                     });

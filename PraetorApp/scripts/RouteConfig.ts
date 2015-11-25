@@ -80,7 +80,7 @@ module PraetorApp {
             });
 
             $stateProvider.state('app.spis.zakladniudaje', {
-                cache:true,
+                //cache:true, //Nová verze angularu nepodporuje tento parametr.
                 url: "/zakladniudaje",
                 views: {
                     'tab-zakladni-udaje': {
@@ -91,7 +91,7 @@ module PraetorApp {
             });
 
             $stateProvider.state('app.spis.dokumenty', {
-                cache: true,
+                //cache:true, //Nová verze angularu nepodporuje tento parametr.
                 url: "/dokumenty",
                 views: {
                     'tab-dokumenty': {
@@ -102,7 +102,7 @@ module PraetorApp {
 
 
             $stateProvider.state('app.spis.subjekty', {
-                cache: true,
+                //cache:true, //Nová verze angularu nepodporuje tento parametr.
                 url: "/subjekty",
                 views: {
                     'tab-subjekty': {

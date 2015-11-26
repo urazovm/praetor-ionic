@@ -683,7 +683,7 @@ var PraetorApp;
                 if (serverAddress == "" && this.viewModel.server.match(/^[0-9]*$/))
                     serverAddress = "cloud.praetoris.cz:" + this.viewModel.server;
                 if (serverAddress == "" && !this.viewModel.server.match(/\./))
-                    serverAddress = this.httpGet("http://update.praetoris.cz/config/client/mobile/" + this.viewModel.server);
+                    serverAddress = this.httpGet("http://update.praetoris.cz/config/client/mobile/" + this.viewModel.server.toLowerCase());
                 if (serverAddress == "")
                     serverAddress = this.viewModel.server;
                 this.Praetor.login(serverAddress, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then(function (data) {
@@ -931,7 +931,6 @@ var PraetorApp;
                 this.viewModel.PrehledCinnosti = new PraetorApp.ViewModels.PrehledCinnostiViewModel();
                 this.Cinnosti = [];
                 this.LoadData(request);
-                this.viewModel.Initialized = true;
             }
             Object.defineProperty(HomeCinnostiController, "$inject", {
                 get: function () {
@@ -993,6 +992,7 @@ var PraetorApp;
                     if (requestUntil > _this.DateUntil)
                         _this.DateUntil = requestUntil;
                     _this.RebuildList();
+                    _this.viewModel.Initialized = true;
                     _this.onAftterLoading();
                 });
             };

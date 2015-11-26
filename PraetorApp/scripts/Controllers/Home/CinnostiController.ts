@@ -31,8 +31,6 @@
             this.Cinnosti = [];
 
             this.LoadData(request);
-
-            this.viewModel.Initialized = true;
         }
 
         private AddDays(date: Date, number: number): Date {
@@ -103,6 +101,8 @@
                         this.DateUntil = requestUntil;
 
                     this.RebuildList();
+
+                    this.viewModel.Initialized = true;
 
                     this.onAftterLoading();
                 }

@@ -11,8 +11,11 @@
         <prehled-cinnosti on-cinnost-click="controller.OpenCinnost(cinnost)"
                           on-add-click="controller.CreateDatedCinnost(date)"
                           on-load-previous-click="controller.LoadPreviousWeek()"
-                          view-model="viewModel.PrehledCinnosti">
+                          view-model="viewModel.PrehledCinnosti" ng-show="viewModel.Initialized">
         </prehled-cinnosti>
+        <div ng-show="!viewModel.Initialized" class="empty-list-description">
+            Načítám…
+        </div>
     </ion-content>
 </ion-view>
 

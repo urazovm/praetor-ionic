@@ -1,5 +1,5 @@
 ﻿<div>
-    <div class="list" ng-show="viewModel.Initialized">
+    <div class="list">
         <div ng-repeat="datumGroup in viewModel.Cinnosti">
             <div class="item item-divider" ng-class="(datumGroup.datum.getDay() == 0 || datumGroup.datum.getDay() == 6) ? 'item-dark' : ''">
                 {{datumGroup.datumString}}
@@ -18,8 +18,5 @@
             </div>
         </div>
         <button class="button button-clear button-block button-dark" ng-click="onLoadPreviousClick()">Načíst předchozí týden</button>
-    </div>
-    <div ng-show="!viewModel.Initialized" class="empty-list-description">
-        Načítám…
     </div>
 </div>

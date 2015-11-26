@@ -16,6 +16,7 @@
 
         private static USERNAME = "USER_ID";
         private static PASSWORD = "PASSWORD";
+        private static SERVER_NAME = "SERVER_NAME";
         private static SERVER_URL = "SERVER_URL";
         private static SESSION_ID = "SESSION_ID";
         private static SPISY_LOCAL_STORAGE = "SPISY_LOCAL_STORAGE";
@@ -75,6 +76,19 @@
             else {
                 var jsonData = JSON.stringify(value);
                 localStorage.setItem(Preferences.SPISY_LOCAL_STORAGE, jsonData);
+            }
+        }
+
+        get serverName(): string {
+            return localStorage.getItem(Preferences.SERVER_NAME);
+        }
+
+        set serverName(value: string) {
+            if (value == null) {
+                localStorage.removeItem(Preferences.SERVER_NAME);
+            }
+            else {
+                localStorage.setItem(Preferences.SERVER_NAME, value);
             }
         }
 

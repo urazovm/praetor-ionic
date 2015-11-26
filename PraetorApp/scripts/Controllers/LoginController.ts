@@ -4,7 +4,7 @@
 
         public static ID = "LoginController";
 
-        public static get $inject(): string[]{
+        public static get $inject(): string[] {
             return ["$scope", "$location", "$http", Services.Utilities.ID, Services.UiHelper.ID, Services.Preferences.ID, Services.PraetorService.ID, Services.HashUtilities.ID];
         }
 
@@ -28,7 +28,7 @@
             this.Hash = Hash;
 
             // vyplníme poslední uložený server a login
-            this.viewModel.server = Preferences.serverUrl;
+            this.viewModel.server = Preferences.serverName;
             this.viewModel.username = Preferences.username;
 
             $scope.$on("http.unauthorized", _.bind(this.http_unauthorized, this));
@@ -65,6 +65,16 @@
 
         //#region Controller Methods
 
+        private httpGet(theUrl: string): string {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", theUrl, false); // false for synchronous request
+            xmlHttp.send(null);
+            if (xmlHttp.status == 200)
+                return xmlHttp.responseText;
+            else
+                return "";
+        }
+
         protected login() {
             if (!this.viewModel.server) {
                 this.UiHelper.alert("Zadejte adresu serveru");
@@ -79,12 +89,22 @@
             if (!this.viewModel.password) {
                 this.UiHelper.alert("Zadejte heslo");
                 return;
-            }            
-                       
-            this.Praetor.login(this.viewModel.server, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then((data) => {                                
-                
+            }
+
+            var serverAddress = "";
+
+            if (serverAddress == "" && this.viewModel.server.match(/^[0-9]*$/)) // Číslo portu na cloudu.
+                serverAddress = "cloud.praetoris.cz:" + this.viewModel.server;
+            if (serverAddress == "" && !this.viewModel.server.match(/\./)) // Zkratka, kterou nám vyhodnotí náš server.
+                serverAddress = this.httpGet("http://update.praetoris.cz/config/client/mobile/" + this.viewModel.server.toLowerCase());
+            if (serverAddress == "")
+                serverAddress = this.viewModel.server;
+
+            this.Praetor.login(serverAddress, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then((data) => {
+
                 if (data.success) {
-                    this.Preferences.serverUrl = this.viewModel.server;
+                    this.Preferences.serverName = this.viewModel.server;
+                    this.Preferences.serverUrl = serverAddress;
                     this.Preferences.username = this.viewModel.username;
                     this.Preferences.password = this.Hash.md5(this.viewModel.password);
                     this.Preferences.sessionId = <any>data.sessionId;
@@ -97,7 +117,7 @@
                 }
 
             })['finally'](function () {
-                                
+
             });
         }
 

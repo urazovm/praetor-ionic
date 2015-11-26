@@ -1,8 +1,4 @@
-﻿[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
-}
-
-.tabs-positive > .tabs, .tabs.tabs-positive, .bar.bar-positive, .bar-positive .button {
+﻿.tabs-positive > .tabs, .tabs.tabs-positive, .bar.bar-positive, .bar-positive .button {
     border-color: #1d2939;
     background-color: #1d2939;
     color: #fff;
@@ -99,15 +95,15 @@
 }
 
 .custom-icon-word {
-    background-image: url('images/file-icons/word.png');
+    background-image: url('../images/file-icons/word.png');
 }
 
 .custom-icon-excel {
-    background-image: url('images/file-icons/excel.png');
+    background-image: url('../images/file-icons/excel.png');
 }
 
 .custom-icon-pdf {
-    background-image: url('images/file-icons/pdf.png');
+    background-image: url('../images/file-icons/pdf.png');
 }
 
 .right-float-overlay {

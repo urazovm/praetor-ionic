@@ -630,7 +630,7 @@ var PraetorApp;
                 this.Preferences = Preferences;
                 this.Praetor = Praetor;
                 this.Hash = Hash;
-                this.viewModel.server = Preferences.serverUrl;
+                this.viewModel.server = Preferences.serverName;
                 this.viewModel.username = Preferences.username;
                 $scope.$on("http.unauthorized", _.bind(this.http_unauthorized, this));
                 $scope.$on("http.forbidden", _.bind(this.http_forbidden, this));
@@ -656,6 +656,15 @@ var PraetorApp;
             LoginController.prototype.http_notFound = function () {
                 this.UiHelper.toast.showLongBottom("Server not available (404); please contact your administrator.");
             };
+            LoginController.prototype.httpGet = function (theUrl) {
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open("GET", theUrl, false);
+                xmlHttp.send(null);
+                if (xmlHttp.status == 200)
+                    return xmlHttp.responseText;
+                else
+                    return "";
+            };
             LoginController.prototype.login = function () {
                 var _this = this;
                 if (!this.viewModel.server) {
@@ -670,9 +679,17 @@ var PraetorApp;
                     this.UiHelper.alert("Zadejte heslo");
                     return;
                 }
-                this.Praetor.login(this.viewModel.server, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then(function (data) {
+                var serverAddress = "";
+                if (serverAddress == "" && this.viewModel.server.match(/^[0-9]*$/))
+                    serverAddress = "cloud.praetoris.cz:" + this.viewModel.server;
+                if (serverAddress == "" && !this.viewModel.server.match(/\./))
+                    serverAddress = this.httpGet("http://update.praetoris.cz/config/client/mobile/" + this.viewModel.server);
+                if (serverAddress == "")
+                    serverAddress = this.viewModel.server;
+                this.Praetor.login(serverAddress, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then(function (data) {
                     if (data.success) {
-                        _this.Preferences.serverUrl = _this.viewModel.server;
+                        _this.Preferences.serverName = _this.viewModel.server;
+                        _this.Preferences.serverUrl = serverAddress;
                         _this.Preferences.username = _this.viewModel.username;
                         _this.Preferences.password = _this.Hash.md5(_this.viewModel.password);
                         _this.Preferences.sessionId = data.sessionId;
@@ -914,6 +931,7 @@ var PraetorApp;
                 this.viewModel.PrehledCinnosti = new PraetorApp.ViewModels.PrehledCinnostiViewModel();
                 this.Cinnosti = [];
                 this.LoadData(request);
+                this.viewModel.Initialized = true;
             }
             Object.defineProperty(HomeCinnostiController, "$inject", {
                 get: function () {
@@ -2289,6 +2307,21 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(Preferences.prototype, "serverName", {
+                get: function () {
+                    return localStorage.getItem(Preferences.SERVER_NAME);
+                },
+                set: function (value) {
+                    if (value == null) {
+                        localStorage.removeItem(Preferences.SERVER_NAME);
+                    }
+                    else {
+                        localStorage.setItem(Preferences.SERVER_NAME, value);
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
             Object.defineProperty(Preferences.prototype, "serverUrl", {
                 get: function () {
                     return localStorage.getItem(Preferences.SERVER_URL);
@@ -2400,6 +2433,7 @@ var PraetorApp;
             Preferences.ID = "Preferences";
             Preferences.USERNAME = "USER_ID";
             Preferences.PASSWORD = "PASSWORD";
+            Preferences.SERVER_NAME = "SERVER_NAME";
             Preferences.SERVER_URL = "SERVER_URL";
             Preferences.SESSION_ID = "SESSION_ID";
             Preferences.SPISY_LOCAL_STORAGE = "SPISY_LOCAL_STORAGE";
@@ -3007,6 +3041,7 @@ var PraetorApp;
         (function (Home) {
             var CinnostiViewModel = (function () {
                 function CinnostiViewModel() {
+                    this.Initialized = false;
                 }
                 return CinnostiViewModel;
             })();

@@ -10,7 +10,7 @@
 <script type="text/ng-template" id="file_template.html">
     <div ng-switch="node.mime || 'dir'">
         <div ng-switch-when="dir" class="dir-entry closed">
-            <a class="item item-icon-left" ng-class="(node.nodes.length == 0) ? 'empty' : ''" onclick="(!this.classList.contains('empty') && this.parentElement.classList.contains('closed')) ? this.parentElement.classList.remove('closed') : this.parentElement.classList.add('closed');"><div class="icon-wrapper closed"><i class="icon ion-ios-folder-outline"></i></div><div class="icon-wrapper opened"><i class="icon ion-ios-folder opened"></i></div>{{node.nazev}}</a>
+            <a class="item item-icon-left" ng-class="(node.nodes.length == 0) ? 'empty' : ''" onclick="(!this.classList.contains('empty') && this.parentElement.classList.contains('closed')) ? this.parentElement.classList.remove('closed') : this.parentElement.classList.add('closed');"><div class="icon-wrapper closed"><i class="icon ion-ios-folder"></i></div><div class="icon-wrapper opened"><i class="icon ion-ios-folder opened"></i></div>{{node.nazev}}</a>
             <ul class="dir">
                 <li ng-repeat="node in node.nodes" ng-include="'file_template.html'"></li>
             </ul>

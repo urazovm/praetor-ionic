@@ -66,6 +66,28 @@
             });
         }
 
+        getFileType(pripona: string) :string {
+            switch (pripona) {
+                case 'doc':
+                case 'docx':
+                case 'docm':
+                case 'rtf':
+                case 'odt':
+                case 'txt':
+                    return 'word';
+                case 'xls':
+                case 'xlsx':
+                case 'xlsm':
+                case 'ods':
+                case 'csv':
+                    return 'excel';
+                case 'pdf':
+                    return 'pdf';
+                default:
+                    return '';
+            }
+        }
+
         public CreateCinnost() {
             var id_Spis = this.viewModel.id_spis;
             var params = new CinnostParams(id_Spis);

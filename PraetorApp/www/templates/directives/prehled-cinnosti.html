@@ -1,7 +1,7 @@
 ﻿<div>
     <div class="list">
         <div ng-repeat="datumGroup in viewModel.Cinnosti">
-            <div class="item item-divider">
+            <div class="item item-divider" ng-class="(datumGroup.datum.getDay() == 0 || datumGroup.datum.getDay() == 6) ? 'item-dark' : ''">
                 {{datumGroup.datumString}}
                 <span class="right-float">{{datumGroup.casString}}</span>
                 <button class="button button-clear ion-plus-round button-right-float" ng-click="onAddClick({date:datumGroup.datum})"></button>
@@ -17,6 +17,6 @@
                 </a>
             </div>
         </div>
-        <button class="button button-block button-stable" ng-click="onLoadPreviousClick()">Načíst předchozí týden</button>
+        <button class="button button-clear button-block button-dark ng-cloak" ng-click="onLoadPreviousClick()">Načíst předchozí týden</button>
     </div>
 </div>

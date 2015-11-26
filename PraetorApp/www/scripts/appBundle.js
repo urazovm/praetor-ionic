@@ -746,6 +746,27 @@ var PraetorApp;
                     _this.FileService.openFile(response.token, dokument.nazev + '.' + dokument.pripona);
                 });
             };
+            SpisController.prototype.getFileType = function (pripona) {
+                switch (pripona) {
+                    case 'doc':
+                    case 'docx':
+                    case 'docm':
+                    case 'rtf':
+                    case 'odt':
+                    case 'txt':
+                        return 'word';
+                    case 'xls':
+                    case 'xlsx':
+                    case 'xlsm':
+                    case 'ods':
+                    case 'csv':
+                        return 'excel';
+                    case 'pdf':
+                        return 'pdf';
+                    default:
+                        return '';
+                }
+            };
             SpisController.prototype.CreateCinnost = function () {
                 var _this = this;
                 var id_Spis = this.viewModel.id_spis;

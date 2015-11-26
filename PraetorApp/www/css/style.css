@@ -1,10 +1,14 @@
-﻿.tabs-positive > .tabs, .tabs.tabs-positive, .bar.bar-positive, .bar-positive .button {
+﻿[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+.tabs-positive > .tabs, .tabs.tabs-positive, .bar.bar-positive, .bar-positive .button {
     border-color: #1d2939;
     background-color: #1d2939;
     color: #fff;
 }
 
-    .bar-positive .button i {
+   .bar-positive .button i {
         font-size: 30px;
         background-color: transparent;
         border-color: transparent;
@@ -61,6 +65,49 @@
 
 .dir .dir .dir .item-icon-left .icon {
     left: 40px;
+}
+
+.dir-entry>a>.icon-wrapper.closed {
+    display: none;
+}
+
+.dir-entry>a>.icon-wrapper.opened {
+    display: block;
+}
+
+.dir-entry.closed>a>.icon-wrapper.closed {
+    display: block;
+}
+
+.dir-entry.closed>a>.icon-wrapper.opened {
+    display: none;
+}
+
+.dir-entry.closed>.dir {
+    display: none;
+}
+
+.dir-entry>a.empty {
+    opacity: 0.5;
+}
+
+.custom-icon {
+    background-size: 32px 32px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 32px;
+}
+
+.custom-icon-word {
+    background-image: url('images/file-icons/word.png');
+}
+
+.custom-icon-excel {
+    background-image: url('images/file-icons/excel.png');
+}
+
+.custom-icon-pdf {
+    background-image: url('images/file-icons/pdf.png');
 }
 
 .right-float-overlay {
@@ -152,3 +199,9 @@
     background-color: yellow;    
 }
 
+.empty-list-description {
+    margin: 10px;
+    font-style: italic;
+    color: #404040;
+    text-align: center;
+}

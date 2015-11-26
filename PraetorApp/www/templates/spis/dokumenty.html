@@ -9,12 +9,21 @@
 
 <script type="text/ng-template" id="file_template.html">
     <div ng-switch="node.mime || 'dir'">
-        <div ng-switch-when="dir">            
-            <a class="item item-icon-left" onclick="this.nextElementSibling.style.display = (this.nextElementSibling.style.display == 'block') ? 'none' : 'block';"><i class="icon ion-folder"></i>{{node.nazev}}</a>
-            <ul style='display:none' class="dir">
+        <div ng-switch-when="dir" class="dir-entry closed">
+            <a class="item item-icon-left" ng-class="(node.nodes.length == 0) ? 'empty' : ''" onclick="(!this.classList.contains('empty') && this.parentElement.classList.contains('closed')) ? this.parentElement.classList.remove('closed') : this.parentElement.classList.add('closed');"><div class="icon-wrapper closed"><i class="icon ion-ios-folder-outline"></i></div><div class="icon-wrapper opened"><i class="icon ion-ios-folder opened"></i></div>{{node.nazev}}</a>
+            <ul class="dir">
                 <li ng-repeat="node in node.nodes" ng-include="'file_template.html'"></li>
             </ul>
         </div>
-        <a ng-switch-default class="item item-icon-left" ng-click="controller.openDokument(node)"><i class="icon ion-document"></i>{{node.nazev}}.{{node.pripona}}<span class="item-note">{{node.downloadProgress}}</span></a>
+        <a ng-switch-default class="item item-icon-left" ng-click="controller.openDokument(node)" ng-init="fileType = controller.getFileType(node.pripona)">
+            <ng-switch on="fileType">
+                <i ng-switch-when="word" class="icon custom-icon custom-icon-word"></i>
+                <i ng-switch-when="excel" class="icon custom-icon custom-icon-excel"></i>
+                <i ng-switch-when="pdf" class="icon custom-icon custom-icon-pdf"></i>
+                <i ng-switch-default class="icon ion-ios-paper-outline"></i>
+            </ng-switch>
+            {{node.nazev}}{{fileType == '' ? '.' + node.pripona : ''}}
+            <span class="item-note">{{node.downloadProgress}}</span>
+        </a>
     </div>
 </script>

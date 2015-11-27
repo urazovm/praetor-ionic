@@ -49,6 +49,16 @@ module PraetorApp {
                 }
             });
 
+            $stateProvider.state('app.home.subjekty', {
+                url: "/subjekty",
+                views: {
+                    'tab-subjekty': {
+                        templateUrl: "templates/home/subjekty.html",
+                        controller: Controllers.HomeSubjektyController.ID
+                    }
+                }
+            });
+
             $stateProvider.state('app.home.cinnosti', {
                 url: "/cinnosti",
                 views: {

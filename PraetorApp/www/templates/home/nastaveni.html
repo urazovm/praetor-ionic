@@ -1,27 +1,47 @@
 ﻿<ion-view title="Praetor">
-    <ion-nav-bar class="bar-positive nav-title-slide-ios pr-black" align-title="center">
+    <ion-nav-bar class="bar-dark bar-praetor nav-title-slide-ios" align-title="center">
     </ion-nav-bar>
 
     <ion-content has-bouncing="false">
-        <table>
-            <tr>
-                <th>Verze serveru</th>
-                <td></td>
-            </tr>
-            <tr>
-                <th>Verze klienta</th>
-                <td></td>
-            </tr>
-            <tr>
-                <th>Přihlášený uživatel</th>
-                <td></td>
-            </tr>
-        </table>
-        <div style="padding-left:20px;padding-right:20px;">
-            <button class="button button-dark icon-left ion-log-out button-block" ng-click="controller.logout()">
-                Odhlásit
-            </button>
-        </div>
+            <form class="list">
+                <label class="item item-input">
+                    <span class="input-label">Jméno serveru</span>
+                    <span>{{viewModel.ServerName}}</span>
+                </label>
+
+                <label class="item item-input">
+                    <span class="input-label">Adresa serveru</span>
+                    <span>{{viewModel.ServerUrl}}</span>
+                </label>
+
+                <label class="item item-input">
+                    <span class="input-label">Verze serveru</span>
+                    <span>{{viewModel.ServerVersion}}</span>
+                </label>
+
+                <label class="item item-input">
+                    <span class="input-label">Verze aplikace</span>
+                    <span>{{viewModel.ApplicationVersion}}</span>
+                </label>
+
+                <label class="item item-input">
+                    <span class="input-label">Přihlášený uživatel</span>
+                    <span>{{viewModel.UserName}}</span>
+                </label>
+
+                <label class="item item-input">
+                    <span class="input-label">Uživatelské jméno</span>
+                    <span>{{viewModel.UserLogin}}</span>
+                </label>
+
+                <div class="row">
+                    <div class="col">
+                        <button class="button button-dark button-praetor icon-left ion-log-out button-block" ng-click="controller.logout()">
+                            Odhlásit
+                        </button>
+                    </div>
+                </div>
+            </form>
     </ion-content>
 </ion-view>
 

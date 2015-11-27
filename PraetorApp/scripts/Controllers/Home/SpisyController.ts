@@ -35,12 +35,13 @@
 
             this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
 
-            this.onBeforeLoading();
-
-            this.LoadData();
+            this.LoadLocalData();
+            this.changeDataSource();
         }
 
-        private LoadData() {
+        private LoadLocalData() {
+            this.onBeforeLoading();
+
             var request = <PraetorServer.Service.WebServer.Messages.LoadDuleziteSpisyRequest>{};
             request.maxPocetPoslednich = 20;
 
@@ -49,7 +50,7 @@
                     this.viewModel.PrehledSpisu.posledniSpisy = response.posledniSpisy;
                     this.viewModel.PrehledSpisu.oblibeneSpisy = response.oblibeneSpisy;
 
-                    this.changeDataSource();
+                    this.onAftterLoading();
                 }
                 );
         }
@@ -66,13 +67,15 @@
             // Došlo k změně u registrované komponenty
             // aktualizujeme seznam spisů
             this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
-            this.onAftterLoading();
         }
 
         reloadData() {
             this.onBeforeLoading();
             this.SpisyUtilities.Synchronize();
-            this.LoadData();
+            this.changeDataSource();
+            this.onAftterLoading();
+
+            this.LoadLocalData();
         }
     }
 }

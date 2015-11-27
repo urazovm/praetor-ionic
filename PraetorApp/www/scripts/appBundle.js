@@ -55,6 +55,31 @@ var PraetorApp;
                     },
                 };
             });
+            ngModule.directive("prehledSubjektu", function ($timeout) {
+                return {
+                    restrict: 'E',
+                    scope: {
+                        viewModel: '=',
+                        onSubjektClick: '&'
+                    },
+                    templateUrl: 'templates/directives/prehled-subjektu.html',
+                    link: function (scope, element, attrs) {
+                        scope.$watch('searchText', function (newValue, oldValue) {
+                            if (newValue) {
+                                var tempFilterText = '', filterTextTimeout;
+                                scope.$watch('searchText', function (val) {
+                                    if (filterTextTimeout)
+                                        $timeout.cancel(filterTextTimeout);
+                                    tempFilterText = val;
+                                    filterTextTimeout = $timeout(function () {
+                                        scope.filterText = tempFilterText;
+                                    }, 1000);
+                                });
+                            }
+                        }, true);
+                    },
+                };
+            });
             ngModule.directive("prehledCinnosti", function () {
                 return {
                     restrict: 'E',
@@ -311,6 +336,15 @@ var PraetorApp;
                     'tab-spisy': {
                         templateUrl: "templates/home/spisy.html",
                         controller: PraetorApp.Controllers.HomeSpisyController.ID
+                    }
+                }
+            });
+            $stateProvider.state('app.home.subjekty', {
+                url: "/subjekty",
+                views: {
+                    'tab-subjekty': {
+                        templateUrl: "templates/home/subjekty.html",
+                        controller: PraetorApp.Controllers.HomeSubjektyController.ID
                     }
                 }
             });
@@ -592,7 +626,7 @@ var PraetorApp;
     (function (Controllers) {
         var HomeController = (function (_super) {
             __extends(HomeController, _super);
-            function HomeController($scope, $location, $http, Utilities, UiHelper, Preferences, SpisyUtilities) {
+            function HomeController($scope, $location, $http, Utilities, UiHelper, Preferences, SpisyUtilities, SubjektyUtilities) {
                 _super.call(this, $scope, PraetorApp.ViewModels.AppViewModel);
                 this.$location = $location;
                 this.$http = $http;
@@ -601,10 +635,12 @@ var PraetorApp;
                 this.Preferences = Preferences;
                 this.SpisyUtilities = SpisyUtilities;
                 this.SpisyUtilities.Synchronize();
+                this.SubjektyUtilities = SubjektyUtilities;
+                this.SubjektyUtilities.Synchronize();
             }
             Object.defineProperty(HomeController, "$inject", {
                 get: function () {
-                    return ["$scope", "$location", "$http", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.SpisyUtilities.ID];
+                    return ["$scope", "$location", "$http", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.SpisyUtilities.ID, PraetorApp.Services.SubjektyUtilities.ID];
                 },
                 enumerable: true,
                 configurable: true
@@ -1050,14 +1086,17 @@ var PraetorApp;
     (function (Controllers) {
         var HomeNastaveniController = (function (_super) {
             __extends(HomeNastaveniController, _super);
-            function HomeNastaveniController($scope, $state, Preferences) {
+            function HomeNastaveniController($scope, $state, Preferences, PraetorService, VersionInfo) {
                 _super.call(this, $scope, PraetorApp.ViewModels.Home.NastaveniViewModel);
                 this.$state = $state;
                 this.Preferences = Preferences;
+                this.PraetorService = PraetorService;
+                this.VersionInfo = VersionInfo;
+                this.loadSessionInfo();
             }
             Object.defineProperty(HomeNastaveniController, "$inject", {
                 get: function () {
-                    return ["$scope", "$state", PraetorApp.Services.Preferences.ID];
+                    return ["$scope", "$state", PraetorApp.Services.Preferences.ID, PraetorApp.Services.PraetorService.ID, "versionInfo"];
                 },
                 enumerable: true,
                 configurable: true
@@ -1065,6 +1104,23 @@ var PraetorApp;
             HomeNastaveniController.prototype.logout = function () {
                 this.Preferences.password = null;
                 this.$state.go("app.login");
+            };
+            HomeNastaveniController.prototype.loadSessionInfo = function () {
+                var _this = this;
+                this.viewModel.ServerName = this.Preferences.serverName;
+                this.viewModel.ServerUrl = this.Preferences.serverUrl;
+                this.viewModel.UserLogin = this.Preferences.username;
+                this.viewModel.ApplicationVersion = this.VersionInfo.versionString;
+                this.onBeforeLoading();
+                var request = {};
+                this.PraetorService.loadSessionInfo(request).then(function (response) {
+                    _this.viewModel.ServerVersion = response.verzeServeru;
+                    _this.viewModel.UserName = response.jmenoUzivatele;
+                    _this.onAftterLoading();
+                });
+            };
+            HomeNastaveniController.prototype.reloadData = function () {
+                this.loadSessionInfo();
             };
             HomeNastaveniController.ID = "HomeNastaveniController";
             return HomeNastaveniController;
@@ -1090,8 +1146,8 @@ var PraetorApp;
                 this.SpisyUtilities.register(this);
                 this.PraetorService = PraetorService;
                 this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
-                this.onBeforeLoading();
-                this.LoadData();
+                this.LoadLocalData();
+                this.changeDataSource();
             }
             Object.defineProperty(HomeSpisyController, "$inject", {
                 get: function () {
@@ -1100,14 +1156,15 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
-            HomeSpisyController.prototype.LoadData = function () {
+            HomeSpisyController.prototype.LoadLocalData = function () {
                 var _this = this;
+                this.onBeforeLoading();
                 var request = {};
                 request.maxPocetPoslednich = 20;
                 this.PraetorService.loadDuleziteSpisy(request).then(function (response) {
                     _this.viewModel.PrehledSpisu.posledniSpisy = response.posledniSpisy;
                     _this.viewModel.PrehledSpisu.oblibeneSpisy = response.oblibeneSpisy;
-                    _this.changeDataSource();
+                    _this.onAftterLoading();
                 });
             };
             HomeSpisyController.prototype.openSpis = function (spis) {
@@ -1119,17 +1176,71 @@ var PraetorApp;
             };
             HomeSpisyController.prototype.changeDataSource = function () {
                 this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
-                this.onAftterLoading();
             };
             HomeSpisyController.prototype.reloadData = function () {
                 this.onBeforeLoading();
                 this.SpisyUtilities.Synchronize();
-                this.LoadData();
+                this.changeDataSource();
+                this.onAftterLoading();
+                this.LoadLocalData();
             };
             HomeSpisyController.ID = "HomeSpisyController";
             return HomeSpisyController;
         })(Controllers.BaseController);
         Controllers.HomeSpisyController = HomeSpisyController;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
+        var HomeSubjektyController = (function (_super) {
+            __extends(HomeSubjektyController, _super);
+            function HomeSubjektyController($scope, $location, $http, $state, $timeout, Utilities, UiHelper, Preferences, SubjektyUtilities, PraetorService) {
+                _super.call(this, $scope, PraetorApp.ViewModels.Home.SubjektyViewModel);
+                this.$location = $location;
+                this.$http = $http;
+                this.Utilities = Utilities;
+                this.UiHelper = UiHelper;
+                this.Preferences = Preferences;
+                this.$state = $state;
+                this.SubjektyUtilities = SubjektyUtilities;
+                this.SubjektyUtilities.register(this);
+                this.PraetorService = PraetorService;
+                this.viewModel.PrehledSubjektu = new PraetorApp.ViewModels.PrehledSubjektuViewModel();
+                this.LoadLocalData();
+                this.changeDataSource();
+            }
+            Object.defineProperty(HomeSubjektyController, "$inject", {
+                get: function () {
+                    return ["$scope", "$location", "$http", "$state", "$timeout", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.SubjektyUtilities.ID, PraetorApp.Services.PraetorService.ID];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            HomeSubjektyController.prototype.LoadLocalData = function () {
+                var _this = this;
+                this.onBeforeLoading();
+                var request = {};
+                this.PraetorService.loadDuleziteSubjekty(request).then(function (response) {
+                    _this.viewModel.PrehledSubjektu.subjektyZOblibenychSpisu = response.subjektyZOblibenychSpisu;
+                    _this.onAftterLoading();
+                });
+            };
+            HomeSubjektyController.prototype.changeDataSource = function () {
+                this.viewModel.PrehledSubjektu.vsechnySubjekty = this.SubjektyUtilities.Subjekty;
+            };
+            HomeSubjektyController.prototype.reloadData = function () {
+                this.onBeforeLoading();
+                this.SubjektyUtilities.Synchronize();
+                this.changeDataSource();
+                this.onAftterLoading();
+                this.LoadLocalData();
+            };
+            HomeSubjektyController.ID = "HomeSubjektyController";
+            return HomeSubjektyController;
+        })(Controllers.BaseController);
+        Controllers.HomeSubjektyController = HomeSubjektyController;
     })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
@@ -1420,6 +1531,38 @@ var PraetorApp;
             return PrehledSpisuFilter;
         })();
         Filters.PrehledSpisuFilter = PrehledSpisuFilter;
+    })(Filters = PraetorApp.Filters || (PraetorApp.Filters = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Filters;
+    (function (Filters) {
+        var PrehledSubjektuFilter = (function () {
+            function PrehledSubjektuFilter() {
+            }
+            PrehledSubjektuFilter.filter = function (input, search) {
+                if (input == null) {
+                    return [];
+                }
+                if (search == null || search == "") {
+                    return [];
+                }
+                var out = [];
+                input.filter(function (value, index, array) {
+                    if (out.length >= 50)
+                        return;
+                    var rowData = "";
+                    if (value.oznaceni)
+                        rowData += value.oznaceni.toLowerCase() + "|#|";
+                    if (rowData.indexOf(search.toLowerCase()) >= 0)
+                        out.push(value);
+                });
+                return out;
+            };
+            PrehledSubjektuFilter.ID = "PrehledSubjektuFilter";
+            return PrehledSubjektuFilter;
+        })();
+        Filters.PrehledSubjektuFilter = PrehledSubjektuFilter;
     })(Filters = PraetorApp.Filters || (PraetorApp.Filters = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;
@@ -3077,6 +3220,18 @@ var PraetorApp;
 (function (PraetorApp) {
     var ViewModels;
     (function (ViewModels) {
+        var PrehledSubjektuViewModel = (function () {
+            function PrehledSubjektuViewModel() {
+            }
+            return PrehledSubjektuViewModel;
+        })();
+        ViewModels.PrehledSubjektuViewModel = PrehledSubjektuViewModel;
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
         var SpisViewModel = (function () {
             function SpisViewModel() {
             }
@@ -3173,6 +3328,21 @@ var PraetorApp;
                 return SpisyViewModel;
             })();
             Home.SpisyViewModel = SpisyViewModel;
+        })(Home = ViewModels.Home || (ViewModels.Home = {}));
+    })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var ViewModels;
+    (function (ViewModels) {
+        var Home;
+        (function (Home) {
+            var SubjektyViewModel = (function () {
+                function SubjektyViewModel() {
+                }
+                return SubjektyViewModel;
+            })();
+            Home.SubjektyViewModel = SubjektyViewModel;
         })(Home = ViewModels.Home || (ViewModels.Home = {}));
     })(ViewModels = PraetorApp.ViewModels || (PraetorApp.ViewModels = {}));
 })(PraetorApp || (PraetorApp = {}));

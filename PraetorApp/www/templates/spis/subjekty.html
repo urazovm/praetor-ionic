@@ -4,7 +4,7 @@
 
         <div class="list">
             <div class="item item-divider" ng-show="(viewModel.subjekty | filter: { role : 'Klient' }).length">Klient</div>
-            <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Klient' }" ng-include="'subjekt_template.html'" ></div>
+            <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Klient' }" ng-include="'subjekt_template.html'"></div>
             <div class="item item-divider"  ng-show="(viewModel.subjekty | filter: { role : 'Protistrana' }).length">Protistrana</div>
             <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Protistrana' }" ng-include="'subjekt_template.html'"></div>
             <div class="item item-divider"  ng-show="(viewModel.subjekty | filter: { role : 'Rozhodující orgán' }).length">Rozhodující orgán</div>
@@ -19,7 +19,7 @@
 <style>
     .button-list-flow-right
     {
-        float:right;
+        float: right;
         margin: -10px 0
     }
 
@@ -28,8 +28,6 @@
 <script type="text/ng-template" id="subjekt_template.html">
     <a class="button button-clear button-list-flow-right" ng-href="tel:{{subjekt.primarniTelefon}}" ng-show="subjekt.primarniTelefon"><i class="icon ion-ios-telephone"></i></a>
     <a class="button button-clear button-list-flow-right" ng-href="mailto:{{subjekt.primarniEmail}}" ng-show="subjekt.primarniEmail"><i class="icon ion-ios-email"></i></a>
-
-    <!--<button style="float:right" class="button button-clear" ng-href="mailto:{{subjekt.primarniEmail}}" ng-show="subjekt.primarniEmail"><i class="icon ion-ios-email"></i></button>-->
 
     <h2>{{subjekt.oznaceni}} </h2>
     <p>{{subjekt.procesniRole}} {{subjekt.hmotnepravniRole}}</p>

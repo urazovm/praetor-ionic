@@ -1,16 +1,23 @@
-﻿.tabs-positive > .tabs, .tabs.tabs-positive, .bar.bar-positive, .bar-positive .button {
+﻿.tabs-dark.tabs-praetor, .tabs-dark.tabs-praetor > .tabs, .tabs.tabs-dark.tabs-praetor, .bar-dark.bar-praetor, .bar.bar-dark.bar-praetor, .bar-dark.bar-praetor .button {
     border-color: #1d2939;
-    background-color: #1d2939;
-    color: #fff;
+    background-color: #1d2939; // Original
+    //border-color: #0c3e6d;
+    //background-color: #0c3e6d; // Prospekt
+    //border-color: #0a60a3;
+    //background-color: #0a60a3; // Roh uvodni obrazovky
+    //border-color: #2794D6;
+    //background-color: #2794D6; // Puvodni prihlasovaci
 }
 
-   .bar-positive .button i {
-        font-size: 30px;
-        background-color: transparent;
-        border-color: transparent;
-    }
+.bar-dark.bar-praetor .button, .bar-dark.bar-praetor .button i {
+    font-size: 30px;
+    background-color: transparent;
+    border-color: transparent;
+}
 
-.bar.bar-stable .title {
+.button-dark.button-praetor {
+    border-color: #000;
+    background-color: #1d2939; // Original
     color: #fff;
 }
 
@@ -21,6 +28,10 @@
     left: 0;
     height: 100%;
     top: 0;
+}
+
+.login-page {
+    background-color: #1d2939; // Original
 }
 
     .praetor-back-button i {

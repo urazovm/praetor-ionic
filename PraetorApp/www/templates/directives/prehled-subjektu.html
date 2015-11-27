@@ -1,4 +1,4 @@
-﻿<div ng-init="searchText=''">    
+﻿<div ng-init="searchText=''">
     <div class="padding">
         <label class="item item-input">
             <i class="icon ion-search placeholder-icon"></i>
@@ -6,54 +6,46 @@
         </label>
     </div>
     <div ng-show="searchText==''">
-        <div class="list" ng-show="viewModel.oblibeneSpisy.length">
-            <div class="item item-divider">Oblíbené spisy</div>
-            <div ng-repeat="spis in viewModel.oblibeneSpisy">
-                <a class="item item-icon-right" ng-click="onSpisClick({spis:spis})">
-                    <i class="icon ion-ios-star icon-oblibeny" ng-show="spis.jeOblibeny"></i>
-                    <h2>{{spis.spisovaZnacka}} {{spis.predmet}}</h2>
-                    <div ng-switch="spis.loading">
-                        <p ng-switch-when="true">Načítám…</p>
-                        <p ng-switch-default>{{spis.hlavniKlient}}{{spis.protistrana ? " vs. " + spis.protistrana : ""}}</p>
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="list" ng-show="viewModel.posledniSpisy.length">
-            <div class="item item-divider">Nedávno otevřené spisy</div>
-            <div ng-repeat="spis in viewModel.posledniSpisy">
-                <a class="item item-icon-right" ng-click="onSpisClick({spis:spis})">
-                    <i class="icon ion-ios-star icon-oblibeny" ng-show="spis.jeOblibeny"></i>
-                    <h2>{{spis.spisovaZnacka}} {{spis.predmet}}</h2>
-                    <div ng-switch="spis.loading">
-                        <p ng-switch-when="true">Načítám…</p>
-                        <p ng-switch-default>{{spis.hlavniKlient}}{{spis.protistrana ? " vs. " + spis.protistrana : ""}}</p>
-                    </div>
-                </a>
+        <div class="list" ng-show="viewModel.subjektyZOblibenychSpisu.length">
+            <div class="item item-divider">Subjekty z oblíbených spisů</div>
+            <div class="item" ng-repeat="subjekt in viewModel.subjektyZOblibenychSpisu" ng-include="'subjekt_template.html'">
             </div>
         </div>
     </div>
     <div ng-show="searchText != ''">
         <div class="list">
             <div class="item item-divider">Hledání: {{filterText}}</div>
-            <div ng-repeat="spis in viewModel.vsechnySpisy | PrehledSpisuFilter : filterText">
-                <a class="item item-icon-right" ng-click="onSpisClick({spis:spis})">
-                    <i class="icon ion-ios-star icon-oblibeny" ng-show="spis.jeOblibeny"></i>
-                    <h2 ng-bind-html="spis.spisovaZnacka + ' ' + spis.predmet | HighLightFilter:searchText"></h2>
-                    <!--<h2 ng-bind-html="spis.spisovaZnacka + ' ' + spis.predmet"></h2>-->
-                    <div ng-switch="spis.loading">
-                        <p ng-switch-when="true">Načítám…</p>
-                        <!--<p ng-switch-default ng-bind-html="spis.hlavniKlient"></p>-->
-                        <p ng-switch-default ng-bind-html="(spis.hlavniKlient ? spis.hlavniKlient : '') + (spis.protistrana ? ' vs. ' + spis.protistrana : '') | HighLightFilter:searchText"></p>
-                    </div>
-                </a>
+            <div ng-show="filterText == searchText" ng-repeat="subjekt in viewModel.vsechnySubjekty | PrehledSubjektuFilter : filterText">
+                <div class="item">
+                    <a class="button button-clear button-list-flow-right" ng-href="tel:{{subjekt.primarniTelefon}}" ng-show="subjekt.primarniTelefon"><i class="icon ion-ios-telephone"></i></a>
+                    <a class="button button-clear button-list-flow-right" ng-href="mailto:{{subjekt.primarniEmail}}" ng-show="subjekt.primarniEmail"><i class="icon ion-ios-email"></i></a>
+
+                    <ng-switch on="subjekt.loading">
+                        <h2 ng-switch-when="true">Načítám…</h2>
+                        <h2 ng-switch-default ng-bind-html="(subjekt.oznaceni ? subjekt.oznaceni : '') | HighLightFilter:searchText"></h2>
+                    </ng-switch>
+                </div>
             </div>
             <div ng-show="filterText != searchText" class="empty-list-description">
                 Vyhledávám…
             </div>
-            <div ng-show="!(viewModel.vsechnySpisy | PrehledSpisuFilter : filterText).length && filterText == searchText && searchText != ''" class="empty-list-description">
-                Žádné spisy nebyly nalezeny.
+            <div ng-show="!(viewModel.vsechnySubjekty | PrehledSubjektuFilter : filterText).length && filterText == searchText && searchText != ''" class="empty-list-description">
+                Žádné subjekty nebyly nalezeny.
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .button-list-flow-right {
+        float: right;
+        margin: -10px 0;
+    }
+</style>
+
+<script type="text/ng-template" id="subjekt_template.html">
+    <a class="button button-clear button-list-flow-right" ng-href="tel:{{subjekt.primarniTelefon}}" ng-show="subjekt.primarniTelefon"><i class="icon ion-ios-telephone"></i></a>
+    <a class="button button-clear button-list-flow-right" ng-href="mailto:{{subjekt.primarniEmail}}" ng-show="subjekt.primarniEmail"><i class="icon ion-ios-email"></i></a>
+
+    <h2>{{subjekt.oznaceni}}</h2>
+</script>

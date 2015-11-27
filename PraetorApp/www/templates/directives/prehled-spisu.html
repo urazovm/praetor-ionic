@@ -1,4 +1,4 @@
-﻿<div ng-init="searchText=''">    
+﻿<div ng-init="searchText=''">
     <div class="padding">
         <label class="item item-input">
             <i class="icon ion-search placeholder-icon"></i>
@@ -8,35 +8,19 @@
     <div ng-show="searchText==''">
         <div class="list" ng-show="viewModel.oblibeneSpisy.length">
             <div class="item item-divider">Oblíbené spisy</div>
-            <div ng-repeat="spis in viewModel.oblibeneSpisy">
-                <a class="item item-icon-right" ng-click="onSpisClick({spis:spis})">
-                    <i class="icon ion-ios-star icon-oblibeny" ng-show="spis.jeOblibeny"></i>
-                    <h2>{{spis.spisovaZnacka}} {{spis.predmet}}</h2>
-                    <div ng-switch="spis.loading">
-                        <p ng-switch-when="true">Načítám…</p>
-                        <p ng-switch-default>{{spis.hlavniKlient}}{{spis.protistrana ? " vs. " + spis.protistrana : ""}}</p>
-                    </div>
-                </a>
+            <div ng-repeat="spis in viewModel.oblibeneSpisy" ng-include="'spis_template.html'">
             </div>
         </div>
         <div class="list" ng-show="viewModel.posledniSpisy.length">
             <div class="item item-divider">Nedávno otevřené spisy</div>
-            <div ng-repeat="spis in viewModel.posledniSpisy">
-                <a class="item item-icon-right" ng-click="onSpisClick({spis:spis})">
-                    <i class="icon ion-ios-star icon-oblibeny" ng-show="spis.jeOblibeny"></i>
-                    <h2>{{spis.spisovaZnacka}} {{spis.predmet}}</h2>
-                    <div ng-switch="spis.loading">
-                        <p ng-switch-when="true">Načítám…</p>
-                        <p ng-switch-default>{{spis.hlavniKlient}}{{spis.protistrana ? " vs. " + spis.protistrana : ""}}</p>
-                    </div>
-                </a>
+            <div ng-repeat="spis in viewModel.posledniSpisy" ng-include="'spis_template.html'">
             </div>
         </div>
     </div>
     <div ng-show="searchText != ''">
         <div class="list">
             <div class="item item-divider">Hledání: {{filterText}}</div>
-            <div ng-repeat="spis in viewModel.vsechnySpisy | PrehledSpisuFilter : filterText">
+            <div ng-show="filterText == searchText" ng-repeat="spis in viewModel.vsechnySpisy | PrehledSpisuFilter : filterText">
                 <a class="item item-icon-right" ng-click="onSpisClick({spis:spis})">
                     <i class="icon ion-ios-star icon-oblibeny" ng-show="spis.jeOblibeny"></i>
                     <h2 ng-bind-html="spis.spisovaZnacka + ' ' + spis.predmet | HighLightFilter:searchText"></h2>
@@ -57,3 +41,14 @@
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="spis_template.html">
+    <a class="item item-icon-right" ng-click="onSpisClick({spis:spis})">
+        <i class="icon ion-ios-star icon-oblibeny" ng-show="spis.jeOblibeny"></i>
+        <h2>{{spis.spisovaZnacka}} {{spis.predmet}}</h2>
+        <div ng-switch="spis.loading">
+            <p ng-switch-when="true">Načítám…</p>
+            <p ng-switch-default>{{spis.hlavniKlient}}{{spis.protistrana ? " vs. " + spis.protistrana : ""}}</p>
+        </div>
+    </a>
+</script>

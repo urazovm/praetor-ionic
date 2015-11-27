@@ -95,6 +95,38 @@ module PraetorApp.Application {
             };
         });
 
+        ngModule.directive("prehledSubjektu", function ($timeout) {
+            return {
+                restrict: 'E',
+                scope: {
+                    viewModel: '=',
+                    onSubjektClick: '&'
+                },
+                templateUrl: 'templates/directives/prehled-subjektu.html',
+                link: function (scope, element, attrs) {
+                    scope.$watch('searchText', (newValue, oldValue) => {
+                        if (newValue) {
+
+                            var tempFilterText = '', filterTextTimeout;
+
+                            scope.$watch('searchText', (val) => {
+
+                                if (filterTextTimeout)
+                                    $timeout.cancel(filterTextTimeout);
+
+                                tempFilterText = val;
+
+                                filterTextTimeout = $timeout(() => {
+                                    (<any>scope).filterText = tempFilterText;
+                                }, 1000); // delay 250 ms
+                            })
+
+                        }
+                    }, true);
+                },
+            };
+        });
+
         ngModule.directive("prehledCinnosti", function () {
             return {
                 restrict: 'E',

@@ -20,6 +20,7 @@
         private static SERVER_URL = "SERVER_URL";
         private static SESSION_ID = "SESSION_ID";
         private static SPISY_LOCAL_STORAGE = "SPISY_LOCAL_STORAGE";
+        private static SUBJEKTY_LOCAL_STORAGE = "SUBJEKTY_LOCAL_STORAGE";
         private static REQUIRE_PIN_THRESHOLD = "REQUIRE_PIN_THRESHOLD";
         private static LAST_PAUSED_AT = "LAST_PAUSED_AT";
         private static HAS_COMPLETED_ONBOARDING = "HAS_COMPLETED_ONBOARDING";
@@ -76,6 +77,25 @@
             else {
                 var jsonData = JSON.stringify(value);
                 localStorage.setItem(Preferences.SPISY_LOCAL_STORAGE, jsonData);
+            }
+        }
+
+        get subjekty(): PraetorServer.Service.WebServer.Messages.Dto.SubjektPrehledEntry[] {
+            var jsonData = localStorage.getItem(Preferences.SUBJEKTY_LOCAL_STORAGE);
+
+            if (jsonData == undefined)
+                return null;
+
+            return JSON.parse(jsonData);
+        }
+
+        set subjekty(value: PraetorServer.Service.WebServer.Messages.Dto.SubjektPrehledEntry[]) {
+            if (value == null) {
+                localStorage.removeItem(Preferences.SUBJEKTY_LOCAL_STORAGE);
+            }
+            else {
+                var jsonData = JSON.stringify(value);
+                localStorage.setItem(Preferences.SUBJEKTY_LOCAL_STORAGE, jsonData);
             }
         }
 

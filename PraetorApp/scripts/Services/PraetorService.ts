@@ -108,6 +108,9 @@
             configure.timeout = 10000;
             configure.headers = { 'Content-Type': 'application/json' };
 
+            if (server.indexOf(":") == -1)
+                server = server + ":4025";
+
             var promise = this.$http.post<PraetorServer.Service.WebServer.Messages.Response>(
                 'http://' + server + '/praetorapi/' + action,
                 data,
@@ -161,8 +164,16 @@
             return this.getData("SaveCinnost", request);
         }
 
-        public LoadPosledniSpisy(request: PraetorServer.Service.WebServer.Messages.LoadPosledniSpisyRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoadPosledniSpisyResponse> {
-            return this.getData("LoadPosledniSpisy", request);
+        public loadDuleziteSpisy(request: PraetorServer.Service.WebServer.Messages.LoadDuleziteSpisyRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoadDuleziteSpisyResponse> {
+            return this.getData("LoadDuleziteSpisy", request);
+        }
+
+        public loadDuleziteSubjekty(request: PraetorServer.Service.WebServer.Messages.LoadDuleziteSubjektyRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoadDuleziteSubjektyResponse> {
+            return this.getData("LoadDuleziteSubjekty", request);
+        }
+
+        public loadSessionInfo(request: PraetorServer.Service.WebServer.Messages.LoadSessionInfoRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoadSessionInfoResponse> {
+            return this.getData("LoadSessionInfo", request);
         }
 
         public getFileToken(request: PraetorServer.Service.WebServer.Messages.GetFileTokenRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.GetFileTokenResponse> {

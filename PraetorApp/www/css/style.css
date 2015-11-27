@@ -40,27 +40,27 @@
 }
 
 .dir .item-icon-left {
-    padding-left: 60px;
-}
-
-.dir .item-icon-left .icon {
-    left: 20px;
-}
-
-.dir .dir .item-icon-left {
     padding-left: 70px;
 }
 
-.dir .dir .item-icon-left .icon {
+.dir .item-icon-left .icon {
     left: 30px;
 }
 
+.dir .dir .item-icon-left {
+    padding-left: 90px;
+}
+
+.dir .dir .item-icon-left .icon {
+    left: 50px;
+}
+
 .dir .dir .dir .item-icon-left {
-    padding-left: 80px;
+    padding-left: 110px;
 }
 
 .dir .dir .dir .item-icon-left .icon {
-    left: 40px;
+    left: 70px;
 }
 
 .dir-entry>a>.icon-wrapper.closed {
@@ -104,6 +104,10 @@
 
 .custom-icon-pdf {
     background-image: url('../images/file-icons/pdf.png');
+}
+
+.icon-oblibeny {
+    color: #FEC73C;
 }
 
 .right-float-overlay {

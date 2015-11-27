@@ -96,7 +96,7 @@
             if (serverAddress == "" && this.viewModel.server.match(/^[0-9]*$/)) // Číslo portu na cloudu.
                 serverAddress = "cloud.praetoris.cz:" + this.viewModel.server;
             if (serverAddress == "" && !this.viewModel.server.match(/\./)) // Zkratka, kterou nám vyhodnotí náš server.
-                serverAddress = this.httpGet("http://update.praetoris.cz/config/client/mobile/" + this.viewModel.server.toLowerCase());
+                serverAddress = this.httpGet("http://update.praetoris.cz/config/client/mobile/address/" + this.viewModel.server.toLowerCase());
             if (serverAddress == "")
                 serverAddress = this.viewModel.server;
 

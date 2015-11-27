@@ -35,23 +35,21 @@
 
             this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
 
-
-            this.LoadPosledniSpisy();
-
-            this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;            
-        }
-
-        private LoadPosledniSpisy() {
-
             this.onBeforeLoading();
 
-            var request = <PraetorServer.Service.WebServer.Messages.LoadPosledniSpisyRequest>{};
-            request.pocet = 20;
+            this.LoadData();
+        }
 
-            this.PraetorService.LoadPosledniSpisy(request).then(
+        private LoadData() {
+            var request = <PraetorServer.Service.WebServer.Messages.LoadDuleziteSpisyRequest>{};
+            request.maxPocetPoslednich = 20;
+
+            this.PraetorService.loadDuleziteSpisy(request).then(
                 response => {
                     this.viewModel.PrehledSpisu.posledniSpisy = response.posledniSpisy;
-                    this.onAftterLoading();
+                    this.viewModel.PrehledSpisu.oblibeneSpisy = response.oblibeneSpisy;
+
+                    this.changeDataSource();
                 }
                 );
         }
@@ -74,6 +72,7 @@
         reloadData() {
             this.onBeforeLoading();
             this.SpisyUtilities.Synchronize();
+            this.LoadData();
         }
     }
 }

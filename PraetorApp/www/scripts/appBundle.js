@@ -683,7 +683,7 @@ var PraetorApp;
                 if (serverAddress == "" && this.viewModel.server.match(/^[0-9]*$/))
                     serverAddress = "cloud.praetoris.cz:" + this.viewModel.server;
                 if (serverAddress == "" && !this.viewModel.server.match(/\./))
-                    serverAddress = this.httpGet("http://update.praetoris.cz/config/client/mobile/" + this.viewModel.server.toLowerCase());
+                    serverAddress = this.httpGet("http://update.praetoris.cz/config/client/mobile/address/" + this.viewModel.server.toLowerCase());
                 if (serverAddress == "")
                     serverAddress = this.viewModel.server;
                 this.Praetor.login(serverAddress, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then(function (data) {
@@ -1090,8 +1090,8 @@ var PraetorApp;
                 this.SpisyUtilities.register(this);
                 this.PraetorService = PraetorService;
                 this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
-                this.LoadPosledniSpisy();
-                this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
+                this.onBeforeLoading();
+                this.LoadData();
             }
             Object.defineProperty(HomeSpisyController, "$inject", {
                 get: function () {
@@ -1100,14 +1100,14 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
-            HomeSpisyController.prototype.LoadPosledniSpisy = function () {
+            HomeSpisyController.prototype.LoadData = function () {
                 var _this = this;
-                this.onBeforeLoading();
                 var request = {};
-                request.pocet = 20;
-                this.PraetorService.LoadPosledniSpisy(request).then(function (response) {
+                request.maxPocetPoslednich = 20;
+                this.PraetorService.loadDuleziteSpisy(request).then(function (response) {
                     _this.viewModel.PrehledSpisu.posledniSpisy = response.posledniSpisy;
-                    _this.onAftterLoading();
+                    _this.viewModel.PrehledSpisu.oblibeneSpisy = response.oblibeneSpisy;
+                    _this.changeDataSource();
                 });
             };
             HomeSpisyController.prototype.openSpis = function (spis) {
@@ -1124,6 +1124,7 @@ var PraetorApp;
             HomeSpisyController.prototype.reloadData = function () {
                 this.onBeforeLoading();
                 this.SpisyUtilities.Synchronize();
+                this.LoadData();
             };
             HomeSpisyController.ID = "HomeSpisyController";
             return HomeSpisyController;
@@ -1205,9 +1206,10 @@ var PraetorApp;
             VyberSpisuController.prototype.LoadPosledniSpisy = function () {
                 var _this = this;
                 var request = {};
-                request.pocet = 20;
-                this.PraetorService.LoadPosledniSpisy(request).then(function (response) {
+                request.maxPocetPoslednich = 20;
+                this.PraetorService.loadDuleziteSpisy(request).then(function (response) {
                     _this.viewModel.PrehledSpisu.posledniSpisy = response.posledniSpisy;
+                    _this.viewModel.PrehledSpisu.oblibeneSpisy = response.oblibeneSpisy;
                 });
             };
             VyberSpisuController.prototype.SelectSpis = function (spis) {
@@ -2179,6 +2181,8 @@ var PraetorApp;
                 var configure = {};
                 configure.timeout = 10000;
                 configure.headers = { 'Content-Type': 'application/json' };
+                if (server.indexOf(":") == -1)
+                    server = server + ":4025";
                 var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, configure)
                     .then(function (response) {
                     if (options.ShowProgress) {
@@ -2214,8 +2218,14 @@ var PraetorApp;
             PraetorService.prototype.SaveCinnost = function (request) {
                 return this.getData("SaveCinnost", request);
             };
-            PraetorService.prototype.LoadPosledniSpisy = function (request) {
-                return this.getData("LoadPosledniSpisy", request);
+            PraetorService.prototype.loadDuleziteSpisy = function (request) {
+                return this.getData("LoadDuleziteSpisy", request);
+            };
+            PraetorService.prototype.loadDuleziteSubjekty = function (request) {
+                return this.getData("LoadDuleziteSubjekty", request);
+            };
+            PraetorService.prototype.loadSessionInfo = function (request) {
+                return this.getData("LoadSessionInfo", request);
             };
             PraetorService.prototype.getFileToken = function (request) {
                 return this.getData("getfiletoken", request);
@@ -2302,6 +2312,25 @@ var PraetorApp;
                     else {
                         var jsonData = JSON.stringify(value);
                         localStorage.setItem(Preferences.SPISY_LOCAL_STORAGE, jsonData);
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Preferences.prototype, "subjekty", {
+                get: function () {
+                    var jsonData = localStorage.getItem(Preferences.SUBJEKTY_LOCAL_STORAGE);
+                    if (jsonData == undefined)
+                        return null;
+                    return JSON.parse(jsonData);
+                },
+                set: function (value) {
+                    if (value == null) {
+                        localStorage.removeItem(Preferences.SUBJEKTY_LOCAL_STORAGE);
+                    }
+                    else {
+                        var jsonData = JSON.stringify(value);
+                        localStorage.setItem(Preferences.SUBJEKTY_LOCAL_STORAGE, jsonData);
                     }
                 },
                 enumerable: true,
@@ -2437,6 +2466,7 @@ var PraetorApp;
             Preferences.SERVER_URL = "SERVER_URL";
             Preferences.SESSION_ID = "SESSION_ID";
             Preferences.SPISY_LOCAL_STORAGE = "SPISY_LOCAL_STORAGE";
+            Preferences.SUBJEKTY_LOCAL_STORAGE = "SUBJEKTY_LOCAL_STORAGE";
             Preferences.REQUIRE_PIN_THRESHOLD = "REQUIRE_PIN_THRESHOLD";
             Preferences.LAST_PAUSED_AT = "LAST_PAUSED_AT";
             Preferences.HAS_COMPLETED_ONBOARDING = "HAS_COMPLETED_ONBOARDING";
@@ -2513,6 +2543,73 @@ var PraetorApp;
             return SpisyUtilities;
         })();
         Services.SpisyUtilities = SpisyUtilities;
+    })(Services = PraetorApp.Services || (PraetorApp.Services = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Services;
+    (function (Services) {
+        var SubjektyUtilities = (function () {
+            function SubjektyUtilities($q, $timeout, Utilities, praetorService, Preferences) {
+                this.$q = $q;
+                this.Utilities = Utilities;
+                this._subjekty = null;
+                this.$timeout = $timeout;
+                this.praetorService = praetorService;
+                this.Preferences = Preferences;
+                this.registerController = [];
+            }
+            Object.defineProperty(SubjektyUtilities, "$inject", {
+                get: function () {
+                    return ["$q", "$timeout", Services.Utilities.ID, Services.PraetorService.ID, Services.Preferences.ID];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(SubjektyUtilities.prototype, "Subjekty", {
+                get: function () {
+                    return this._subjekty;
+                },
+                set: function (value) {
+                    this._subjekty = value;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            SubjektyUtilities.prototype.Synchronize = function () {
+                var self = this;
+                this.Preferences.subjekty = null;
+                if (this.Preferences.subjekty != null) {
+                    this.Subjekty = this.Preferences.subjekty;
+                    self.onChangedDataSource();
+                }
+                if (this.Preferences.subjekty == null) {
+                    this.loadSubjekty();
+                }
+            };
+            SubjektyUtilities.prototype.loadSubjekty = function () {
+                var self = this;
+                var request = {};
+                this.praetorService.getData("LoadChangedSubjekty", request).then(function (response) {
+                    if (response.success) {
+                        self.Preferences.subjekty = response.changedSubjekty;
+                        self.Subjekty = response.changedSubjekty;
+                        self.onChangedDataSource();
+                    }
+                });
+            };
+            SubjektyUtilities.prototype.onChangedDataSource = function () {
+                _.each(this.registerController, function (controller) {
+                    controller.changeDataSource.apply(controller);
+                });
+            };
+            SubjektyUtilities.prototype.register = function (controller) {
+                this.registerController.push(controller);
+            };
+            SubjektyUtilities.ID = "SubjektyUtilities";
+            return SubjektyUtilities;
+        })();
+        Services.SubjektyUtilities = SubjektyUtilities;
     })(Services = PraetorApp.Services || (PraetorApp.Services = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;

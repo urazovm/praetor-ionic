@@ -36,12 +36,13 @@
         }
 
         private LoadPosledniSpisy() {
-            var request = <PraetorServer.Service.WebServer.Messages.LoadPosledniSpisyRequest>{};
-            request.pocet = 20;
+            var request = <PraetorServer.Service.WebServer.Messages.LoadDuleziteSpisyRequest>{};
+            request.maxPocetPoslednich = 20;
 
-            this.PraetorService.LoadPosledniSpisy(request).then(
+            this.PraetorService.loadDuleziteSpisy(request).then(
                 response => {
                     this.viewModel.PrehledSpisu.posledniSpisy = response.posledniSpisy;
+                    this.viewModel.PrehledSpisu.oblibeneSpisy = response.oblibeneSpisy;
                 }
                 );
         }

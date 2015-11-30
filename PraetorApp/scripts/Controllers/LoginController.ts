@@ -107,7 +107,6 @@
             }
 
             this.Praetor.login(serverAddress, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then((data) => {
-
                 if (data.success) {
                     this.Preferences.serverName = this.viewModel.server;
                     this.Preferences.serverUrl = serverAddress;

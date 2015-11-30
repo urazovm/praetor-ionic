@@ -739,6 +739,8 @@ var PraetorApp;
                 }, function (ex) {
                     if (!ex.responded)
                         _this.UiHelper.alert("Nepodařilo se kontaktovat server. Jste připojeni k internetu?");
+                    else if (ex.response.status == 0)
+                        _this.UiHelper.alert("Vypršel časový limit.");
                     else if (ex.response.status == 404)
                         _this.UiHelper.alert("Server nebyl nalezen.");
                     else if (ex.response.status == 500)
@@ -2317,7 +2319,7 @@ var PraetorApp;
                 });
             };
             PraetorService.prototype.resolveServerAbbrev = function (abbrev) {
-                return this.httpGet("http://update1.praetoris.cz/config/client/mobile/address/" + abbrev.toLowerCase());
+                return this.httpGet("http://update.praetoris.cz/config/client/mobile/address/" + abbrev.toLowerCase());
             };
             PraetorService.prototype.login = function (server, username, password) {
                 var _this = this;

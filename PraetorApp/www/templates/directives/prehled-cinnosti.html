@@ -1,7 +1,7 @@
 ﻿<div>
     <div class="list">
         <div ng-repeat="datumGroup in viewModel.Cinnosti">
-            <div class="item item-divider" ng-class="(datumGroup.datum.getDay() == 0 || datumGroup.datum.getDay() == 6) ? 'item-dark' : ''">
+            <div class="item item-divider" ng-class="(datumGroup.datum.getDay() == 0 || datumGroup.datum.getDay() == 6) ? 'item-dark item-praetor' : ''">
                 {{datumGroup.datumString}}
                 <span class="right-float">{{datumGroup.casString}}</span>
                 <button class="button button-clear ion-plus-round button-right-float" ng-click="onAddClick({date:datumGroup.datum})"></button>

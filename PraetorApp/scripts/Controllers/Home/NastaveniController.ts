@@ -10,7 +10,7 @@
         }
 
         private $state: ng.ui.IStateService;
-        private Preferences: Services.Preferences;        
+        private Preferences: Services.Preferences;
         private PraetorService: Services.PraetorService;
         private VersionInfo: Interfaces.VersionInfo;
 
@@ -18,7 +18,7 @@
             super($scope, ViewModels.Home.NastaveniViewModel);
 
             this.$state = $state;
-            this.Preferences = Preferences;            
+            this.Preferences = Preferences;
             this.PraetorService = PraetorService;
             this.VersionInfo = VersionInfo;
 

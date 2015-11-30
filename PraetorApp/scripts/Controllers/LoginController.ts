@@ -92,13 +92,19 @@
             }
 
             var serverAddress = "";
+            var zkratkaNenalezena = false;
 
-            if (serverAddress == "" && this.viewModel.server.match(/^[0-9]*$/)) // Číslo portu na cloudu.
+            if (serverAddress == "" && this.viewModel.server.match(/^[0-9]*$/)) { // Číslo portu na cloudu.
                 serverAddress = "cloud.praetoris.cz:" + this.viewModel.server;
-            if (serverAddress == "" && !this.viewModel.server.match(/\./)) // Zkratka, kterou nám vyhodnotí náš server.
+            }
+            if (serverAddress == "" && !this.viewModel.server.match(/\./)) { // Zkratka, kterou nám vyhodnotí náš server.
                 serverAddress = this.httpGet("http://update.praetoris.cz/config/client/mobile/address/" + this.viewModel.server.toLowerCase());
-            if (serverAddress == "")
+                if (serverAddress == "")
+                    zkratkaNenalezena = true;
+            }
+            if (serverAddress == "") {
                 serverAddress = this.viewModel.server;
+            }
 
             this.Praetor.login(serverAddress, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then((data) => {
 
@@ -113,10 +119,15 @@
                     this.$location.replace();
                 }
                 else {
-                    this.UiHelper.alert(data.message);
+                    var message = data.message;
+                    if (zkratkaNenalezena) {
+                        message += " Zadaná adresa serveru byla vyhodnocena jako zkratka, ale nezdařil se její překlad. Zkuste zadat přímou adresu serveru.";
+                    }
+                    this.UiHelper.alert(message);
                 }
 
-            })['finally'](function () {
+            }
+            )['finally'](function () {
 
             });
         }

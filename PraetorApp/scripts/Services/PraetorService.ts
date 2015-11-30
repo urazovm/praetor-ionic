@@ -66,8 +66,14 @@
                     // Ukončeno timeoutem
                     q.resolve({ success: false, message: "Nepodařilo se připojit k serveru: " + server, sessionId: "" });
                 }
+                else if (e.status == 401) {
+                    q.resolve({ success: false, message: "Zadané uživatelské jméno nebo heslo je neplatné.", sessionId: "" });
+                }
+                else if (e.status == 500) {
+                    q.resolve({ success: false, message: "Server '" + server + "' nebyl nalezen.", sessionId: "" });
+                }
                 else {
-                    q.resolve({ success: false, message: "Error " + e.status + "|" + e.message, sessionId: "" });
+                    q.resolve({ success: false, message: "Chyba " + e.status + " – " + e.message, sessionId: "" });
                 }
             });
 

@@ -716,12 +716,18 @@ var PraetorApp;
                     return;
                 }
                 var serverAddress = "";
-                if (serverAddress == "" && this.viewModel.server.match(/^[0-9]*$/))
+                var zkratkaNenalezena = false;
+                if (serverAddress == "" && this.viewModel.server.match(/^[0-9]*$/)) {
                     serverAddress = "cloud.praetoris.cz:" + this.viewModel.server;
-                if (serverAddress == "" && !this.viewModel.server.match(/\./))
+                }
+                if (serverAddress == "" && !this.viewModel.server.match(/\./)) {
                     serverAddress = this.httpGet("http://update.praetoris.cz/config/client/mobile/address/" + this.viewModel.server.toLowerCase());
-                if (serverAddress == "")
+                    if (serverAddress == "")
+                        zkratkaNenalezena = true;
+                }
+                if (serverAddress == "") {
                     serverAddress = this.viewModel.server;
+                }
                 this.Praetor.login(serverAddress, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then(function (data) {
                     if (data.success) {
                         _this.Preferences.serverName = _this.viewModel.server;
@@ -733,7 +739,11 @@ var PraetorApp;
                         _this.$location.replace();
                     }
                     else {
-                        _this.UiHelper.alert(data.message);
+                        var message = data.message;
+                        if (zkratkaNenalezena) {
+                            message += " Zadaná adresa serveru byla vyhodnocena jako zkratka, ale nezdařil se její překlad. Zkuste zadat přímou adresu serveru.";
+                        }
+                        _this.UiHelper.alert(message);
                     }
                 })['finally'](function () {
                 });
@@ -2294,8 +2304,14 @@ var PraetorApp;
                     if (e.status == 0) {
                         q.resolve({ success: false, message: "Nepodařilo se připojit k serveru: " + server, sessionId: "" });
                     }
+                    else if (e.status == 401) {
+                        q.resolve({ success: false, message: "Zadané uživatelské jméno nebo heslo je neplatné.", sessionId: "" });
+                    }
+                    else if (e.status == 500) {
+                        q.resolve({ success: false, message: "Server '" + server + "' nebyl nalezen.", sessionId: "" });
+                    }
                     else {
-                        q.resolve({ success: false, message: "Error " + e.status + "|" + e.message, sessionId: "" });
+                        q.resolve({ success: false, message: "Chyba " + e.status + " – " + e.message, sessionId: "" });
                     }
                 });
                 return q.promise;

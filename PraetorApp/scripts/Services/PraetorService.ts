@@ -1,4 +1,8 @@
 ﻿module PraetorApp.Services {
+    export class HttpGetException {
+        public responded: boolean;
+        public response: ng.IHttpPromiseCallbackArg<string>;
+    }
 
     export class PraetorService {
 
@@ -32,6 +36,42 @@
             return q.promise;
         }
 
+        private httpGet(theUrl: string): ng.IPromise<string> {
+            var configure = <ng.IRequestShortcutConfig>{};
+            configure.timeout = 4000;
+
+            this.$ionicLoading.show({
+                template: '<i class="icon ion-load-c"></i>'
+            });
+
+            return this.$http.get<string>(theUrl, configure).then<string>(
+                (response) => {
+                    this.$ionicLoading.hide();
+
+                    if (response.status == 200) {
+                        return response.data;
+                    }
+                    else {
+                        var exc = new HttpGetException();
+                        exc.responded = true;
+                        exc.response = response;
+                        throw exc;
+                    }
+                },
+                (ex) => {
+                    this.$ionicLoading.hide();
+                    var exc = new HttpGetException();
+                    exc.responded = true;
+                    exc.response = ex;
+                    throw exc;
+                }
+            );
+        }
+
+        public resolveServerAbbrev(abbrev: string): ng.IPromise<string> {
+            return this.httpGet("http://update.praetoris.cz/config/client/mobile/address/" + abbrev.toLowerCase());
+        }
+
         public login(server: string, username: string, password: string): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoginResponse> {
 
             var q = this.$q.defer<PraetorServer.Service.WebServer.Messages.LoginResponse>();
@@ -52,11 +92,11 @@
                 configure)
                 .then(response => {
 
-                // Zavřeme dialogové okno
-                this.$ionicLoading.hide();
-                q.resolve(response.data);
+                    // Zavřeme dialogové okno
+                    this.$ionicLoading.hide();
+                    q.resolve(response.data);
 
-            })
+                })
             ['catch'](e => {
 
                 // Zavřeme dialogové okno
@@ -123,37 +163,37 @@
                 configure)
                 .then(response => {
 
-                if (options.ShowProgress) {
-                    this.$ionicLoading.hide();
-                }
+                    if (options.ShowProgress) {
+                        this.$ionicLoading.hide();
+                    }
 
-                var responseData = response.data
-                if (responseData.success) {
-                    q.resolve(response.data);
-                }
-                else {
-                    if (options.ShowMessage)
-                        this.UiHelper.alert(responseData.message);
+                    var responseData = response.data
+                    if (responseData.success) {
+                        q.resolve(response.data);
+                    }
+                    else {
+                        if (options.ShowMessage)
+                            this.UiHelper.alert(responseData.message);
 
-                    q.reject(responseData);
+                        q.reject(responseData);
+                    }
                 }
-            }
                 , e => {
-                // TODO: Sjednotit typ objektu v reject?
-                if (options.ShowProgress)
-                    this.$ionicLoading.hide();
+                    // TODO: Sjednotit typ objektu v reject?
+                    if (options.ShowProgress)
+                        this.$ionicLoading.hide();
 
-                (<any>window).lastError = e;
-                var qReturn = this.$q.when();
+                    (<any>window).lastError = e;
+                    var qReturn = this.$q.when();
 
-                //if (options.ShowMessage)
-                //    qReturn = this.UiHelper.alert(e.status + " " + e.statusText, "Chyba");
-                console.log(e.status + " " + e.statusText);
+                    //if (options.ShowMessage)
+                    //    qReturn = this.UiHelper.alert(e.status + " " + e.statusText, "Chyba");
+                    console.log(e.status + " " + e.statusText);
 
-                qReturn.then(() => {
-                    q.reject(e);
+                    qReturn.then(() => {
+                        q.reject(e);
+                    });
                 });
-            });
 
             return q.promise;
         }

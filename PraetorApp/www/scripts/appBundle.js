@@ -657,8 +657,9 @@ var PraetorApp;
     (function (Controllers) {
         var LoginController = (function (_super) {
             __extends(LoginController, _super);
-            function LoginController($scope, $location, $http, Utilities, UiHelper, Preferences, Praetor, Hash) {
+            function LoginController($q, $scope, $location, $http, Utilities, UiHelper, Preferences, Praetor, Hash) {
                 _super.call(this, $scope, PraetorApp.ViewModels.LoginViewModel);
+                this.$q = $q;
                 this.$location = $location;
                 this.$http = $http;
                 this.Utilities = Utilities;
@@ -674,7 +675,7 @@ var PraetorApp;
             }
             Object.defineProperty(LoginController, "$inject", {
                 get: function () {
-                    return ["$scope", "$location", "$http", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.PraetorService.ID, PraetorApp.Services.HashUtilities.ID];
+                    return ["$q", "$scope", "$location", "$http", PraetorApp.Services.Utilities.ID, PraetorApp.Services.UiHelper.ID, PraetorApp.Services.Preferences.ID, PraetorApp.Services.PraetorService.ID, PraetorApp.Services.HashUtilities.ID];
                 },
                 enumerable: true,
                 configurable: true
@@ -692,14 +693,18 @@ var PraetorApp;
             LoginController.prototype.http_notFound = function () {
                 this.UiHelper.toast.showLongBottom("Server not available (404); please contact your administrator.");
             };
-            LoginController.prototype.httpGet = function (theUrl) {
-                var xmlHttp = new XMLHttpRequest();
-                xmlHttp.open("GET", theUrl, false);
-                xmlHttp.send(null);
-                if (xmlHttp.status == 200)
-                    return xmlHttp.responseText;
-                else
-                    return "";
+            LoginController.prototype.resolveServerAddress = function () {
+                if (this.viewModel.server.match(/^[0-9]*$/)) {
+                    return this.$q.when("cloud.praetoris.cz:" + this.viewModel.server);
+                }
+                else if (!this.viewModel.server.match(/\./)) {
+                    return this.Praetor.resolveServerAbbrev(this.viewModel.server).then(function (serverAddress) {
+                        return serverAddress;
+                    });
+                }
+                else {
+                    return this.$q.when(this.viewModel.server);
+                }
             };
             LoginController.prototype.login = function () {
                 var _this = this;
@@ -715,37 +720,31 @@ var PraetorApp;
                     this.UiHelper.alert("Zadejte heslo");
                     return;
                 }
-                var serverAddress = "";
-                var zkratkaNenalezena = false;
-                if (serverAddress == "" && this.viewModel.server.match(/^[0-9]*$/)) {
-                    serverAddress = "cloud.praetoris.cz:" + this.viewModel.server;
-                }
-                if (serverAddress == "" && !this.viewModel.server.match(/\./)) {
-                    serverAddress = this.httpGet("http://update.praetoris.cz/config/client/mobile/address/" + this.viewModel.server.toLowerCase());
-                    if (serverAddress == "")
-                        zkratkaNenalezena = true;
-                }
-                if (serverAddress == "") {
-                    serverAddress = this.viewModel.server;
-                }
-                this.Praetor.login(serverAddress, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then(function (data) {
-                    if (data.success) {
-                        _this.Preferences.serverName = _this.viewModel.server;
-                        _this.Preferences.serverUrl = serverAddress;
-                        _this.Preferences.username = _this.viewModel.username;
-                        _this.Preferences.password = _this.Hash.md5(_this.viewModel.password);
-                        _this.Preferences.sessionId = data.sessionId;
-                        _this.$location.path("/app/home");
-                        _this.$location.replace();
-                    }
-                    else {
-                        var message = data.message;
-                        if (zkratkaNenalezena) {
-                            message += " Zadaná adresa serveru byla vyhodnocena jako zkratka, ale nezdařil se její překlad. Zkuste zadat přímou adresu serveru.";
+                this.resolveServerAddress().then(function (serverAddress) {
+                    _this.Praetor.login(serverAddress, _this.viewModel.username, _this.Hash.md5(_this.viewModel.password)).then(function (data) {
+                        if (data.success) {
+                            _this.Preferences.serverName = _this.viewModel.server;
+                            _this.Preferences.serverUrl = serverAddress;
+                            _this.Preferences.username = _this.viewModel.username;
+                            _this.Preferences.password = _this.Hash.md5(_this.viewModel.password);
+                            _this.Preferences.sessionId = data.sessionId;
+                            _this.$location.path("/app/home");
+                            _this.$location.replace();
                         }
-                        _this.UiHelper.alert(message);
-                    }
-                })['finally'](function () {
+                        else {
+                            var message = data.message;
+                            _this.UiHelper.alert(message);
+                        }
+                    });
+                }, function (ex) {
+                    if (!ex.responded)
+                        _this.UiHelper.alert("Nepodařilo se kontaktovat server. Jste připojeni k internetu?");
+                    else if (ex.response.status == 404)
+                        _this.UiHelper.alert("Server nebyl nalezen.");
+                    else if (ex.response.status == 500)
+                        _this.UiHelper.alert("Server není dostupný.");
+                    else
+                        _this.UiHelper.alert("Chyba vyhledávání serveru: " + ex.response.status + " – " + ex.response.statusText);
                 });
             };
             LoginController.ID = "LoginController";
@@ -2264,6 +2263,12 @@ var PraetorApp;
 (function (PraetorApp) {
     var Services;
     (function (Services) {
+        var HttpGetException = (function () {
+            function HttpGetException() {
+            }
+            return HttpGetException;
+        })();
+        Services.HttpGetException = HttpGetException;
         var PraetorService = (function () {
             function PraetorService($q, Utilities, $http, $location, $ionicLoading, Preferences, UiHelper) {
                 this.$q = $q;
@@ -2284,6 +2289,35 @@ var PraetorApp;
             PraetorService.prototype.loadHome = function (request) {
                 var q = this.$q.defer();
                 return q.promise;
+            };
+            PraetorService.prototype.httpGet = function (theUrl) {
+                var _this = this;
+                var configure = {};
+                configure.timeout = 4000;
+                this.$ionicLoading.show({
+                    template: '<i class="icon ion-load-c"></i>'
+                });
+                return this.$http.get(theUrl, configure).then(function (response) {
+                    _this.$ionicLoading.hide();
+                    if (response.status == 200) {
+                        return response.data;
+                    }
+                    else {
+                        var exc = new HttpGetException();
+                        exc.responded = true;
+                        exc.response = response;
+                        throw exc;
+                    }
+                }, function (ex) {
+                    _this.$ionicLoading.hide();
+                    var exc = new HttpGetException();
+                    exc.responded = true;
+                    exc.response = ex;
+                    throw exc;
+                });
+            };
+            PraetorService.prototype.resolveServerAbbrev = function (abbrev) {
+                return this.httpGet("http://update1.praetoris.cz/config/client/mobile/address/" + abbrev.toLowerCase());
             };
             PraetorService.prototype.login = function (server, username, password) {
                 var _this = this;

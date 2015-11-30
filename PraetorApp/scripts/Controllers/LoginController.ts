@@ -5,9 +5,10 @@
         public static ID = "LoginController";
 
         public static get $inject(): string[] {
-            return ["$scope", "$location", "$http", Services.Utilities.ID, Services.UiHelper.ID, Services.Preferences.ID, Services.PraetorService.ID, Services.HashUtilities.ID];
+            return ["$q", "$scope", "$location", "$http", Services.Utilities.ID, Services.UiHelper.ID, Services.Preferences.ID, Services.PraetorService.ID, Services.HashUtilities.ID];
         }
 
+        private $q: ng.IQService;
         private $location: ng.ILocationService;
         private $http: ng.IHttpService;
         private Utilities: Services.Utilities;
@@ -16,9 +17,10 @@
         private Praetor: Services.PraetorService;
         private Hash: Services.HashUtilities;
 
-        constructor($scope: ng.IScope, $location: ng.ILocationService, $http: ng.IHttpService, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences, Praetor: Services.PraetorService, Hash: Services.HashUtilities) {
+        constructor($q: ng.IQService, $scope: ng.IScope, $location: ng.ILocationService, $http: ng.IHttpService, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences, Praetor: Services.PraetorService, Hash: Services.HashUtilities) {
             super($scope, ViewModels.LoginViewModel);
 
+            this.$q = $q;
             this.$location = $location;
             this.$http = $http;
             this.Utilities = Utilities;
@@ -65,14 +67,18 @@
 
         //#region Controller Methods
 
-        private httpGet(theUrl: string): string {
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open("GET", theUrl, false); // false for synchronous request
-            xmlHttp.send(null);
-            if (xmlHttp.status == 200)
-                return xmlHttp.responseText;
-            else
-                return "";
+        private resolveServerAddress(): ng.IPromise<string> {
+            if (this.viewModel.server.match(/^[0-9]*$/)) { // Číslo portu na cloudu.
+                return this.$q.when("cloud.praetoris.cz:" + this.viewModel.server);
+            }
+            else if (!this.viewModel.server.match(/\./)) { // Zkratka, kterou nám vyhodnotí náš server.
+                return this.Praetor.resolveServerAbbrev(this.viewModel.server).then((serverAddress) => {
+                    return serverAddress;
+                });
+            }
+            else { // Přímo napsaná adresa uživatelem
+                return this.$q.when(this.viewModel.server);
+            }
         }
 
         protected login() {
@@ -91,44 +97,41 @@
                 return;
             }
 
-            var serverAddress = "";
-            var zkratkaNenalezena = false;
+            this.resolveServerAddress().then(
+                (serverAddress) => {
+                    this.Praetor.login(serverAddress, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then(
+                        (data) => {
+                            if (data.success) {
+                                this.Preferences.serverName = this.viewModel.server;
+                                this.Preferences.serverUrl = serverAddress;
+                                this.Preferences.username = this.viewModel.username;
+                                this.Preferences.password = this.Hash.md5(this.viewModel.password);
+                                this.Preferences.sessionId = <any>data.sessionId;
 
-            if (serverAddress == "" && this.viewModel.server.match(/^[0-9]*$/)) { // Číslo portu na cloudu.
-                serverAddress = "cloud.praetoris.cz:" + this.viewModel.server;
-            }
-            if (serverAddress == "" && !this.viewModel.server.match(/\./)) { // Zkratka, kterou nám vyhodnotí náš server.
-                serverAddress = this.httpGet("http://update.praetoris.cz/config/client/mobile/address/" + this.viewModel.server.toLowerCase());
-                if (serverAddress == "")
-                    zkratkaNenalezena = true;
-            }
-            if (serverAddress == "") {
-                serverAddress = this.viewModel.server;
-            }
+                                this.$location.path("/app/home");
+                                this.$location.replace();
+                            }
+                            else {
+                                var message = data.message;
+                                this.UiHelper.alert(message);
+                            }
 
-            this.Praetor.login(serverAddress, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then((data) => {
-                if (data.success) {
-                    this.Preferences.serverName = this.viewModel.server;
-                    this.Preferences.serverUrl = serverAddress;
-                    this.Preferences.username = this.viewModel.username;
-                    this.Preferences.password = this.Hash.md5(this.viewModel.password);
-                    this.Preferences.sessionId = <any>data.sessionId;
-
-                    this.$location.path("/app/home");
-                    this.$location.replace();
+                        }
+                    )
+                },
+                (ex: Services.HttpGetException) => {
+                    if (!ex.responded)
+                        this.UiHelper.alert("Nepodařilo se kontaktovat server. Jste připojeni k internetu?");
+                    else if (ex.response.status == 0)
+                        this.UiHelper.alert("Vypršel časový limit.");
+                    else if (ex.response.status == 404)
+                        this.UiHelper.alert("Server nebyl nalezen.");
+                    else if (ex.response.status == 500)
+                        this.UiHelper.alert("Server není dostupný.");
+                    else
+                        this.UiHelper.alert("Chyba vyhledávání serveru: " + ex.response.status + " – " + ex.response.statusText);
                 }
-                else {
-                    var message = data.message;
-                    if (zkratkaNenalezena) {
-                        message += " Zadaná adresa serveru byla vyhodnocena jako zkratka, ale nezdařil se její překlad. Zkuste zadat přímou adresu serveru.";
-                    }
-                    this.UiHelper.alert(message);
-                }
-
-            }
-            )['finally'](function () {
-
-            });
+            );
         }
 
         //#endregion

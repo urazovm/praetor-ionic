@@ -10,33 +10,28 @@
     <ion-content has-bouncing="false">
             <form class="list">
                 <label class="item item-input">
-                    <span class="input-label">Jméno serveru</span>
-                    <span>{{viewModel.ServerName}}</span>
-                </label>
-
-                <label class="item item-input">
-                    <span class="input-label">Adresa serveru</span>
-                    <span>{{viewModel.ServerUrl}}</span>
-                </label>
-
-                <label class="item item-input">
-                    <span class="input-label">Verze serveru</span>
-                    <span>{{viewModel.ServerVersion}}</span>
-                </label>
-
-                <label class="item item-input">
-                    <span class="input-label">Verze aplikace</span>
-                    <span>{{viewModel.ApplicationVersion}}</span>
-                </label>
-
-                <label class="item item-input">
-                    <span class="input-label">Přihlášený uživatel</span>
+                    <span class="input-label">Uživatel</span>
                     <span>{{viewModel.UserName}}</span>
                 </label>
 
                 <label class="item item-input">
-                    <span class="input-label">Uživatelské jméno</span>
+                    <span class="input-label">ID</span>
                     <span>{{viewModel.UserLogin}}</span>
+                </label>
+
+                <label class="item item-input">
+                    <span class="input-label">Server</span>
+                    <span>{{viewModel.ServerName}} ({{viewModel.ServerVersion}})</span>
+                </label>
+
+                <label class="item item-input">
+                    <span class="input-label">Adresa</span>
+                    <span>{{viewModel.ServerUrl}}</span>
+                </label>
+
+                <label class="item item-input">
+                    <span class="input-label">Verze</span>
+                    <span>{{viewModel.ApplicationVersion}}</span>
                 </label>
 
                 <div class="row">

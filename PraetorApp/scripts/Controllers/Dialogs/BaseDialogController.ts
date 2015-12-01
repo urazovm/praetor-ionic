@@ -36,6 +36,7 @@
 
             // Save off a reference to the Ionic modal instance.
             this.modalInstance = instance;
+            instance.controller = this;
 
             // Hold a reference to the data object that was passed in when opening the dialog.
             this.data = instance.dialogData;

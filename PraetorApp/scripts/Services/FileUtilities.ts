@@ -18,26 +18,28 @@
             this.Preferences = Preferences;
         }       
 
-        public openFile(token: string, name: string): ng.IPromise<boolean> {
+        public openFile(token: string, name: string): ng.IPromise<void> {
             return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token + '/' + encodeURIComponent(name));
         }
 
-        public openUrl(path: string): ng.IPromise<boolean> {
+        public openUrl(path: string): ng.IPromise<void> {
             console.log("opening document: " + path);
             
-            var q = this.$q.defer<boolean>();
+            var q = this.$q.defer<void>();
 
             (<any>window).handleDocumentWithURL(
                 function () {
-                    console.log('success');
-                    q.resolve(true);
+                    q.resolve();
                 },
                 function (error) {
-                    console.log('failure');
+                    var message: string;
                     if (error == 53) {
-                        console.log('No app that handles this file type.');
+                        message = "Nebyla nalezena aplikace pro otevření tohoto typu souboru.";
                     }
-                    q.resolve(false);
+                    else {
+                        message = "Neznámá chyba při stahování dokumentu " + error;
+                    }
+                    q.reject(message);
                 },
                 path
                 );

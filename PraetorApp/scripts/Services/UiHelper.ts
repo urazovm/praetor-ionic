@@ -28,6 +28,8 @@
          */
         private static openDialogIds: string[];
 
+        private static openDialogInstances: { [dialogId: string]: any };
+
         /**
          * Constant IDs for the dialogs. For use with the showDialog helper method.
          */
@@ -66,7 +68,7 @@
             this.$rootScope = $rootScope;
             this.$q = $q;
             this.$http = $http;
-            this.$ionicModal = $ionicModal;            
+            this.$ionicModal = $ionicModal;
             this.Utilities = Utilities;
             this.Preferences = Preferences;
             this.MockPlatformApis = MockPlatformApis;
@@ -102,7 +104,7 @@
          * Exposes an API for working with the operating system's clipboard.
          */
         get clipboard(): ICordovaClipboardPlugin {
-            if (typeof(cordova) !== "undefined" && cordova.plugins && cordova.plugins.clipboard) {
+            if (typeof (cordova) !== "undefined" && cordova.plugins && cordova.plugins.clipboard) {
                 return cordova.plugins.clipboard;
             }
             else if (this.Utilities.isChromeExtension) {
@@ -454,6 +456,11 @@
             creationPromise.then((modal: any) => {
                 var backdrop: HTMLDivElement;
 
+                if (UiHelper.openDialogInstances == null)
+                    UiHelper.openDialogInstances = [];
+
+                UiHelper.openDialogInstances[dialogId] = modal;
+
                 // Show it.
                 modal.show();
 
@@ -461,7 +468,7 @@
                     // HACK: Here we adjust the background color's alpha value so the user can't
                     // see through the overlay. At some point we should update this to use a blur
                     // effect similar to this: http://ionicframework.com/demos/frosted-glass/
-                    backdrop = <HTMLDivElement> document.querySelector("div.modal-backdrop");
+                    backdrop = <HTMLDivElement>document.querySelector("div.modal-backdrop");
                     backdrop.style.backgroundColor = "rgba(0, 0, 0, 1)";
                 }
 
@@ -491,6 +498,40 @@
             });
 
             return q.promise;
+        }
+
+        public static getTopDialog(): any {
+            if (UiHelper.openDialogIds == null)
+                UiHelper.openDialogIds = [];
+
+            if (UiHelper.openDialogInstances == null)
+                UiHelper.openDialogInstances = [];
+
+            var dialogCount = UiHelper.openDialogIds.length;
+            if (dialogCount == 0)
+                return undefined;
+
+            var dialogId = UiHelper.openDialogIds[dialogCount - 1];
+            return UiHelper.openDialogInstances[dialogId];
+        }
+
+        // Vrátí false, pokud nebyl žádný dialog zobrazen a nebylo tedy nic zavřeno.
+        public static closeTopDialog(): boolean {
+            var dialogInstance = UiHelper.getTopDialog();
+
+            if (dialogInstance == undefined)
+                return false;
+
+            var dialogControllerInstance = dialogInstance.controller;
+
+            if (dialogControllerInstance == undefined)
+                return false;
+
+            if (!dialogControllerInstance.close)
+                return false;
+
+            dialogControllerInstance.close();
+            return true;
         }
 
         //#endregion

@@ -15,16 +15,29 @@
     border-color: transparent;
 }
 
+.bar-praetor-fake {
+    display: block !important;
+}
+
+.bar-praetor-fake .nav-bar-block {
+    z-index: -1000 !important;
+}
+
 .button-dark.button-praetor {
     border-color: #000;
     background-color: #1d2939; // Original
     color: #fff;
 }
 
+.button-dark.button-praetor.activated {
+    border-color: #000;
+    background-color: #000;
+}
+
 .item-dark.item-praetor {
     color: #000;
     background-color: #E0E0E0;
-    border-color: #808080;
+    border-color: #C0C0C0;
 }
 
 .praetor-back-button {
@@ -121,6 +134,10 @@
 
 .custom-icon-pdf {
     background-image: url('../images/file-icons/pdf.png');
+}
+
+.custom-icon-obrazek {
+    background-image: url('../images/file-icons/obrazek.png');
 }
 
 .icon-oblibeny {

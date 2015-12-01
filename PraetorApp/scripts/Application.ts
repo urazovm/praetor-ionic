@@ -385,8 +385,13 @@ module PraetorApp.Application {
 
         var deregister = (<any>$ionicPlatform).registerBackButtonAction(() => {
             var nameRoute = $state.current.name;
-            if (nameRoute.indexOf("app.spis.") === 0) {
+            if (Services.UiHelper.closeTopDialog())
+                return;
+            else if (nameRoute.indexOf("app.spis.") === 0) {
                 $state.go('app.home');
+            }
+            else if (nameRoute.indexOf("app.home.subjekty") === 0) {
+                $state.go('app.home.spisy');
             }
             else if (nameRoute.indexOf("app.home.cinnosti") === 0) {
                 $state.go('app.home.spisy');

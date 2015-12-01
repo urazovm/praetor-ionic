@@ -42,6 +42,9 @@
             this.PraetorService.loadSpisZakladniUdaje(request).then((response) => {
                 this.viewModel.spis = response.spis;
                 this.viewModel.subjekty = response.subjekty;                
+
+                this.viewModel.Initialized = true;
+
                 this.onAftterLoading();
             });
         }
@@ -62,12 +65,16 @@
             request.id_file = dokument.id;
 
             this.PraetorService.getFileToken(request).then((response) => {
-                this.FileService.openFile(<string>response.token, dokument.nazev + '.' + dokument.pripona);
+                this.FileService.openFile(<string>response.token, dokument.nazev + '.' + dokument.pripona).catch(
+                    (errorMessage) => {
+                        this.UiHelper.alert(errorMessage);
+                    }
+                );
             });
         }
 
-        getFileType(pripona: string) :string {
-            switch (pripona) {
+        getFileType(pripona: string): string {
+            switch (pripona.toLowerCase()) {
                 case 'doc':
                 case 'docx':
                 case 'docm':
@@ -83,6 +90,12 @@
                     return 'excel';
                 case 'pdf':
                     return 'pdf';
+                case 'jpg':
+                case 'jpeg':
+                case 'bmp':
+                case 'png':
+                case 'gif':
+                    return 'obrazek';
                 default:
                     return '';
             }

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 18.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="Layer_1"
+   x="0px"
+   y="0px"
+   viewBox="0 0 500 500"
+   enable-background="new 0 0 500 500"
+   xml:space="preserve"
+   inkscape:version="0.48.5 r10040"
+   width="100%"
+   height="100%"
+   sodipodi:docname="slozka.svg"
+   inkscape:export-filename="C:\_praetor-ionic\icon-src\pracovni\slozka-otevrena.png"
+   inkscape:export-xdpi="36"
+   inkscape:export-ydpi="36"><metadata
+   id="metadata13"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+   id="defs11">
+	
+	
+</defs><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="1920"
+   inkscape:window-height="1137"
+   id="namedview9"
+   showgrid="false"
+   inkscape:zoom="1.357645"
+   inkscape:cx="180.77403"
+   inkscape:cy="272.74808"
+   inkscape:window-x="1358"
+   inkscape:window-y="-8"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="g3939"><inkscape:grid
+     type="xygrid"
+     id="grid3785"
+     units="mm"
+     empspacing="5"
+     visible="true"
+     enabled="true"
+     snapvisiblegridlinesonly="true" /></sodipodi:namedview>
+
+<g
+   inkscape:groupmode="layer"
+   id="layer1"
+   inkscape:label="Otevrena"
+   style="display:inline"><g
+     transform="translate(0,-2e-6)"
+     id="g3781"><path
+       d="M 500,185.4 H 489.1 454.6 74.2 c -6,0 -12.1,4.8 -13.5,10.6 L 11.5,392.2 c -1.4,5.9 2.2,10.6 8.2,10.6 h 418 c 6,0 12.1,-4.8 13.4,-10.6 L 497.4,196 c 0,-0.1 0,-0.1 0,-0.2 l 2.6,-10.4 z"
+       id="path5"
+       inkscape:connector-curvature="0"
+       style="fill:#fbad3f;fill-opacity:1" /><path
+       d="m 63.2,170.8 391.2,0 0,-32.3 c 0,-4 -3.3,-7.3 -7.3,-7.3 l -267.1,0 -20.55118,-35.137008 -152.14882,0 c -4,0 -7.3,3.3 -7.3,7.299998 L 0,377.7 47.1,183.5 c 1.7,-7.3 8.7,-12.7 16.1,-12.7 z"
+       id="path7"
+       inkscape:connector-curvature="0"
+       style="fill:#fed992;fill-opacity:1"
+       sodipodi:nodetypes="scsscccsccs" /></g></g><g
+   inkscape:groupmode="layer"
+   id="layer2"
+   inkscape:label="Zavrena"
+   style="display:none"><g
+     id="g3939"><path
+       sodipodi:nodetypes="ssccccs"
+       inkscape:connector-curvature="0"
+       id="path3936"
+       d="m 7.3125,95.84375 c -4,0 -7.3125,3.312498 -7.3125,7.3125 l 0,27.9375 104.34375,0 L 180,131 159.4375,95.84375 z"
+       style="fill:#fed992;fill-opacity:1" /><path
+       sodipodi:nodetypes="sccsssss"
+       inkscape:connector-curvature="0"
+       id="polygon7"
+       d="M 447.03872,139.18656 0,139.18656 c 0,87.88096 0,175.76192 0,263.64288 0,3.99872 3.27168,7.2704 7.2704,7.2704 l 439.8592,0 c 3.99872,0 7.2704,-3.27168 7.2704,-7.2704 l 0,-256.37248 c 0,-3.99872 -3.27168,-7.2704 -7.36128,-7.2704 z"
+       style="fill:#fbad3f;fill-opacity:1" /></g></g></svg>

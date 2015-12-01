@@ -124,6 +124,14 @@
     width: 32px;
 }
 
+.custom-icon-slozka-otevrena {
+    background-image: url('../images/file-icons/slozka-otevrena.png');
+}
+
+.custom-icon-slozka-zavrena {
+    background-image: url('../images/file-icons/slozka-zavrena.png');
+}
+
 .custom-icon-word {
     background-image: url('../images/file-icons/word.png');
 }

@@ -5,6 +5,8 @@
         dokumenty: PraetorServer.Service.WebServer.Messages.Dto.DokumentNode[];
         spis: PraetorServer.Service.WebServer.Messages.Dto.Spis;
         subjekty: PraetorServer.Service.WebServer.Messages.Dto.SpisSubjekt[];
-        public Initialized: boolean = false;
+        public spisInitialized: boolean = false;
+        public subjektyInitialized: boolean = false;
+        public dokumentyInitialized: boolean = false;
     }
 }

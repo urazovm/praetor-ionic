@@ -26,7 +26,7 @@
 
             var request = <PraetorServer.Service.WebServer.Messages.LoadCinnostiRequest>{};
             request.cinnostiUntil = DateTools.GetDateInJsonFormat(this.DateUntil);
-            request.cinnostiSince = DateTools.GetDateInJsonFormat(this.AddDays(this.DateSince, - 7));
+            request.cinnostiSince = DateTools.GetDateInJsonFormat(this.AddDays(this.DateSince, -7));
             this.viewModel.PrehledCinnosti = new PraetorApp.ViewModels.PrehledCinnostiViewModel();
             this.Cinnosti = [];
 

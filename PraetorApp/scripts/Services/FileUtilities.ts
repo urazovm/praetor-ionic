@@ -37,7 +37,8 @@
                         message = "Nebyla nalezena aplikace pro otevření tohoto typu souboru.";
                     }
                     else {
-                        message = "Neznámá chyba při stahování dokumentu " + error;
+                        // Tato chyba se vyskytuje i v případě, že není v systému aplikace, která by uměla dokument otevřít, takže volíme dostatečně obecnou chybu.
+                        message = "Dokument nelze otevřít.";
                     }
                     q.reject(message);
                 },

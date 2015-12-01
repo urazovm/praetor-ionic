@@ -1,6 +1,6 @@
 ﻿<ion-view title="Spis {{viewModel.spis.spisovaZnacka}}">
     <ion-content has-bouncing="false">
-        <div class="padding" ng-show="viewModel.Initialized">
+        <div class="padding" ng-show="viewModel.spisInitialized">
             <h3 >{{viewModel.spis.predmet}}</h3>
             <style>
                 table.keyvaluetable th { text-align: left; white-space: nowrap; font-weight: bold; padding-right: 3px }
@@ -32,7 +32,7 @@
                 Zapsat činnost
             </button>
         </div>
-        <div ng-show="!viewModel.Initialized" class="empty-list-description">
+        <div ng-show="!viewModel.spisInitialized" class="empty-list-description">
             Načítám…
         </div>
 

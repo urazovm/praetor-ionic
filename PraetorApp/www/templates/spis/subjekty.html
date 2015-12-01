@@ -2,7 +2,7 @@
 
     <ion-content has-bouncing="false">
 
-        <div class="list">
+        <div class="list" ng-show="viewModel.subjektyInitialized">
             <div class="item item-divider" ng-show="(viewModel.subjekty | filter: { role : 'Klient' }).length">Klient</div>
             <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Klient' }" ng-include="'subjekt_template.html'"></div>
             <div class="item item-divider"  ng-show="(viewModel.subjekty | filter: { role : 'Protistrana' }).length">Protistrana</div>
@@ -11,6 +11,12 @@
             <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Rozhodující orgán' }" ng-include="'subjekt_template.html'"></div>
             <div class="item item-divider" ng-show="(viewModel.subjekty | filter: { role : 'Zúčastněný subjekt' }).length">Zúčastněný subjekt</div>
             <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Zúčastněný subjekt' }" ng-include="'subjekt_template.html'"></div>
+        </div>
+        <div ng-show="viewModel.subjektyInitialized && viewModel.subjekty.length == 0" class="empty-list-description">
+            Spis neobsahuje žádné subjekty
+        </div>
+        <div ng-show="!viewModel.subjektyInitialized" class="empty-list-description">
+            Načítám…
         </div>
 
 </ion-content>

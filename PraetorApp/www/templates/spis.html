@@ -1,11 +1,9 @@
 ﻿<ion-pane>
     <ion-nav-bar class="bar-dark bar-praetor nav-title-slide-ios" align-title="center">
         <ion-nav-buttons side="left">
-            <button class="button" ui-sref="app.home.spisy">
-                <i class="icon ion-ios-arrow-back"></i>
-            </button>
+            <button class="button button-icon icon ion-ios-arrow-back" ui-sref="app.home.spisy"></button>
         </ion-nav-buttons>
-
+        
         <ion-nav-buttons side="right">
             <button class="button" ng-click="controller.reloadData()" ng-show="showLoadingButton">
                 <i class="icon ion-ios-loop" ng-class="{'animated-icon': isLoading}"></i>
@@ -27,5 +25,5 @@
             <ion-nav-view name="tab-dokumenty"></ion-nav-view>
         </ion-tab>
 
-</ion-tabs>
+    </ion-tabs>
 </ion-pane>

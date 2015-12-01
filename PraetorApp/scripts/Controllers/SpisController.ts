@@ -4,8 +4,8 @@
 
         public static ID = "SpisController";
 
-        public static get $inject(): string[]{
-            return ["$scope", "$location", "$http", "$state",  "$stateParams", Services.Utilities.ID, Services.UiHelper.ID, Services.Preferences.ID, Services.PraetorService.ID, Services.FileUtilities.ID];
+        public static get $inject(): string[] {
+            return ["$scope", "$location", "$http", "$state", "$stateParams", Services.Utilities.ID, Services.UiHelper.ID, Services.Preferences.ID, Services.PraetorService.ID, Services.FileUtilities.ID];
         }
 
         private $location: ng.ILocationService;
@@ -15,12 +15,12 @@
         private Preferences: Services.Preferences;
         private $ionicHistory: any;
         private PraetorService: Services.PraetorService;
-        private FileService: Services.FileUtilities;        
+        private FileService: Services.FileUtilities;
         private $state: ng.ui.IStateService;
 
         constructor($scope: ng.IScope, $location: ng.ILocationService, $http: ng.IHttpService, $state: ng.ui.IStateService, $stateParams, Utilities: Services.Utilities, UiHelper: Services.UiHelper, Preferences: Services.Preferences, PraetorService: Services.PraetorService, FileService: Services.FileUtilities) {
             super($scope, ViewModels.SpisViewModel);
-            
+
             this.$location = $location;
             this.$http = $http;
             this.Utilities = Utilities;
@@ -28,22 +28,22 @@
             this.Preferences = Preferences;
             this.PraetorService = PraetorService;
             this.FileService = FileService;
-            this.viewModel.id_spis = $stateParams.id;            
+            this.viewModel.id_spis = $stateParams.id;
             this.$state = $state;          
             
             // načteme data
-            this.reloadData();      
+            this.reloadData();
         }
 
-        private loadSpis() {   
-            this.onBeforeLoading();         
+        private loadSpis() {
+            this.onBeforeLoading();
             var request = <PraetorServer.Service.WebServer.Messages.LoadSpisZakladniUdajeRequest>{};
             request.id_Spis = this.viewModel.id_spis;
             this.PraetorService.loadSpisZakladniUdaje(request).then((response) => {
                 this.viewModel.spis = response.spis;
-                this.viewModel.subjekty = response.subjekty;                
-
-                this.viewModel.Initialized = true;
+                this.viewModel.subjekty = response.subjekty;
+                this.viewModel.spisInitialized = true;
+                this.viewModel.subjektyInitialized = true;
 
                 this.onAftterLoading();
             });
@@ -55,6 +55,7 @@
             request.id_Spis = this.viewModel.id_spis;
             this.PraetorService.loadSpisDokumenty(request).then((response) => {
                 this.viewModel.dokumenty = response.dokumenty;
+                this.viewModel.dokumentyInitialized = true;
                 this.onAftterLoading();
             });
         }
@@ -64,13 +65,19 @@
             var request = <PraetorServer.Service.WebServer.Messages.GetFileTokenRequest>{};
             request.id_file = dokument.id;
 
-            this.PraetorService.getFileToken(request).then((response) => {
-                this.FileService.openFile(<string>response.token, dokument.nazev + '.' + dokument.pripona).catch(
-                    (errorMessage) => {
-                        this.UiHelper.alert(errorMessage);
-                    }
-                );
-            });
+            this.PraetorService.getFileToken(request).then(
+                (response) => {
+                    this.FileService.openFile(<string>response.token, dokument.nazev + '.' + dokument.pripona).then(
+                        () => {
+                            this.UiHelper.alert("Dokument otevřen.");
+                        }
+                    ).catch(
+                        (errorMessage) => {
+                            this.UiHelper.alert(errorMessage);
+                        }
+                    );
+                }
+            );
         }
 
         getFileType(pripona: string): string {
@@ -80,7 +87,6 @@
                 case 'docm':
                 case 'rtf':
                 case 'odt':
-                case 'txt':
                     return 'word';
                 case 'xls':
                 case 'xlsx':
@@ -113,7 +119,7 @@
                 (ex) => {
                     this.UiHelper.alert("Činnost se nepodařilo uložit.");
                 }
-                );
+            );
         }
 
         reloadData() {

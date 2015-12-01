@@ -795,7 +795,8 @@ var PraetorApp;
                 this.PraetorService.loadSpisZakladniUdaje(request).then(function (response) {
                     _this.viewModel.spis = response.spis;
                     _this.viewModel.subjekty = response.subjekty;
-                    _this.viewModel.Initialized = true;
+                    _this.viewModel.spisInitialized = true;
+                    _this.viewModel.subjektyInitialized = true;
                     _this.onAftterLoading();
                 });
             };
@@ -806,6 +807,7 @@ var PraetorApp;
                 request.id_Spis = this.viewModel.id_spis;
                 this.PraetorService.loadSpisDokumenty(request).then(function (response) {
                     _this.viewModel.dokumenty = response.dokumenty;
+                    _this.viewModel.dokumentyInitialized = true;
                     _this.onAftterLoading();
                 });
             };
@@ -814,7 +816,9 @@ var PraetorApp;
                 var request = {};
                 request.id_file = dokument.id;
                 this.PraetorService.getFileToken(request).then(function (response) {
-                    _this.FileService.openFile(response.token, dokument.nazev + '.' + dokument.pripona).catch(function (errorMessage) {
+                    _this.FileService.openFile(response.token, dokument.nazev + '.' + dokument.pripona).then(function () {
+                        _this.UiHelper.alert("Dokument otevřen.");
+                    }).catch(function (errorMessage) {
                         _this.UiHelper.alert(errorMessage);
                     });
                 });
@@ -826,7 +830,6 @@ var PraetorApp;
                     case 'docm':
                     case 'rtf':
                     case 'odt':
-                    case 'txt':
                         return 'word';
                     case 'xls':
                     case 'xlsx':
@@ -1701,7 +1704,7 @@ var PraetorApp;
                         message = "Nebyla nalezena aplikace pro otevření tohoto typu souboru.";
                     }
                     else {
-                        message = "Neznámá chyba při stahování dokumentu " + error;
+                        message = "Dokument nelze otevřít.";
                     }
                     q.reject(message);
                 }, path);
@@ -3329,7 +3332,9 @@ var PraetorApp;
     (function (ViewModels) {
         var SpisViewModel = (function () {
             function SpisViewModel() {
-                this.Initialized = false;
+                this.spisInitialized = false;
+                this.subjektyInitialized = false;
+                this.dokumentyInitialized = false;
             }
             return SpisViewModel;
         })();

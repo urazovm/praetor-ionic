@@ -22,18 +22,9 @@
 </ion-content>
 </ion-view>
 
-<style>
-    .button-list-flow-right
-    {
-        float: right;
-        margin: -10px 0
-    }
-
-</style>
-
 <script type="text/ng-template" id="subjekt_template.html">
-    <a class="button button-clear button-list-flow-right" ng-href="tel:{{subjekt.primarniTelefon}}" ng-show="subjekt.primarniTelefon"><i class="icon ion-ios-telephone"></i></a>
-    <a class="button button-clear button-list-flow-right" ng-href="mailto:{{subjekt.primarniEmail}}" ng-show="subjekt.primarniEmail"><i class="icon ion-ios-email"></i></a>
+    <a class="button button-clear button-dark button-praetor-flow-right-contact" ng-href="tel:{{subjekt.primarniTelefon}}" ng-show="subjekt.primarniTelefon"><i class="icon ion-ios-telephone"></i></a>
+    <a class="button button-clear button-dark button-praetor-flow-right-contact" ng-href="mailto:{{subjekt.primarniEmail}}" ng-show="subjekt.primarniEmail"><i class="icon ion-ios-email"></i></a>
 
     <h2>{{subjekt.oznaceni}} </h2>
     <p>{{subjekt.procesniRole}} {{subjekt.hmotnepravniRole}}</p>

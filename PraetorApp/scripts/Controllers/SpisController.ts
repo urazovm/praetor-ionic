@@ -67,15 +67,22 @@
 
             this.PraetorService.getFileToken(request).then(
                 (response) => {
-                    this.FileService.openFile(<string>response.token, dokument.nazev + '.' + dokument.pripona).then(
-                        () => {
-                            this.UiHelper.alert("Dokument otevřen.");
-                        }
-                    ).catch(
+                    this.FileService.openFile(<string>response.token, dokument.nazev + '.' + dokument.pripona).catch(
                         (errorMessage) => {
                             this.UiHelper.alert(errorMessage);
                         }
                     );
+                }
+            ).catch(
+                (ex: ng.IHttpPromiseCallbackArg<string>) => {
+                    if (ex == undefined)
+                        this.UiHelper.alert("Došlo k neznámé chybě.");
+                    else if (ex.status == 500)
+                        this.UiHelper.alert("Připojení k serveru bylo přerušeno.");
+                    else if (ex.status == 401)
+                        this.UiHelper.alert("Nemáte oprávnění dokument zobrazit.");
+                    else
+                        this.UiHelper.alert("Došlo k chybě " + ex.status + ".");
                 }
             );
         }

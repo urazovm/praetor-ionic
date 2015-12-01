@@ -4,7 +4,7 @@
             <div class="item item-divider" ng-class="(datumGroup.datum.getDay() == 0 || datumGroup.datum.getDay() == 6) ? 'item-dark item-praetor' : ''">
                 {{datumGroup.datumString}}
                 <span class="right-float">{{datumGroup.casString}}</span>
-                <button class="button button-clear ion-plus-round button-right-float" ng-click="onAddClick({date:datumGroup.datum})"></button>
+                <button class="button button-clear ion-plus-round button-praetor-flow-right" ng-click="onAddClick({date:datumGroup.datum})"></button>
             </div>
             <div ng-repeat="cinnost in datumGroup.cinnosti">
                 <a class="item" ng-click="onCinnostClick({cinnost:cinnost})">

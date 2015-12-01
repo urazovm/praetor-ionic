@@ -169,10 +169,20 @@
     background-color: #D9D9D9;
 }
 
-.button-right-float {
+.item.item-praetor-inactive.activated {
+    color: #ddd;
+    background-color: #fff;
+}
+
+.button-praetor-flow-right, .item-divider .button.button-praetor-flow-right {
     float: right !important;
-    position: static !important;
+    top: 0 !important;
     line-height: inherit !important;
+}
+
+.button-praetor-flow-right-contact, .button.button-praetor-flow-right-contact, .item .button.button-praetor-flow-right-contact {
+    float: right !important;
+    margin: -13px 0 !important;
 }
 
 .right-float {

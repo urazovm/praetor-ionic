@@ -21,12 +21,13 @@
             this.UiHelper = uiHelper;
 
             var now = new Date();
-            this.DateSince = this.AddDays(this.GetDate(now), 1);
-            this.DateUntil = this.DateSince;
+            this.DateUntil = this.AddDays(this.GetDate(now), 1);
+            var dniDoPondeli = (this.DateUntil.getDay() - 1) % 7;
+            this.DateSince = this.AddDays(this.DateUntil, -dniDoPondeli - 7);
 
             var request = <PraetorServer.Service.WebServer.Messages.LoadCinnostiRequest>{};
             request.cinnostiUntil = DateTools.GetDateInJsonFormat(this.DateUntil);
-            request.cinnostiSince = DateTools.GetDateInJsonFormat(this.AddDays(this.DateSince, -7));
+            request.cinnostiSince = DateTools.GetDateInJsonFormat(this.DateSince);
             this.viewModel.PrehledCinnosti = new PraetorApp.ViewModels.PrehledCinnostiViewModel();
             this.Cinnosti = [];
 
@@ -51,6 +52,21 @@
             this.LoadData(request);
         }
 
+        private daysOfWeek: string[] = ["neděle", "pondělí", "úterý", "středa", "čtvrtek", "pátek", "sobota"];
+        private months: string[] = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"];
+
+        private getDayString(date: moment.Moment): string {
+            return this.daysOfWeek[date.day()];
+        }
+
+        private getMonthString(date: moment.Moment): string {
+            return this.months[date.month()];
+        }
+
+        private formatDate(date: moment.Moment): string {
+            return this.getDayString(date) + " " + date.date() + ". " + this.getMonthString(date);
+        }
+
         public RebuildList() {
             var list = new Array<PraetorApp.ViewModels.Ekonomika.CinnostDateGroup>();
 
@@ -60,7 +76,7 @@
             while (dateSince >= moment(this.DateSince)) {
                 var datumEntry = new PraetorApp.ViewModels.Ekonomika.CinnostDateGroup();
                 datumEntry.datum = dateSince.clone().toDate();
-                datumEntry.datumString = dateSince.format("dddd D. M. YYYY");
+                datumEntry.datumString = this.formatDate(dateSince);
                 datumEntry.cinnosti = _.select(this.Cinnosti, x => moment(x.datum) >= dateSince && moment(x.datum) < dateUntil);
                 datumEntry.cas = _.sum(datumEntry.cinnosti, x => x.cas);
                 datumEntry.casString = DateTools.FormatAsHourDurationFromMinutes(datumEntry.cas);

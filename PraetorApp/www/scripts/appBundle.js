@@ -816,11 +816,18 @@ var PraetorApp;
                 var request = {};
                 request.id_file = dokument.id;
                 this.PraetorService.getFileToken(request).then(function (response) {
-                    _this.FileService.openFile(response.token, dokument.nazev + '.' + dokument.pripona).then(function () {
-                        _this.UiHelper.alert("Dokument otevřen.");
-                    }).catch(function (errorMessage) {
+                    _this.FileService.openFile(response.token, dokument.nazev + '.' + dokument.pripona).catch(function (errorMessage) {
                         _this.UiHelper.alert(errorMessage);
                     });
+                }).catch(function (ex) {
+                    if (ex == undefined)
+                        _this.UiHelper.alert("Došlo k neznámé chybě.");
+                    else if (ex.status == 500)
+                        _this.UiHelper.alert("Připojení k serveru bylo přerušeno.");
+                    else if (ex.status == 401)
+                        _this.UiHelper.alert("Nemáte oprávnění dokument zobrazit.");
+                    else
+                        _this.UiHelper.alert("Došlo k chybě " + ex.status + ".");
                 });
             };
             SpisController.prototype.getFileType = function (pripona) {
@@ -985,14 +992,17 @@ var PraetorApp;
             __extends(HomeCinnostiController, _super);
             function HomeCinnostiController($scope, praetorService, uiHelper) {
                 _super.call(this, $scope, PraetorApp.ViewModels.Home.CinnostiViewModel);
+                this.daysOfWeek = ["neděle", "pondělí", "úterý", "středa", "čtvrtek", "pátek", "sobota"];
+                this.months = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"];
                 this.PraetorService = praetorService;
                 this.UiHelper = uiHelper;
                 var now = new Date();
-                this.DateSince = this.AddDays(this.GetDate(now), 1);
-                this.DateUntil = this.DateSince;
+                this.DateUntil = this.AddDays(this.GetDate(now), 1);
+                var dniDoPondeli = (this.DateUntil.getDay() - 1) % 7;
+                this.DateSince = this.AddDays(this.DateUntil, -dniDoPondeli - 7);
                 var request = {};
                 request.cinnostiUntil = Controllers.DateTools.GetDateInJsonFormat(this.DateUntil);
-                request.cinnostiSince = Controllers.DateTools.GetDateInJsonFormat(this.AddDays(this.DateSince, -7));
+                request.cinnostiSince = Controllers.DateTools.GetDateInJsonFormat(this.DateSince);
                 this.viewModel.PrehledCinnosti = new PraetorApp.ViewModels.PrehledCinnostiViewModel();
                 this.Cinnosti = [];
                 this.LoadData(request);
@@ -1017,6 +1027,15 @@ var PraetorApp;
                 this.Cinnosti = [];
                 this.LoadData(request);
             };
+            HomeCinnostiController.prototype.getDayString = function (date) {
+                return this.daysOfWeek[date.day()];
+            };
+            HomeCinnostiController.prototype.getMonthString = function (date) {
+                return this.months[date.month()];
+            };
+            HomeCinnostiController.prototype.formatDate = function (date) {
+                return this.getDayString(date) + " " + date.date() + ". " + this.getMonthString(date);
+            };
             HomeCinnostiController.prototype.RebuildList = function () {
                 var list = new Array();
                 var dateUntil = moment(this.DateUntil);
@@ -1024,7 +1043,7 @@ var PraetorApp;
                 while (dateSince >= moment(this.DateSince)) {
                     var datumEntry = new PraetorApp.ViewModels.Ekonomika.CinnostDateGroup();
                     datumEntry.datum = dateSince.clone().toDate();
-                    datumEntry.datumString = dateSince.format("dddd D. M. YYYY");
+                    datumEntry.datumString = this.formatDate(dateSince);
                     datumEntry.cinnosti = _.select(this.Cinnosti, function (x) { return moment(x.datum) >= dateSince && moment(x.datum) < dateUntil; });
                     datumEntry.cas = _.sum(datumEntry.cinnosti, function (x) { return x.cas; });
                     datumEntry.casString = Controllers.DateTools.FormatAsHourDurationFromMinutes(datumEntry.cas);

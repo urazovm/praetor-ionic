@@ -704,26 +704,27 @@ var PraetorApp;
                     return this.$q.when("cloud.praetoris.cz:" + this.viewModel.server);
                 }
                 else if (!this.viewModel.server.match(/\./)) {
-                    return this.Praetor.resolveServerAbbrev(this.viewModel.server).then(function (serverAddress) {
-                        return serverAddress;
-                    });
+                    return this.Praetor.resolveServerAbbrev(this.viewModel.server);
                 }
                 else {
                     return this.$q.when(this.viewModel.server);
                 }
             };
+            LoginController.prototype.showMessage = function (message) {
+                this.viewModel.message = message;
+            };
             LoginController.prototype.login = function () {
                 var _this = this;
                 if (!this.viewModel.server) {
-                    this.UiHelper.alert("Zadejte adresu serveru");
+                    this.showMessage("Zadejte adresu serveru");
                     return;
                 }
                 if (!this.viewModel.username) {
-                    this.UiHelper.alert("Zadejte přihlašovací jméno");
+                    this.showMessage("Zadejte přihlašovací jméno");
                     return;
                 }
                 if (!this.viewModel.password) {
-                    this.UiHelper.alert("Zadejte heslo");
+                    this.showMessage("Zadejte heslo");
                     return;
                 }
                 this.resolveServerAddress().then(function (serverAddress) {
@@ -739,20 +740,20 @@ var PraetorApp;
                         }
                         else {
                             var message = data.message;
-                            _this.UiHelper.alert(message);
+                            _this.showMessage(message);
                         }
                     });
                 }, function (ex) {
-                    if (!ex.responded)
-                        _this.UiHelper.alert("Nepodařilo se kontaktovat server. Jste připojeni k internetu?");
+                    if (!ex || !ex.responded || !ex.response)
+                        _this.showMessage("Nepodařilo se kontaktovat server. Jste připojeni k internetu?");
                     else if (ex.response.status == 0)
-                        _this.UiHelper.alert("Připojení k serveru není k dispozici.");
+                        _this.showMessage("Připojení k serveru není k dispozici.");
                     else if (ex.response.status == 404)
-                        _this.UiHelper.alert("Server nebyl nalezen.");
+                        _this.showMessage("Server nebyl nalezen.");
                     else if (ex.response.status == 500)
-                        _this.UiHelper.alert("Server není dostupný.");
+                        _this.showMessage("Server není dostupný.");
                     else
-                        _this.UiHelper.alert("Chyba vyhledávání serveru: " + ex.response.status + " – " + ex.response.statusText);
+                        _this.showMessage("Chyba vyhledávání serveru: " + ex.response.status + " – " + ex.response.statusText);
                 });
             };
             LoginController.ID = "LoginController";
@@ -2349,14 +2350,14 @@ var PraetorApp;
                         var exc = new HttpGetException();
                         exc.responded = true;
                         exc.response = response;
-                        throw exc;
+                        return _this.$q.reject(exc);
                     }
                 }, function (ex) {
                     _this.$ionicLoading.hide();
                     var exc = new HttpGetException();
                     exc.responded = true;
                     exc.response = ex;
-                    throw exc;
+                    return _this.$q.reject(exc);
                 });
             };
             PraetorService.prototype.resolveServerAbbrev = function (abbrev) {

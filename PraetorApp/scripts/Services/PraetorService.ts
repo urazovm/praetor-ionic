@@ -55,7 +55,7 @@
                         var exc = new HttpGetException();
                         exc.responded = true;
                         exc.response = response;
-                        throw exc;
+                        return this.$q.reject(exc);
                     }
                 },
                 (ex) => {
@@ -63,7 +63,7 @@
                     var exc = new HttpGetException();
                     exc.responded = true;
                     exc.response = ex;
-                    throw exc;
+                    return this.$q.reject(exc);
                 }
             );
         }

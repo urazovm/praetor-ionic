@@ -72,28 +72,31 @@
                 return this.$q.when("cloud.praetoris.cz:" + this.viewModel.server);
             }
             else if (!this.viewModel.server.match(/\./)) { // Zkratka, kterou nám vyhodnotí náš server.
-                return this.Praetor.resolveServerAbbrev(this.viewModel.server).then((serverAddress) => {
-                    return serverAddress;
-                });
+                return this.Praetor.resolveServerAbbrev(this.viewModel.server);
             }
             else { // Přímo napsaná adresa uživatelem
                 return this.$q.when(this.viewModel.server);
             }
         }
 
+        private showMessage(message: string) {
+            //this.UiHelper.alert(message);
+            this.viewModel.message = message;
+        }
+
         protected login() {
             if (!this.viewModel.server) {
-                this.UiHelper.alert("Zadejte adresu serveru");
+                this.showMessage("Zadejte adresu serveru");
                 return;
             }
 
             if (!this.viewModel.username) {
-                this.UiHelper.alert("Zadejte přihlašovací jméno");
+                this.showMessage("Zadejte přihlašovací jméno");
                 return;
             }
 
             if (!this.viewModel.password) {
-                this.UiHelper.alert("Zadejte heslo");
+                this.showMessage("Zadejte heslo");
                 return;
             }
 
@@ -113,23 +116,23 @@
                             }
                             else {
                                 var message = data.message;
-                                this.UiHelper.alert(message);
+                                this.showMessage(message);
                             }
 
                         }
                     )
                 },
                 (ex: Services.HttpGetException) => {
-                    if (!ex.responded)
-                        this.UiHelper.alert("Nepodařilo se kontaktovat server. Jste připojeni k internetu?");
+                    if (!ex || !ex.responded || !ex.response)
+                        this.showMessage("Nepodařilo se kontaktovat server. Jste připojeni k internetu?");
                     else if (ex.response.status == 0)
-                        this.UiHelper.alert("Připojení k serveru není k dispozici.");
+                        this.showMessage("Připojení k serveru není k dispozici.");
                     else if (ex.response.status == 404)
-                        this.UiHelper.alert("Server nebyl nalezen.");
+                        this.showMessage("Server nebyl nalezen.");
                     else if (ex.response.status == 500)
-                        this.UiHelper.alert("Server není dostupný.");
+                        this.showMessage("Server není dostupný.");
                     else
-                        this.UiHelper.alert("Chyba vyhledávání serveru: " + ex.response.status + " – " + ex.response.statusText);
+                        this.showMessage("Chyba vyhledávání serveru: " + ex.response.status + " – " + ex.response.statusText);
                 }
             );
         }

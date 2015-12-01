@@ -169,11 +169,6 @@
     background-color: #D9D9D9;
 }
 
-.item.item-praetor-inactive.activated {
-    color: #ddd;
-    background-color: #fff;
-}
-
 .button-praetor-flow-right, .item-divider .button.button-praetor-flow-right {
     float: right !important;
     top: 0 !important;

@@ -40,6 +40,7 @@
                         // Tato chyba se vyskytuje i v případě, že není v systému aplikace, která by uměla dokument otevřít, takže volíme dostatečně obecnou chybu.
                         message = "Dokument nelze otevřít.";
                     }
+                    window.open(path);
                     q.reject(message);
                 },
                 path

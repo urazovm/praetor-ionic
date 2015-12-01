@@ -81,6 +81,8 @@
                         this.UiHelper.alert("Připojení k serveru bylo přerušeno.");
                     else if (ex.status == 401)
                         this.UiHelper.alert("Nemáte oprávnění dokument zobrazit.");
+                    else if (ex.status == 0)
+                        this.UiHelper.alert("Připojení k serveru není k dispozici.");
                     else
                         this.UiHelper.alert("Došlo k chybě " + ex.status + ".");
                 }

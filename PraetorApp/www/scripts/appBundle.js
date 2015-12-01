@@ -746,7 +746,7 @@ var PraetorApp;
                     if (!ex.responded)
                         _this.UiHelper.alert("Nepodařilo se kontaktovat server. Jste připojeni k internetu?");
                     else if (ex.response.status == 0)
-                        _this.UiHelper.alert("Vypršel časový limit.");
+                        _this.UiHelper.alert("Připojení k serveru není k dispozici.");
                     else if (ex.response.status == 404)
                         _this.UiHelper.alert("Server nebyl nalezen.");
                     else if (ex.response.status == 500)
@@ -826,6 +826,8 @@ var PraetorApp;
                         _this.UiHelper.alert("Připojení k serveru bylo přerušeno.");
                     else if (ex.status == 401)
                         _this.UiHelper.alert("Nemáte oprávnění dokument zobrazit.");
+                    else if (ex.status == 0)
+                        _this.UiHelper.alert("Připojení k serveru není k dispozici.");
                     else
                         _this.UiHelper.alert("Došlo k chybě " + ex.status + ".");
                 });

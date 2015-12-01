@@ -123,7 +123,7 @@
                     if (!ex.responded)
                         this.UiHelper.alert("Nepodařilo se kontaktovat server. Jste připojeni k internetu?");
                     else if (ex.response.status == 0)
-                        this.UiHelper.alert("Vypršel časový limit.");
+                        this.UiHelper.alert("Připojení k serveru není k dispozici.");
                     else if (ex.response.status == 404)
                         this.UiHelper.alert("Server nebyl nalezen.");
                     else if (ex.response.status == 500)

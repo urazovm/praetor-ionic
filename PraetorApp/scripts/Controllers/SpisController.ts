@@ -65,28 +65,38 @@
             var request = <PraetorServer.Service.WebServer.Messages.GetFileTokenRequest>{};
             request.id_file = dokument.id;
 
-            this.PraetorService.getFileToken(request).then(
-                (response) => {
-                    this.FileService.openFile(<string>response.token, dokument.nazev + '.' + dokument.pripona)['catch'](
-                        (errorMessage) => {
-                            this.UiHelper.alert(errorMessage);
-                        }
+            try {
+                this.PraetorService.getFileToken(request).then(
+                    (response) => {
+                        this.FileService.openFile(<string>response.token, dokument.nazev + '.' + dokument.pripona)['catch'](
+                            (errorMessage) => {
+                                this.UiHelper.alert(errorMessage);
+                            }
+                        );
+                    }
+                )['catch'](
+                    (ex: ng.IHttpPromiseCallbackArg<string>) => {
+                        if (ex == undefined)
+                            this.UiHelper.alert("Došlo k neznámé chybě.");
+                        else if (ex.status == 500)
+                            this.UiHelper.alert("Připojení k serveru bylo přerušeno.");
+                        else if (ex.status == 401)
+                            this.UiHelper.alert("Nemáte oprávnění dokument zobrazit.");
+                        else if (ex.status == 0)
+                            this.UiHelper.alert("Připojení k serveru není k dispozici.");
+                        else
+                            this.UiHelper.alert("Došlo k chybě " + ex.status + ".");
+                    }
                     );
-                }
-            )['catch'](
-                (ex: ng.IHttpPromiseCallbackArg<string>) => {
-                    if (ex == undefined)
-                        this.UiHelper.alert("Došlo k neznámé chybě.");
-                    else if (ex.status == 500)
-                        this.UiHelper.alert("Připojení k serveru bylo přerušeno.");
-                    else if (ex.status == 401)
-                        this.UiHelper.alert("Nemáte oprávnění dokument zobrazit.");
-                    else if (ex.status == 0)
-                        this.UiHelper.alert("Připojení k serveru není k dispozici.");
-                    else
-                        this.UiHelper.alert("Došlo k chybě " + ex.status + ".");
-                }
-            );
+            }
+            catch (ex) {
+                var message = "Došlo k chybové situaci";
+                if (ex.message)
+                    message += ": " + ex.message;
+                else
+                    message += ".";
+                this.UiHelper.alert(message);
+            }
         }
 
         getFileType(pripona: string): string {

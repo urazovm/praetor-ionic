@@ -6,15 +6,12 @@
         </label>
     </div>
     <div ng-show="searchText==''">
-        <div class="list" ng-show="viewModel.oblibeneSpisy.length">
-            <div class="item item-divider">Oblíbené spisy</div>
-            <div ng-repeat="spis in viewModel.oblibeneSpisy" ng-include="'spis_template.html'">
-            </div>
-        </div>
-        <div class="list" ng-show="viewModel.posledniSpisy.length">
-            <div class="item item-divider">Nedávno otevřené spisy</div>
-            <div ng-repeat="spis in viewModel.posledniSpisy" ng-include="'spis_template.html'">
-            </div>
+        <div class="list" ng-show="viewModel.oblibeneSpisy.length + viewModel.posledniSpisy.length">
+            <div class="item item-divider" ng-show="viewModel.oblibeneSpisy.length">Oblíbené spisy</div>
+            <div ng-repeat="spis in viewModel.oblibeneSpisy" ng-include="'spis_template.html'"></div>
+
+            <div class="item item-divider" ng-show="viewModel.posledniSpisy.length">Nedávno otevřené spisy</div>
+            <div ng-repeat="spis in viewModel.posledniSpisy" ng-include="'spis_template.html'"></div>
         </div>
     </div>
     <div ng-show="searchText != ''">

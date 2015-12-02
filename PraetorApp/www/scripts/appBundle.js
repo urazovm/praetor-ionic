@@ -503,6 +503,7 @@ var PraetorApp;
                     return;
                 }
                 this.modalInstance = instance;
+                instance.controller = this;
                 this.data = instance.dialogData;
                 this.dialog_shown();
             };

@@ -209,13 +209,8 @@ var PraetorApp;
                 window.StatusBar.overlaysWebView(false);
             var deregister = $ionicPlatform.registerBackButtonAction(function () {
                 var nameRoute = $state.current.name;
-                if (PraetorApp.Services.UiHelper.closeTopDialog())
-                    return;
-                else if (nameRoute.indexOf("app.spis.") === 0) {
+                if (nameRoute.indexOf("app.spis.") === 0) {
                     $state.go('app.home');
-                }
-                else if (nameRoute.indexOf("app.home.subjekty") === 0) {
-                    $state.go('app.home.spisy');
                 }
                 else if (nameRoute.indexOf("app.home.cinnosti") === 0) {
                     $state.go('app.home.spisy');
@@ -508,7 +503,6 @@ var PraetorApp;
                     return;
                 }
                 this.modalInstance = instance;
-                instance.controller = this;
                 this.data = instance.dialogData;
                 this.dialog_shown();
             };
@@ -795,7 +789,6 @@ var PraetorApp;
                 this.PraetorService.loadSpisZakladniUdaje(request).then(function (response) {
                     _this.viewModel.spis = response.spis;
                     _this.viewModel.subjekty = response.subjekty;
-                    _this.viewModel.Initialized = true;
                     _this.onAftterLoading();
                 });
             };
@@ -814,13 +807,11 @@ var PraetorApp;
                 var request = {};
                 request.id_file = dokument.id;
                 this.PraetorService.getFileToken(request).then(function (response) {
-                    _this.FileService.openFile(response.token, dokument.nazev + '.' + dokument.pripona).['catch'](function (errorMessage) {
-                        _this.UiHelper.alert(errorMessage);
-                    });
+                    _this.FileService.openFile(response.token, dokument.nazev + '.' + dokument.pripona);
                 });
             };
             SpisController.prototype.getFileType = function (pripona) {
-                switch (pripona.toLowerCase()) {
+                switch (pripona) {
                     case 'doc':
                     case 'docx':
                     case 'docm':
@@ -836,12 +827,6 @@ var PraetorApp;
                         return 'excel';
                     case 'pdf':
                         return 'pdf';
-                    case 'jpg':
-                    case 'jpeg':
-                    case 'bmp':
-                    case 'png':
-                    case 'gif':
-                        return 'obrazek';
                     default:
                         return '';
                 }
@@ -1694,16 +1679,14 @@ var PraetorApp;
                 console.log("opening document: " + path);
                 var q = this.$q.defer();
                 window.handleDocumentWithURL(function () {
-                    q.resolve();
+                    console.log('success');
+                    q.resolve(true);
                 }, function (error) {
-                    var message;
+                    console.log('failure');
                     if (error == 53) {
-                        message = "Nebyla nalezena aplikace pro otevření tohoto typu souboru.";
+                        console.log('No app that handles this file type.');
                     }
-                    else {
-                        message = "Neznámá chyba při stahování dokumentu " + error;
-                    }
-                    q.reject(message);
+                    q.resolve(false);
                 }, path);
                 return q.promise;
             };
@@ -2970,9 +2953,6 @@ var PraetorApp;
                 creationPromise = this.$ionicModal.fromTemplateUrl(template, creationArgs);
                 creationPromise.then(function (modal) {
                     var backdrop;
-                    if (UiHelper.openDialogInstances == null)
-                        UiHelper.openDialogInstances = [];
-                    UiHelper.openDialogInstances[dialogId] = modal;
                     modal.show();
                     if (!options.showBackground) {
                         backdrop = document.querySelector("div.modal-backdrop");
@@ -2990,29 +2970,6 @@ var PraetorApp;
                     });
                 });
                 return q.promise;
-            };
-            UiHelper.getTopDialog = function () {
-                if (UiHelper.openDialogIds == null)
-                    UiHelper.openDialogIds = [];
-                if (UiHelper.openDialogInstances == null)
-                    UiHelper.openDialogInstances = [];
-                var dialogCount = UiHelper.openDialogIds.length;
-                if (dialogCount == 0)
-                    return undefined;
-                var dialogId = UiHelper.openDialogIds[dialogCount - 1];
-                return UiHelper.openDialogInstances[dialogId];
-            };
-            UiHelper.closeTopDialog = function () {
-                var dialogInstance = UiHelper.getTopDialog();
-                if (dialogInstance == undefined)
-                    return false;
-                var dialogControllerInstance = dialogInstance.controller;
-                if (dialogControllerInstance == undefined)
-                    return false;
-                if (!dialogControllerInstance.close)
-                    return false;
-                dialogControllerInstance.close();
-                return true;
             };
             UiHelper.ID = "UiHelper";
             UiHelper.DIALOG_ALREADY_OPEN = "DIALOG_ALREADY_OPEN";
@@ -3329,7 +3286,6 @@ var PraetorApp;
     (function (ViewModels) {
         var SpisViewModel = (function () {
             function SpisViewModel() {
-                this.Initialized = false;
             }
             return SpisViewModel;
         })();

@@ -67,13 +67,13 @@
 
             this.PraetorService.getFileToken(request).then(
                 (response) => {
-                    this.FileService.openFile(<string>response.token, dokument.nazev + '.' + dokument.pripona).catch(
+                    this.FileService.openFile(<string>response.token, dokument.nazev + '.' + dokument.pripona)['catch'](
                         (errorMessage) => {
                             this.UiHelper.alert(errorMessage);
                         }
                     );
                 }
-            ).catch(
+            )['catch'](
                 (ex: ng.IHttpPromiseCallbackArg<string>) => {
                     if (ex == undefined)
                         this.UiHelper.alert("Došlo k neznámé chybě.");

@@ -814,7 +814,7 @@ var PraetorApp;
                 var request = {};
                 request.id_file = dokument.id;
                 this.PraetorService.getFileToken(request).then(function (response) {
-                    _this.FileService.openFile(response.token, dokument.nazev + '.' + dokument.pripona).catch(function (errorMessage) {
+                    _this.FileService.openFile(response.token, dokument.nazev + '.' + dokument.pripona).['catch'](function (errorMessage) {
                         _this.UiHelper.alert(errorMessage);
                     });
                 });

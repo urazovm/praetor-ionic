@@ -11,6 +11,7 @@
         private $q: ng.IQService;
         private $location: ng.ILocationService;
         private $http: ng.IHttpService;
+        private $scope: ng.IScope;
         private Utilities: Services.Utilities;
         private UiHelper: Services.UiHelper;
         private Preferences: Services.Preferences;
@@ -23,6 +24,7 @@
             this.$q = $q;
             this.$location = $location;
             this.$http = $http;
+            this.$scope = $scope;
             this.Utilities = Utilities;
             this.UiHelper = UiHelper;
             this.Preferences = Preferences;
@@ -97,6 +99,7 @@
 
             if (!this.viewModel.password) {
                 this.showMessage("Zadejte heslo");
+                this.$scope.$broadcast('scroll.scrollTop')
                 return;
             }
 
@@ -118,7 +121,6 @@
                                 var message = data.message;
                                 this.showMessage(message);
                             }
-
                         }
                     )
                 },

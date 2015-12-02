@@ -1,6 +1,6 @@
 ﻿module PraetorApp.Controllers {
 
-    export class VyberSpisuController extends BaseDialogController<ViewModels.Spis.VyberSpisuViewModel, Void, VyberSpisuResult>
+    export class VyberSpisuController extends BaseDialogController<ViewModels.Spis.VyberSpisuViewModel, VyberSpisuParams, VyberSpisuResult>
         implements PraetorApp.Definitely.ISpisyUtilitiesDataChange {
 
         public static ID = "VyberSpisuController";
@@ -30,12 +30,12 @@
 
             this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
 
-            this.LoadPosledniSpisy();
+            this.LoadDuleziteSpisy();
 
             this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
         }
 
-        private LoadPosledniSpisy() {
+        private LoadDuleziteSpisy() {
             var request = <PraetorServer.Service.WebServer.Messages.LoadDuleziteSpisyRequest>{};
             request.maxPocetPoslednich = 20;
 
@@ -55,7 +55,14 @@
             this.close(new VyberSpisuResult(false, undefined));
         }
 
+        private LoadParams() {
+            var params = this.getData();
+            if (params)
+                this.viewModel.Reason = params.Reason;
+        }
+
         private Shown() {
+            this.LoadParams();
         }
 
         changeDataSource() {                

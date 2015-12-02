@@ -137,15 +137,17 @@
         }
 
         public CreateDatedCinnost(date: Date) {
-            this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, new Models.DialogOptions()).then(
+            var vyberSpisuParams = new VyberSpisuParams("Zapsání činnosti");
+            var vyberSpisuOptions = new Models.DialogOptions(vyberSpisuParams);
+            this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, vyberSpisuOptions).then(
                 (result: VyberSpisuResult) => {
                     if (!result || !result.Success)
                         return;
 
                     var id_Spis = result.Id_Spis;
-                    var params = new CinnostParams(id_Spis, date);
-                    var options = new Models.DialogOptions(params);
-                    this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(
+                    var cinnostParams = new CinnostParams(id_Spis, date);
+                    var cinnostOptions = new Models.DialogOptions(cinnostParams);
+                    this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, cinnostOptions).then(
                         (result: CinnostResult) => {
                             if (result && result.Success)
                                 this.UiHelper.toast.show("Činnost byla uložena.", "short", "center");
@@ -160,15 +162,17 @@
         }
 
         public CreateCinnost() {
-            this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, new Models.DialogOptions()).then(
+            var vyberSpisuParams = new VyberSpisuParams("Zapsání činnosti");
+            var vyberSpisuOptions = new Models.DialogOptions(vyberSpisuParams);
+            this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, vyberSpisuOptions).then(
                 (result: VyberSpisuResult) => {
                     if (!result || !result.Success)
                         return;
 
                     var id_Spis = result.Id_Spis;
-                    var params = new CinnostParams(id_Spis);
-                    var options = new Models.DialogOptions(params);
-                    this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, options).then(
+                    var cinnostParams = new CinnostParams(id_Spis);
+                    var cinnostOptions = new Models.DialogOptions(cinnostParams);
+                    this.UiHelper.showDialog(this.UiHelper.DialogIds.Cinnost, cinnostOptions).then(
                         (result: CinnostResult) => {
                             if (result && result.Success)
                                 this.UiHelper.toast.show("Činnost byla uložena.", "short", "center");

@@ -668,6 +668,7 @@ var PraetorApp;
                 this.$q = $q;
                 this.$location = $location;
                 this.$http = $http;
+                this.$scope = $scope;
                 this.Utilities = Utilities;
                 this.UiHelper = UiHelper;
                 this.Preferences = Preferences;
@@ -725,6 +726,7 @@ var PraetorApp;
                 }
                 if (!this.viewModel.password) {
                     this.showMessage("Zadejte heslo");
+                    this.$scope.$broadcast('scroll.scrollTop');
                     return;
                 }
                 this.resolveServerAddress().then(function (serverAddress) {
@@ -816,22 +818,32 @@ var PraetorApp;
                 var _this = this;
                 var request = {};
                 request.id_file = dokument.id;
-                this.PraetorService.getFileToken(request).then(function (response) {
-                    _this.FileService.openFile(response.token, dokument.nazev + '.' + dokument.pripona)['catch'](function (errorMessage) {
-                        _this.UiHelper.alert(errorMessage);
+                try {
+                    this.PraetorService.getFileToken(request).then(function (response) {
+                        _this.FileService.openFile(response.token, dokument.nazev + '.' + dokument.pripona)['catch'](function (errorMessage) {
+                            _this.UiHelper.alert(errorMessage);
+                        });
+                    })['catch'](function (ex) {
+                        if (ex == undefined)
+                            _this.UiHelper.alert("Došlo k neznámé chybě.");
+                        else if (ex.status == 500)
+                            _this.UiHelper.alert("Připojení k serveru bylo přerušeno.");
+                        else if (ex.status == 401)
+                            _this.UiHelper.alert("Nemáte oprávnění dokument zobrazit.");
+                        else if (ex.status == 0)
+                            _this.UiHelper.alert("Připojení k serveru není k dispozici.");
+                        else
+                            _this.UiHelper.alert("Došlo k chybě " + ex.status + ".");
                     });
-                })['catch'](function (ex) {
-                    if (ex == undefined)
-                        _this.UiHelper.alert("Došlo k neznámé chybě.");
-                    else if (ex.status == 500)
-                        _this.UiHelper.alert("Připojení k serveru bylo přerušeno.");
-                    else if (ex.status == 401)
-                        _this.UiHelper.alert("Nemáte oprávnění dokument zobrazit.");
-                    else if (ex.status == 0)
-                        _this.UiHelper.alert("Připojení k serveru není k dispozici.");
+                }
+                catch (ex) {
+                    var message = "Došlo k chybové situaci";
+                    if (ex.message)
+                        message += ": " + ex.message;
                     else
-                        _this.UiHelper.alert("Došlo k chybě " + ex.status + ".");
-                });
+                        message += ".";
+                    this.UiHelper.alert(message);
+                }
             };
             SpisController.prototype.getFileType = function (pripona) {
                 switch (pripona.toLowerCase()) {
@@ -1093,13 +1105,15 @@ var PraetorApp;
             };
             HomeCinnostiController.prototype.CreateDatedCinnost = function (date) {
                 var _this = this;
-                this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, new PraetorApp.Models.DialogOptions()).then(function (result) {
+                var vyberSpisuParams = new Controllers.VyberSpisuParams("Zapsání činnosti");
+                var vyberSpisuOptions = new PraetorApp.Models.DialogOptions(vyberSpisuParams);
+                this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, vyberSpisuOptions).then(function (result) {
                     if (!result || !result.Success)
                         return;
                     var id_Spis = result.Id_Spis;
-                    var params = new Controllers.CinnostParams(id_Spis, date);
-                    var options = new PraetorApp.Models.DialogOptions(params);
-                    _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, options).then(function (result) {
+                    var cinnostParams = new Controllers.CinnostParams(id_Spis, date);
+                    var cinnostOptions = new PraetorApp.Models.DialogOptions(cinnostParams);
+                    _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, cinnostOptions).then(function (result) {
                         if (result && result.Success)
                             _this.UiHelper.toast.show("Činnost byla uložena.", "short", "center");
                         _this.reloadData();
@@ -1110,13 +1124,15 @@ var PraetorApp;
             };
             HomeCinnostiController.prototype.CreateCinnost = function () {
                 var _this = this;
-                this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, new PraetorApp.Models.DialogOptions()).then(function (result) {
+                var vyberSpisuParams = new Controllers.VyberSpisuParams("Zapsání činnosti");
+                var vyberSpisuOptions = new PraetorApp.Models.DialogOptions(vyberSpisuParams);
+                this.UiHelper.showDialog(this.UiHelper.DialogIds.VyberSpisu, vyberSpisuOptions).then(function (result) {
                     if (!result || !result.Success)
                         return;
                     var id_Spis = result.Id_Spis;
-                    var params = new Controllers.CinnostParams(id_Spis);
-                    var options = new PraetorApp.Models.DialogOptions(params);
-                    _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, options).then(function (result) {
+                    var cinnostParams = new Controllers.CinnostParams(id_Spis);
+                    var cinnostOptions = new PraetorApp.Models.DialogOptions(cinnostParams);
+                    _this.UiHelper.showDialog(_this.UiHelper.DialogIds.Cinnost, cinnostOptions).then(function (result) {
                         if (result && result.Success)
                             _this.UiHelper.toast.show("Činnost byla uložena.", "short", "center");
                         _this.reloadData();
@@ -1355,7 +1371,7 @@ var PraetorApp;
                 this.SpisyUtilities = SpisyUtilities;
                 this.SpisyUtilities.register(this);
                 this.viewModel.PrehledSpisu = new PraetorApp.ViewModels.PrehledSpisuViewModel();
-                this.LoadPosledniSpisy();
+                this.LoadDuleziteSpisy();
                 this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
             }
             Object.defineProperty(VyberSpisuController, "$inject", {
@@ -1365,7 +1381,7 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
-            VyberSpisuController.prototype.LoadPosledniSpisy = function () {
+            VyberSpisuController.prototype.LoadDuleziteSpisy = function () {
                 var _this = this;
                 var request = {};
                 request.maxPocetPoslednich = 20;
@@ -1380,7 +1396,13 @@ var PraetorApp;
             VyberSpisuController.prototype.Cancel = function () {
                 this.close(new Controllers.VyberSpisuResult(false, undefined));
             };
+            VyberSpisuController.prototype.LoadParams = function () {
+                var params = this.getData();
+                if (params)
+                    this.viewModel.Reason = params.Reason;
+            };
             VyberSpisuController.prototype.Shown = function () {
+                this.LoadParams();
             };
             VyberSpisuController.prototype.changeDataSource = function () {
                 this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;
@@ -1389,6 +1411,19 @@ var PraetorApp;
             return VyberSpisuController;
         })(Controllers.BaseDialogController);
         Controllers.VyberSpisuController = VyberSpisuController;
+    })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
+})(PraetorApp || (PraetorApp = {}));
+var PraetorApp;
+(function (PraetorApp) {
+    var Controllers;
+    (function (Controllers) {
+        var VyberSpisuParams = (function () {
+            function VyberSpisuParams(reason) {
+                this.Reason = reason;
+            }
+            return VyberSpisuParams;
+        })();
+        Controllers.VyberSpisuParams = VyberSpisuParams;
     })(Controllers = PraetorApp.Controllers || (PraetorApp.Controllers = {}));
 })(PraetorApp || (PraetorApp = {}));
 var PraetorApp;

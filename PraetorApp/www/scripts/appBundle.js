@@ -380,19 +380,19 @@ var PraetorApp;
                     }
                 }
             });
-            $stateProvider.state('app.spis.dokumenty', {
-                url: "/dokumenty",
-                views: {
-                    'tab-dokumenty': {
-                        templateUrl: "templates/spis/dokumenty.html",
-                    }
-                }
-            });
             $stateProvider.state('app.spis.zakladniudaje', {
                 url: "/zakladniudaje",
                 views: {
                     'tab-zakladni-udaje': {
                         templateUrl: "templates/spis/zakladniudaje.html",
+                    }
+                }
+            });
+            $stateProvider.state('app.spis.dokumenty', {
+                url: "/dokumenty",
+                views: {
+                    'tab-dokumenty': {
+                        templateUrl: "templates/spis/dokumenty.html",
                     }
                 }
             });
@@ -1234,6 +1234,11 @@ var PraetorApp;
                 });
             };
             HomeSpisyController.prototype.openSpis = function (spis) {
+                var _this = this;
+                setTimeout(function () {
+                    _this.$state.go('app.spis.dokumenty', { id: spis.id_Spis });
+                    _this.scope.$apply();
+                }, 100);
             };
             HomeSpisyController.prototype.changeDataSource = function () {
                 this.viewModel.PrehledSpisu.vsechnySpisy = this.SpisyUtilities.Spisy;

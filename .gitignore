@@ -5,6 +5,7 @@
 *.suo
 *.user
 *.sln.docstates
+_Seby_*
 
 # Build results
 [Dd]ebug/

@@ -99,6 +99,7 @@
 
             if (!this.viewModel.password) {
                 this.showMessage("Zadejte heslo");
+                this.$scope.$broadcast('scroll.scrollTop')
                 return;
             }
 

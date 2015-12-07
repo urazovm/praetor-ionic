@@ -5,7 +5,7 @@
             <input type="search" placeholder="Search" ng-model="searchText">
         </label>
     </div>
-    <div ng-show="searchText==''" class="ng-hide">
+    <div ng-show="searchText==''">
         <div class="list" ng-show="viewModel.oblibeneSpisy.length + viewModel.posledniSpisy.length">
             <div class="item item-divider" ng-show="viewModel.oblibeneSpisy.length">Oblíbené spisy</div>
             <div ng-repeat="spis in viewModel.oblibeneSpisy" ng-include="'spis_template.html'"></div>
@@ -29,10 +29,10 @@
                     </div>
                 </a>
             </div>
-            <div ng-show="filterText != searchText" class="empty-list-description ng-hide">
+            <div ng-show="filterText != searchText" class="empty-list-description">
                 Vyhledávám…
             </div>
-            <div ng-show="!(viewModel.vsechnySpisy | PrehledSpisuFilter : filterText).length && filterText == searchText && searchText != ''" class="empty-list-description ng-hide">
+            <div ng-show="!(viewModel.vsechnySpisy | PrehledSpisuFilter : filterText).length && filterText == searchText && searchText != ''" class="empty-list-description">
                 Žádné spisy nebyly nalezeny.
             </div>
         </div>

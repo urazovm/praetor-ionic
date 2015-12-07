@@ -1,4 +1,8 @@
-﻿.tabs-dark.tabs-praetor > .tabs, .tabs.tabs-dark.tabs-praetor, .bar-dark.bar-praetor, .bar.bar-dark.bar-praetor, .bar-dark.bar-praetor .button {
+﻿[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
+.tabs-dark.tabs-praetor > .tabs, .tabs.tabs-dark.tabs-praetor, .bar-dark.bar-praetor, .bar.bar-dark.bar-praetor, .bar-dark.bar-praetor .button {
     border-color: #1d2939;
     background-color: #1d2939; // Original
     //border-color: #0c3e6d;

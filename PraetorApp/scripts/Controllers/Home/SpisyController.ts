@@ -56,9 +56,9 @@
         }
 
         openSpis(spis: PraetorServer.Service.WebServer.Messages.Dto.Spis) {
-            // Jako první stránku chceme na spisu otevřít dokumenty.
+            // Jako první stránku chceme na spisu otevřít základní údaje.
             setTimeout(() => {
-                this.$state.go('app.spis.dokumenty', { id: spis.id_Spis });
+                this.$state.go('app.spis.zakladniudaje', { id: spis.id_Spis });
                 this.scope.$apply();
             }, 100);
         }

@@ -1236,7 +1236,7 @@ var PraetorApp;
             HomeSpisyController.prototype.openSpis = function (spis) {
                 var _this = this;
                 setTimeout(function () {
-                    _this.$state.go('app.spis.dokumenty', { id: spis.id_Spis });
+                    _this.$state.go('app.spis.zakladniudaje', { id: spis.id_Spis });
                     _this.scope.$apply();
                 }, 100);
             };

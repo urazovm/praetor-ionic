@@ -11,6 +11,8 @@
             <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Rozhodující orgán' }" ng-include="'subjekt_template.html'"></div>
             <div class="item item-divider" ng-show="(viewModel.subjekty | filter: { role : 'Zúčastněný subjekt' }).length">Zúčastněný subjekt</div>
             <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Zúčastněný subjekt' }" ng-include="'subjekt_template.html'"></div>
+            <div class="item item-divider" ng-show="(viewModel.subjekty | filter: { role : 'Další' }).length">Další</div>
+            <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Další' }" ng-include="'subjekt_template.html'"></div>
         </div>
         <div ng-show="viewModel.subjektyInitialized && viewModel.subjekty.length == 0" class="empty-list-description">
             Spis neobsahuje žádné subjekty
@@ -27,5 +29,5 @@
     <a class="button button-clear button-dark button-praetor-flow-right-contact" ng-href="mailto:{{subjekt.primarniEmail}}" ng-show="subjekt.primarniEmail"><i class="icon ion-ios-email"></i></a>
 
     <h2>{{subjekt.oznaceni}} </h2>
-    <p>{{subjekt.procesniRole}} {{subjekt.hmotnepravniRole}}</p>
+    <p>{{subjekt.procesniRole}}{{subjekt.procesniRole && subjekt.hmotnepravniRole ? ', ' : ''}}{{subjekt.hmotnepravniRole}}</p>
 </script>

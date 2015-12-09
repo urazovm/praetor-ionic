@@ -11,7 +11,7 @@
             <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Rozhodující orgán' }" ng-include="'subjekt_template.html'"></div>
             <div class="item item-divider" ng-show="(viewModel.subjekty | filter: { role : 'Zúčastněný subjekt' }).length">Zúčastněný subjekt</div>
             <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Zúčastněný subjekt' }" ng-include="'subjekt_template.html'"></div>
-            <div class="item item-divider" ng-show="(viewModel.subjekty | filter: { role : 'Další' }).length">Další</div>
+            <div class="item item-divider" ng-show="(viewModel.subjekty | filter: { role : 'Další' }).length">Kontakty a právní zástupci</div>
             <div class="item" ng-repeat="subjekt in viewModel.subjekty | filter: { role : 'Další' }" ng-include="'subjekt_template.html'"></div>
         </div>
         <div ng-show="viewModel.subjektyInitialized && viewModel.subjekty.length == 0" class="empty-list-description">

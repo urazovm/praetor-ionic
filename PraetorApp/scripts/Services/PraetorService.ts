@@ -20,6 +20,8 @@
         private UiHelper: UiHelper;
         private $ionicLoading: any;
 
+        private serverInterfaceVersion: number;
+
         constructor($q: ng.IQService, Utilities: Utilities, $http: ng.IHttpService, $location: ng.ILocationService, $ionicLoading: any, Preferences: Services.Preferences, UiHelper: UiHelper) {
             this.$q = $q;
             this.$http = $http;
@@ -28,6 +30,8 @@
             this.$location = $location;
             this.UiHelper = UiHelper;
             this.$ionicLoading = $ionicLoading;
+
+            this.serverInterfaceVersion = -1;
         }
 
         public loadHome(request: any): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoadHomeResponse> {
@@ -68,15 +72,37 @@
             );
         }
 
-        public resolveServerAbbrev(abbrev: string): ng.IPromise<string> {
-            return this.httpGet("http://update.praetoris.cz/config/client/mobile/address/" + abbrev.toLowerCase());
+        public getServerUrlBase(server: string): string {
+            var result: string;
+
+            if (server.indexOf('http://') == 0)
+                result = server;
+            else if (server.indexOf('https://') == 0)
+                result = server;
+            else
+                result = 'https://' + server;
+
+            if (result.indexOf(":", result.indexOf("://") + 3) == -1) {
+                if (result.indexOf('http://') == 0)
+                    result += ":4025";
+                else
+                    result += ":14025";
+            }
+
+            result += '/praetorapi/';
+
+            return result;
         }
 
-        public login(server: string, username: string, password: string): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoginResponse> {
+        public resolveServerAbbrev(abbrev: string): ng.IPromise<string> {
+            return this.httpGet("https://update.praetoris.cz/config/client/mobile-v1/address/" + abbrev.toLowerCase());
+        }
+
+        public login(server: string, serverAbbrev: string, username: string, password: string): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoginResponse> {
 
             var q = this.$q.defer<PraetorServer.Service.WebServer.Messages.LoginResponse>();
 
-            var data = { username: username, password: password };
+            var data = { serverAbbrev: serverAbbrev, username: username, password: password };
 
             var configure = <ng.IRequestShortcutConfig>{};
             configure.timeout = 4000;
@@ -86,14 +112,17 @@
                 template: '<i class="icon ion-load-c"></i>'
             });
 
+            var serverUrlBase = this.getServerUrlBase(server);
+
             this.$http.post<PraetorServer.Service.WebServer.Messages.LoginResponse>(
-                'http://' + server + '/praetorapi/login',
+                serverUrlBase + 'login',
                 data,
                 configure)
                 .then(response => {
 
                     // Zavřeme dialogové okno
                     this.$ionicLoading.hide();
+                    this.serverInterfaceVersion = response.data.interfaceVersion;
                     q.resolve(response.data);
 
                 })
@@ -102,19 +131,27 @@
                 // Zavřeme dialogové okno
                 this.$ionicLoading.hide();
 
+                var message: string;
+
                 if (e.status == 0) {
                     // Ukončeno timeoutem
-                    q.resolve({ success: false, message: "Nepodařilo se připojit k serveru: " + server, sessionId: "" });
+                    message = "Nepodařilo se připojit k serveru: " + server;
                 }
                 else if (e.status == 401) {
-                    q.resolve({ success: false, message: "Zadané uživatelské jméno nebo heslo je neplatné.", sessionId: "" });
+                    message = "Zadané uživatelské jméno nebo heslo je neplatné.";
                 }
                 else if (e.status == 500) {
-                    q.resolve({ success: false, message: "Server '" + server + "' nebyl nalezen.", sessionId: "" });
+                    message = "Server '" + server + "' nebyl nalezen.";
                 }
                 else {
-                    q.resolve({ success: false, message: "Chyba " + e.status + " – " + e.message, sessionId: "" });
+                    message = "Chyba " + e.status + " – " + e.message;
                 }
+
+                var data = { success: false, message: message, sessionId: "", interfaceVersion: -1 };
+
+                this.serverInterfaceVersion = data.interfaceVersion;
+
+                q.resolve(data);
             });
 
             return q.promise;
@@ -140,6 +177,7 @@
             var q = this.$q.defer<PraetorServer.Service.WebServer.Messages.Response>();
 
             var server = this.Preferences.serverUrl;
+            data.serverAbbrev = this.Preferences.serverName;
             data.username = this.Preferences.username;
             data.password = this.Preferences.password;
             data.sessionId = this.Preferences.sessionId;
@@ -154,11 +192,10 @@
             configure.timeout = 10000;
             configure.headers = { 'Content-Type': 'application/json' };
 
-            if (server.indexOf(":") == -1)
-                server = server + ":4025";
+            var serverUrlBase = this.getServerUrlBase(server);
 
             var promise = this.$http.post<PraetorServer.Service.WebServer.Messages.Response>(
-                'http://' + server + '/praetorapi/' + action,
+                serverUrlBase + action,
                 data,
                 configure)
                 .then(response => {
@@ -168,6 +205,9 @@
                     }
 
                     var responseData = response.data
+
+                    this.serverInterfaceVersion = responseData.interfaceVersion;
+
                     if (responseData.success) {
                         q.resolve(response.data);
                     }
@@ -222,8 +262,24 @@
             return this.getData("LoadSessionInfo", request);
         }
 
-        public getFileToken(request: PraetorServer.Service.WebServer.Messages.GetFileTokenRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.GetFileTokenResponse> {
+        private getFileToken(request: PraetorServer.Service.WebServer.Messages.GetFileTokenRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.GetFileTokenResponse> {
             return this.getData("getfiletoken", request);
+        }
+
+        public getFileUrl(id_Dokument: System.Guid, name: string): ng.IPromise<string> {
+            var request = <PraetorServer.Service.WebServer.Messages.GetFileTokenRequest>{};
+            request.id_file = id_Dokument;
+            return this.getFileToken(request).then(
+                (response) => {
+                    var serverUrlBase = this.getServerUrlBase(this.Preferences.serverUrl);
+                    if (this.serverInterfaceVersion == undefined)
+                        return serverUrlBase + 'getFile/' + response.token + '/' + encodeURIComponent(name);
+                    else if (this.serverInterfaceVersion == 1)
+                        return serverUrlBase + 'getFile/' + encodeURIComponent(this.Preferences.serverName) + '/' + response.token + '/' + encodeURIComponent(name);
+                    else
+                        return null;
+                }
+            );
         }
 
         public loadSpisDokumenty(request: PraetorServer.Service.WebServer.Messages.LoadSpisDokumentyRequest): ng.IPromise<PraetorServer.Service.WebServer.Messages.LoadSpisDokumentyResponse> {

@@ -104,7 +104,7 @@
 
             this.resolveServerAddress().then(
                 (serverAddress) => {
-                    this.Praetor.login(serverAddress, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then(
+                    this.Praetor.login(serverAddress, this.viewModel.server, this.viewModel.username, this.Hash.md5(this.viewModel.password)).then(
                         (data) => {
                             if (data.success) {
                                 this.Preferences.serverName = this.viewModel.server;

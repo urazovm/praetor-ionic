@@ -62,17 +62,17 @@
 
         openDokument(dokument: PraetorServer.Service.WebServer.Messages.Dto.DokumentNode) {
 
-            var request = <PraetorServer.Service.WebServer.Messages.GetFileTokenRequest>{};
-            request.id_file = dokument.id;
-
             try {
-                this.PraetorService.getFileToken(request).then(
-                    (response) => {
-                        this.FileService.openFile(<string>response.token, dokument.nazev + '.' + dokument.pripona)['catch'](
-                            (errorMessage) => {
-                                this.UiHelper.alert(errorMessage);
-                            }
-                        );
+                this.PraetorService.getFileUrl(dokument.id, dokument.nazev).then(
+                    (url) => {
+                        if (url != null)
+                            this.FileService.openUrl(url)['catch'](
+                                (errorMessage) => {
+                                    this.UiHelper.alert(errorMessage);
+                                }
+                            );
+                        else
+                            this.UiHelper.alert("Nepodařilo se získat adresu dokumentu.");
                     }
                 )['catch'](
                     (ex: ng.IHttpPromiseCallbackArg<string>) => {

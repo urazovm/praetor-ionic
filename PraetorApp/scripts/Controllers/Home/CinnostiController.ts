@@ -52,21 +52,6 @@
             this.LoadData(request);
         }
 
-        private daysOfWeek: string[] = ["neděle", "pondělí", "úterý", "středa", "čtvrtek", "pátek", "sobota"];
-        private months: string[] = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"];
-
-        private getDayString(date: moment.Moment): string {
-            return this.daysOfWeek[date.day()];
-        }
-
-        private getMonthString(date: moment.Moment): string {
-            return this.months[date.month()];
-        }
-
-        private formatDate(date: moment.Moment): string {
-            return this.getDayString(date) + " " + date.date() + ". " + this.getMonthString(date);
-        }
-
         public RebuildList() {
             var list = new Array<PraetorApp.ViewModels.Ekonomika.CinnostDateGroup>();
 
@@ -76,7 +61,7 @@
             while (dateSince >= moment(this.DateSince)) {
                 var datumEntry = new PraetorApp.ViewModels.Ekonomika.CinnostDateGroup();
                 datumEntry.datum = dateSince.clone().toDate();
-                datumEntry.datumString = this.formatDate(dateSince);
+                datumEntry.datumString = DateTools.FormatDate(dateSince);
                 datumEntry.cinnosti = _.select(this.Cinnosti, x => moment(x.datum) >= dateSince && moment(x.datum) < dateUntil);
                 datumEntry.cas = _.sum(datumEntry.cinnosti, x => x.cas);
                 datumEntry.casString = DateTools.FormatAsHourDurationFromMinutes(datumEntry.cas);

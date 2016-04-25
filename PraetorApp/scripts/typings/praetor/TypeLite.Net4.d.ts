@@ -8,6 +8,7 @@
 
 declare module PraetorServer.Service.WebServer.Messages {
     interface Request {
+        serverAbbrev: string;
         username: string;
         password: string;
         sessionId: System.Guid;
@@ -18,6 +19,7 @@ declare module PraetorServer.Service.WebServer.Messages {
     interface Response {
         success: boolean;
         message: string;
+        interfaceVersion: number;
     }
     interface GetFileTokenResponse extends PraetorServer.Service.WebServer.Messages.Response {
         token: System.Guid;

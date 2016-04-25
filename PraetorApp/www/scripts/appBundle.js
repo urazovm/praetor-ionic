@@ -560,16 +560,6 @@ var PraetorApp;
         Directives.BaseElementDirective = BaseElementDirective;
     })(Directives = PraetorApp.Directives || (PraetorApp.Directives = {}));
 })(PraetorApp || (PraetorApp = {}));
-/**
- * This file exists to control the order in which compiled TypeScript files are concatenated
- * into the resulting appBundle.js file. While all *.ts files could be listed here, we don't
- * need to list them all since the tsc compiler will automatically traverse the directory tree.
- * Here we can list base components that are needed by other components (eg base classes) that
- * must be parsed before the dependent class.
- */
-/// <reference path="Controllers/BaseController.ts" />
-/// <reference path="Controllers/Dialogs/BaseDialogController.ts" />
-/// <reference path="Directives/BaseElementDirective.ts" />
 var PraetorApp;
 (function (PraetorApp) {
     var Controllers;
@@ -621,6 +611,17 @@ var PraetorApp;
                 var minutes = duration.minutes();
                 return hours + ":" + (minutes < 10 ? "0" : "") + minutes;
             };
+            DateTools.GetDayString = function (date) {
+                return this.daysOfWeek[date.day()];
+            };
+            DateTools.GetMonthString = function (date) {
+                return this.months[date.month()];
+            };
+            DateTools.FormatDate = function (date) {
+                return this.GetDayString(date) + " " + date.date() + ". " + this.GetMonthString(date);
+            };
+            DateTools.daysOfWeek = ["neděle", "pondělí", "úterý", "středa", "čtvrtek", "pátek", "sobota"];
+            DateTools.months = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"];
             return DateTools;
         })();
         Controllers.DateTools = DateTools;
@@ -729,7 +730,7 @@ var PraetorApp;
                     return;
                 }
                 this.resolveServerAddress().then(function (serverAddress) {
-                    _this.Praetor.login(serverAddress, _this.viewModel.username, _this.Hash.md5(_this.viewModel.password)).then(function (data) {
+                    _this.Praetor.login(serverAddress, _this.viewModel.server, _this.viewModel.username, _this.Hash.md5(_this.viewModel.password)).then(function (data) {
                         if (data.success) {
                             _this.Preferences.serverName = _this.viewModel.server;
                             _this.Preferences.serverUrl = serverAddress;
@@ -815,13 +816,14 @@ var PraetorApp;
             };
             SpisController.prototype.openDokument = function (dokument) {
                 var _this = this;
-                var request = {};
-                request.id_file = dokument.id;
                 try {
-                    this.PraetorService.getFileToken(request).then(function (response) {
-                        _this.FileService.openFile(response.token, dokument.nazev + '.' + dokument.pripona)['catch'](function (errorMessage) {
-                            _this.UiHelper.alert(errorMessage);
-                        });
+                    this.PraetorService.getFileUrl(dokument.id, dokument.nazev).then(function (url) {
+                        if (url != null)
+                            _this.FileService.openUrl(url)['catch'](function (errorMessage) {
+                                _this.UiHelper.alert(errorMessage);
+                            });
+                        else
+                            _this.UiHelper.alert("Nepodařilo se získat adresu dokumentu.");
                     })['catch'](function (ex) {
                         if (ex == undefined)
                             _this.UiHelper.alert("Došlo k neznámé chybě.");
@@ -1006,8 +1008,6 @@ var PraetorApp;
             __extends(HomeCinnostiController, _super);
             function HomeCinnostiController($scope, praetorService, uiHelper) {
                 _super.call(this, $scope, PraetorApp.ViewModels.Home.CinnostiViewModel);
-                this.daysOfWeek = ["neděle", "pondělí", "úterý", "středa", "čtvrtek", "pátek", "sobota"];
-                this.months = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"];
                 this.PraetorService = praetorService;
                 this.UiHelper = uiHelper;
                 var now = new Date();
@@ -1041,15 +1041,6 @@ var PraetorApp;
                 this.Cinnosti = [];
                 this.LoadData(request);
             };
-            HomeCinnostiController.prototype.getDayString = function (date) {
-                return this.daysOfWeek[date.day()];
-            };
-            HomeCinnostiController.prototype.getMonthString = function (date) {
-                return this.months[date.month()];
-            };
-            HomeCinnostiController.prototype.formatDate = function (date) {
-                return this.getDayString(date) + " " + date.date() + ". " + this.getMonthString(date);
-            };
             HomeCinnostiController.prototype.RebuildList = function () {
                 var list = new Array();
                 var dateUntil = moment(this.DateUntil);
@@ -1057,7 +1048,7 @@ var PraetorApp;
                 while (dateSince >= moment(this.DateSince)) {
                     var datumEntry = new PraetorApp.ViewModels.Ekonomika.CinnostDateGroup();
                     datumEntry.datum = dateSince.clone().toDate();
-                    datumEntry.datumString = this.formatDate(dateSince);
+                    datumEntry.datumString = Controllers.DateTools.FormatDate(dateSince);
                     datumEntry.cinnosti = _.select(this.Cinnosti, function (x) { return moment(x.datum) >= dateSince && moment(x.datum) < dateUntil; });
                     datumEntry.cas = _.sum(datumEntry.cinnosti, function (x) { return x.cas; });
                     datumEntry.casString = Controllers.DateTools.FormatAsHourDurationFromMinutes(datumEntry.cas);
@@ -1746,9 +1737,6 @@ var PraetorApp;
                 enumerable: true,
                 configurable: true
             });
-            FileUtilities.prototype.openFile = function (token, name) {
-                return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token + '/' + encodeURIComponent(name));
-            };
             FileUtilities.prototype.openUrl = function (path) {
                 console.log("opening document: " + path);
                 var q = this.$q.defer();
@@ -2182,7 +2170,6 @@ var PraetorApp;
                 }
             };
             MockPlatformApis.prototype.clipboard_chromeExtension_copy = function (text, onSuccess, onFail) {
-                // The following is based on http://stackoverflow.com/a/12693636
                 try {
                     document["oncopy"] = function (event) {
                         event.clipboardData.setData("Text", text);
@@ -2356,6 +2343,7 @@ var PraetorApp;
                 this.$location = $location;
                 this.UiHelper = UiHelper;
                 this.$ionicLoading = $ionicLoading;
+                this.serverInterfaceVersion = -1;
             }
             Object.defineProperty(PraetorService, "$inject", {
                 get: function () {
@@ -2394,37 +2382,60 @@ var PraetorApp;
                     return _this.$q.reject(exc);
                 });
             };
-            PraetorService.prototype.resolveServerAbbrev = function (abbrev) {
-                return this.httpGet("http://update.praetoris.cz/config/client/mobile/address/" + abbrev.toLowerCase());
+            PraetorService.prototype.getServerUrlBase = function (server) {
+                var result;
+                if (server.indexOf('http://') == 0)
+                    result = server;
+                else if (server.indexOf('https://') == 0)
+                    result = server;
+                else
+                    result = 'https://' + server;
+                if (result.indexOf(":", result.indexOf("://") + 3) == -1) {
+                    if (result.indexOf('http://') == 0)
+                        result += ":4025";
+                    else
+                        result += ":14025";
+                }
+                result += '/praetorapi/';
+                return result;
             };
-            PraetorService.prototype.login = function (server, username, password) {
+            PraetorService.prototype.resolveServerAbbrev = function (abbrev) {
+                return this.httpGet("https://update.praetoris.cz/config/client/mobile-v1/address/" + abbrev.toLowerCase());
+            };
+            PraetorService.prototype.login = function (server, serverAbbrev, username, password) {
                 var _this = this;
                 var q = this.$q.defer();
-                var data = { username: username, password: password };
+                var data = { serverAbbrev: serverAbbrev, username: username, password: password };
                 var configure = {};
                 configure.timeout = 4000;
                 configure.headers = { 'Content-Type': 'application/json' };
                 this.$ionicLoading.show({
                     template: '<i class="icon ion-load-c"></i>'
                 });
-                this.$http.post('http://' + server + '/praetorapi/login', data, configure)
+                var serverUrlBase = this.getServerUrlBase(server);
+                this.$http.post(serverUrlBase + 'login', data, configure)
                     .then(function (response) {
                     _this.$ionicLoading.hide();
+                    _this.serverInterfaceVersion = response.data.interfaceVersion;
                     q.resolve(response.data);
                 })['catch'](function (e) {
                     _this.$ionicLoading.hide();
+                    var message;
                     if (e.status == 0) {
-                        q.resolve({ success: false, message: "Nepodařilo se připojit k serveru: " + server, sessionId: "" });
+                        message = "Nepodařilo se připojit k serveru: " + server;
                     }
                     else if (e.status == 401) {
-                        q.resolve({ success: false, message: "Zadané uživatelské jméno nebo heslo je neplatné.", sessionId: "" });
+                        message = "Zadané uživatelské jméno nebo heslo je neplatné.";
                     }
                     else if (e.status == 500) {
-                        q.resolve({ success: false, message: "Server '" + server + "' nebyl nalezen.", sessionId: "" });
+                        message = "Server '" + server + "' nebyl nalezen.";
                     }
                     else {
-                        q.resolve({ success: false, message: "Chyba " + e.status + " – " + e.message, sessionId: "" });
+                        message = "Chyba " + e.status + " – " + e.message;
                     }
+                    var data = { success: false, message: message, sessionId: "", interfaceVersion: -1 };
+                    _this.serverInterfaceVersion = data.interfaceVersion;
+                    q.resolve(data);
                 });
                 return q.promise;
             };
@@ -2442,6 +2453,7 @@ var PraetorApp;
                 }
                 var q = this.$q.defer();
                 var server = this.Preferences.serverUrl;
+                data.serverAbbrev = this.Preferences.serverName;
                 data.username = this.Preferences.username;
                 data.password = this.Preferences.password;
                 data.sessionId = this.Preferences.sessionId;
@@ -2452,14 +2464,14 @@ var PraetorApp;
                 var configure = {};
                 configure.timeout = 10000;
                 configure.headers = { 'Content-Type': 'application/json' };
-                if (server.indexOf(":") == -1)
-                    server = server + ":4025";
-                var promise = this.$http.post('http://' + server + '/praetorapi/' + action, data, configure)
+                var serverUrlBase = this.getServerUrlBase(server);
+                var promise = this.$http.post(serverUrlBase + action, data, configure)
                     .then(function (response) {
                     if (options.ShowProgress) {
                         _this.$ionicLoading.hide();
                     }
                     var responseData = response.data;
+                    _this.serverInterfaceVersion = responseData.interfaceVersion;
                     if (responseData.success) {
                         q.resolve(response.data);
                     }
@@ -2500,6 +2512,20 @@ var PraetorApp;
             };
             PraetorService.prototype.getFileToken = function (request) {
                 return this.getData("getfiletoken", request);
+            };
+            PraetorService.prototype.getFileUrl = function (id_Dokument, name) {
+                var _this = this;
+                var request = {};
+                request.id_file = id_Dokument;
+                return this.getFileToken(request).then(function (response) {
+                    var serverUrlBase = _this.getServerUrlBase(_this.Preferences.serverUrl);
+                    if (_this.serverInterfaceVersion == undefined)
+                        return serverUrlBase + 'getFile/' + response.token + '/' + encodeURIComponent(name);
+                    else if (_this.serverInterfaceVersion == 1)
+                        return serverUrlBase + 'getFile/' + encodeURIComponent(_this.Preferences.serverName) + '/' + response.token + '/' + encodeURIComponent(name);
+                    else
+                        return null;
+                });
             };
             PraetorService.prototype.loadSpisDokumenty = function (request) {
                 return this.getData("loadspisdokumenty", request);

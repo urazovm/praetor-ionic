@@ -18,10 +18,6 @@
             this.Preferences = Preferences;
         }       
 
-        public openFile(token: string, name: string): ng.IPromise<void> {
-            return this.openUrl('http://' + this.Preferences.serverUrl + '/praetorapi/getFile/' + token + '/' + encodeURIComponent(name));
-        }
-
         public openUrl(path: string): ng.IPromise<void> {
             console.log("opening document: " + path);
             

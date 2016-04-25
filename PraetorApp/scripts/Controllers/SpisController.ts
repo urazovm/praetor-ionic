@@ -63,7 +63,7 @@
         openDokument(dokument: PraetorServer.Service.WebServer.Messages.Dto.DokumentNode) {
 
             try {
-                this.PraetorService.getFileUrl(dokument.id, dokument.nazev).then(
+                this.PraetorService.getFileUrl(dokument.id, dokument.nazev + '.' + dokument.pripona).then(
                     (url) => {
                         if (url != null)
                             this.FileService.openUrl(url)['catch'](

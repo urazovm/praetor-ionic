@@ -272,7 +272,7 @@
             return this.getFileToken(request).then(
                 (response) => {
                     var serverUrlBase = this.getServerUrlBase(this.Preferences.serverUrl);
-                    if (this.serverInterfaceVersion == undefined)
+                    if (!this.serverInterfaceVersion)
                         return serverUrlBase + 'getFile/' + response.token + '/' + encodeURIComponent(name);
                     else if (this.serverInterfaceVersion == 1)
                         return serverUrlBase + 'getFile/' + encodeURIComponent(this.Preferences.serverName) + '/' + response.token + '/' + encodeURIComponent(name);

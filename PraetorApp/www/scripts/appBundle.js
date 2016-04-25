@@ -817,7 +817,7 @@ var PraetorApp;
             SpisController.prototype.openDokument = function (dokument) {
                 var _this = this;
                 try {
-                    this.PraetorService.getFileUrl(dokument.id, dokument.nazev).then(function (url) {
+                    this.PraetorService.getFileUrl(dokument.id, dokument.nazev + '.' + dokument.pripona).then(function (url) {
                         if (url != null)
                             _this.FileService.openUrl(url)['catch'](function (errorMessage) {
                                 _this.UiHelper.alert(errorMessage);
@@ -2519,7 +2519,7 @@ var PraetorApp;
                 request.id_file = id_Dokument;
                 return this.getFileToken(request).then(function (response) {
                     var serverUrlBase = _this.getServerUrlBase(_this.Preferences.serverUrl);
-                    if (_this.serverInterfaceVersion == undefined)
+                    if (!_this.serverInterfaceVersion)
                         return serverUrlBase + 'getFile/' + response.token + '/' + encodeURIComponent(name);
                     else if (_this.serverInterfaceVersion == 1)
                         return serverUrlBase + 'getFile/' + encodeURIComponent(_this.Preferences.serverName) + '/' + response.token + '/' + encodeURIComponent(name);
